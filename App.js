@@ -5,17 +5,12 @@ import {
 } from 'react-native';
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
-import MainTabScreen from './src/components/MainTabScreen';
-import LandingPage from './src/components/LandingPage';
-import Login from './src/components/Login';
-import Register from './src/components/Register';
-import LoadingScrene from "./src/components/LoadingScrene";
-import { AntDesign } from '@expo/vector-icons'; 
-import RootStackScreen from "./src/components/RootStackScreen";
+import MainTabScreen from './src/components/Main/MainTabScreen';
+import LandingPage from './src/components/Authentication/LandingPage';
+import Login from './src/components/Authentication/Login';
+import Register from './src/components/Authentication/Register';
+import LoadingScrene from "./src/components/Authentication/LoadingScrene";
 import io from 'socket.io-client/dist/socket.io'
-import AsyncStorage from '@react-native-community/async-storage';
-import AuthLoadingScreen from './src/components/AuthLoadingScreen';
-import More from './src/components/Menu';
 import { View } from 'react-native-animatable';
 
 var e;
@@ -35,9 +30,6 @@ export default class App extends React.Component{
           <Stack.Screen name="Login" component={Login} hideNavBar={true} options={{headerShown: false}}/>
           <Stack.Screen name="Register" component={Register} hideNavBar={true} options={{headerShown: false}}/>
           <Stack.Screen name="Taskeeper" component={MainTabScreen}  options={{headerShown: false}}/>  
-         
-
-         
       </Stack.Navigator>     
       </NavigationContainer>
     );

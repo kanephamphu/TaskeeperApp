@@ -11,8 +11,8 @@ import {
     Animated,
     Keyboard
 } from 'react-native'
-import background from '../images/anh1.png'
-import logo from '../images/logonew3.png'
+import background from '../../images/anh1.png'
+import logo from '../../images/logonew3.png'
 import { AntDesign } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
@@ -35,7 +35,6 @@ class Login extends Component{
             loginquery: '',
             password: '',
             nof:'',
-            
             errors: {}
         }
        

@@ -5,7 +5,7 @@ import Polyline from '@mapbox/polyline'
 import * as Permissions from 'expo-permissions';
 import { Marker } from 'react-native-maps'
 
-const locations = require('../locales/locations.json')
+const locations = require('../../locales/locations.json')
 const { width, height } = Dimensions.get('screen')
 
 export default class Map extends React.Component {

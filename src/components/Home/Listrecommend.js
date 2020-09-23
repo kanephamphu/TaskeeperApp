@@ -2,7 +2,6 @@ import React,{Component} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,TextInput,FlatList,Image,ScrollView, Dimensions,LinearGradient,SafeAreaView} from 'react-native'
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io'
-import girl from '../images/abc.png';
 import { AntDesign } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
@@ -10,7 +9,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import AsyncStorage from '@react-native-community/async-storage';
 const {height,width} =Dimensions.get('window');
-class Detail extends Component{
+class Listrecommend extends Component{
     constructor(props){
         super(props);
         this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
@@ -26,10 +25,44 @@ class Detail extends Component{
            data:[{
                key:'1',
                name:'Business Analyst',
-               image:require('../images/fourdigit.png'),
+               image:require('../../images/fourdigit.png'),
                location:'Da Nang'
            },
-    
+            {
+                key:'2',
+                name:'Business Analyst',
+                image:require('../../images/cmc.png'),
+                location:'Da Nang'
+            },
+            {
+                key:'3',
+                name:'Business Analyst',
+                image:require('../../images/nexle.png'),
+                location:'Da Nang'
+            },{
+                key:'4',
+                name:'Business Analyst',
+                image:require('../../images/taseco.jpg'),
+                location:'Da Nang'
+            },
+            {
+                key:'5',
+                name:'Business Analyst',
+                image:require('../../images/taseco.jpg'),
+                location:'Da Nang'
+            },
+            {
+                key:'6',
+                name:'Business Analyst',
+                image:require('../../images/taseco.jpg'),
+                location:'Da Nang'
+            },
+            {
+                key:'7',
+                name:'Business Analyst',
+                image:require('../../images/taseco.jpg'),
+                location:'Da Nang'
+            },
            
         ]
         }
@@ -44,7 +77,7 @@ class Detail extends Component{
                     </TouchableOpacity>                                             
                             <TextInput
                                 style={styles.searching}
-                                placeholder="Searching ..." 
+                                placeholder="Searching recommend work..." 
                                 placeholderTextColor='#71B7B7'
                                 underlineColorAndroid="transparent"
                                 />                                        
@@ -59,7 +92,7 @@ class Detail extends Component{
                        <Text style={{fontWeight:'bold',fontSize:18,color:'#71B7B7',fontStyle:'italic'}}>List Recommend</Text>
                    </View>
                     <View style={{marginTop:10}}>                      
-                                {this.state.data.map(task=><Bulletin  name={task.name}
+                                {this.state.data.map((task,index)=><Bulletin key={index} name={task.name}
                                 image={task.image}
                                 location={task.location}
                                 />)}               
@@ -72,12 +105,9 @@ class Detail extends Component{
         )
     }
 }
-const Bulletin=({key ,name,image,location})=>{
-    return(
-       
-       
-             <View style={{backgroundColor:'#71B7B7',
-            
+const Bulletin=({name,image,location})=>{
+    return(  
+             <View style={{backgroundColor:'#71B7B7',    
             marginHorizontal:10,
             marginVertical:10,
             borderRadius:8,
@@ -121,7 +151,7 @@ const Bulletin=({key ,name,image,location})=>{
     )
 }
 
-export default Detail;
+export default Listrecommend;
 const styles = StyleSheet.create({
     container:{
         flex:1,

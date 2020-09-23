@@ -1,15 +1,21 @@
 import React,{Component} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,TextInput,FlatList,Image,ScrollView, Dimensions,LinearGradient,SafeAreaView} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,TextInput,
+    FlatList,Image,ScrollView, Dimensions,ActivityIndicator,
+    SafeAreaView, AccessibilityInfo} from 'react-native'
+import Swiper from 'react-native-swiper';
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io'
-import girl from '../images/abc.png';
+import girl from '../../images/abc.png';
+import job from '../../images/job.png' ;
+import header from '../../images/header.png' ;
 import { AntDesign } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import Search from './Search';
-
+import FlatListdata from './Listdata/FlatListdata'
 import AsyncStorage from '@react-native-community/async-storage';
+import SearchStack from './SearchStackScreen'
 var e;
 const {height,width} =Dimensions.get('window');
 class Home extends Component{
@@ -17,179 +23,135 @@ class Home extends Component{
         super(props);
         e=this;
         this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
-        
         this.state={
            first_name:'',
            last_name:'',
            email:'',
+           avatar:'',
            username:'',
-           id:'',  
            phone:''   ,   
-           secret_key:'',
            introduction :'',
            floor_price:'',
            ceiling_price:'',
+           isLoading:true,
+           secret_key:'',
+           refreshing:false,
            data:[{
                key:'1',
                name:'Business Analyst',
-               image:require('../images/fourdigit.png'),
+               image:require('../../images/fourdigit.png'),
                location:'Da Nang'
            },
             {
                 key:'2',
                 name:'Business Analyst',
-                image:require('../images/cmc.png'),
+                image:require('../../images/cmc.png'),
                 location:'Da Nang'
             },
             {
                 key:'3',
                 name:'Business Analyst',
-                image:require('../images/nexle.png'),
+                image:require('../../images/nexle.png'),
                 location:'Da Nang'
             },{
                 key:'4',
                 name:'Business Analyst',
-                image:require('../images/taseco.jpg'),
+                image:require('../../images/taseco.jpg'),
                 location:'Da Nang'
             },
             {
                 key:'5',
                 name:'Business Analyst',
-                image:require('../images/taseco.jpg'),
+                image:require('../../images/taseco.jpg'),
                 location:'Da Nang'
             },
             {
                 key:'6',
                 name:'Business Analyst',
-                image:require('../images/taseco.jpg'),
+                image:require('../../images/taseco.jpg'),
                 location:'Da Nang'
             },
             {
                 key:'7',
                 name:'Business Analyst',
-                image:require('../images/taseco.jpg'),
+                image:require('../../images/taseco.jpg'),
                 location:'Da Nang'
             },  
            
             ],
             number_task:10,
-            skip:0,
+            skip:1,
             datasource :[],
-            _id:'',
-            price:''
+            datasourcenew:[]
         }
-        this.socket.on('sv-get-default-tasks',function(data){
+        this.socket.on('sv-get-news-feed',function(data){
+            var list=data.data
+            if(data.success==true){ 
+                e.setState({
+                    datasourcenew:list,  
+                    isLoading:false    
+                }) 
+              console.log(JSON.stringify(list))
+            }
+            
+        })
+       this.socket.on('sv-get-default-tasks',function(data){
             var listdata=data.data
             if(data.success==true){ 
                 e.setState({
-                    datasource:listdata,
-                    
+                    datasource:listdata,  
+                    isLoading:false    
                 }) 
-                console.log(JSON.stringify(listdata))
-               
             }
-        })
-        this.apply=this.applyJob.bind(this)
-        this.socket.on("sv-apply-job",function(data){
-            if(data){
-                console.log(JSON.stringify(data))
-            }
+            
         })
     }
+   
     componentDidMount= async()=> {  
         const token = await AsyncStorage.getItem("token")
         const decode=jwt_decode(token)
         this.setState({
           first_name:decode.first_name,
           email:decode.email,
+          avatar:decode.avata,
+          secret_key:token,
+          
         })
         const gettask={
             number_task:this.state.number_task,
             skip:this.state.skip
         }
         this.socket.emit("cl-get-default-tasks",gettask)
+        const getnewtask={
+            secret_key:this.state.secret_key,
+            number_task:this.state.number_task,
+            skip:this.state.skip
+        }
+        this.socket.emit("cl-get-news-feed",getnewtask)
       }
-    
-    applyJob=async()=>{
-        const token = await AsyncStorage.getItem("token")
-        const apply={
-            secret_key:token,
-           
-            
-        }
-        this.socket.emit("cl-apply-job",apply)
-    }
-    render(){
-        const Bulletina=({_id,created_time,task_description,task_title,price,introduction,floor_price,ceiling_price})=>{
-            return(
-                     <View style={{backgroundColor:'#71B7B7',
-                        marginHorizontal:10,
-                        marginVertical:10,
-                        borderRadius:8,
-                        paddingVertical:40,
-                        paddingHorizontal:15,
-                        marginTop:30,
-                        marginBottom:20,
-                        height:250,
-                        shadowOffset: { width: 0, height: 0 },
-                        shadowColor: 'green',
-                        shadowOpacity: 0.1, 
-                        elevation: 4,
-                }}>
-                    <View style={{marginTop:-60}}> 
-                            <Text>{created_time}</Text>
-                    </View>
-                    <View style={{flexDirection:'column',flex:1,marginLeft:10,fontWeight:'bold'}}>
-                        
-                        <Text style={{fontWeight:'bold',fontSize:25,fontStyle:'italic'}}>{task_title}</Text>
-                        <Text >{task_description}</Text>
-                        <Text>{_id}</Text>
-                       
-                    </View>
-                    
-                    <View style={{flexDirection:'row',marginLeft:-11    }}>
-                        <TouchableOpacity style={styles.iconBulliten}  onPress={() => alert('Follow')}>
-                            <AntDesign style={{marginRight:5}} name="pluscircle" size={30} color="#71B7B7" /> 
-                            <Text>Follow</Text>
-                        </TouchableOpacity>         
-                        <TouchableOpacity style={styles.iconBulliten} onPress={this.apply}>
-                             <Ionicons style={{marginRight:5}} name="md-checkmark-circle" size={30} color="#71B7B7" />
-                             <Text>Apply</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.iconBulliten} onPress={() => alert('save')}>
-                            <Entypo style={{marginRight:5}} name="save" size={30} color="#71B7B7" />
-                           
-                            <Text>Save</Text>
-                        </TouchableOpacity>                                                    
-                    </View>
-                </View>
-               
-                
-            )
-        }
-        return( 
-            <View style={styles.container}>
-                <Search/>
-                <ScrollView > 
+    renderHeader=()=>{
+        return(
+            <SafeAreaView  style={styles.container}>
+                <View>
                     <View style={styles.viewimage}>
-                        <Image style={styles.image} source={girl}/>
+                        <Swiper>
+                            <Image style={styles.image} source={job}/>
+                            <Image style={styles.image} source={girl}/>
+                            <Image style={styles.image} source={header}/>
+                        </Swiper>
                         <View style={styles.text1}>
                             <Text style={{fontStyle:'italic'}}>The suitable of for you today !!!</Text>
                         </View>
                         <View style={styles.text}>
                             <Text style={{fontWeight:'bold',fontSize:20}}>Hi </Text>
                             <Text style={{fontSize:20}}>{this.state.first_name} !</Text>
-                 
                         </View>
-                   </View> 
-                 
-                   <View style={{flexDirection:'row'}}>
-                    <View style={styles.texttitle}>
-                        <Text style={{fontWeight:'bold',fontSize:18,color:'#71B7B7',fontStyle:'italic'}}>Recommend Work</Text>
-            
-                    </View>
                    </View>
-                   
+                   <View style={{flexDirection:'row'}}>
+                        <View style={styles.texttitle}>
+                            <Text style={{fontWeight:'bold',fontSize:18,color:'#71B7B7',fontStyle:'italic'}}>Recommend Work</Text>
+                        </View>
+                   </View>
                    <View style={styles.recommend}>
                         <ScrollView horizontal={true}>
                             <View style={{flexDirection:'row'}}>
@@ -197,42 +159,88 @@ class Home extends Component{
                                 image={task.image}
                                 location={task.location}
                                 />)}
-                                <TouchableOpacity onPress={()=>this.props.navigation.push("Listrecommend")} style={{marginTop:100,marginRight:30,marginLeft:10}} >
+                                <TouchableOpacity onPress={()=>this.props.navigation.push("searchuser")} style={{marginTop:100,marginRight:30,marginLeft:10}} >
                                     <MaterialCommunityIcons  name="skip-next-circle" size={50} color='#ffff'/>
                                 </TouchableOpacity>
                             </View>
                         </ScrollView>
                    </View>
-                   <View style={{marginLeft:10,marginTop:10,width:130,borderBottomWidth:2,borderBottomColor:'#71B7B7'}}>
+                   <View style={{marginLeft:10,marginTop:10,width:130,marginBottom:10,borderBottomWidth:2,borderBottomColor:'#71B7B7'}}>
                        <Text style={{fontWeight:'bold',fontSize:18,color:'#71B7B7',fontStyle:'italic'}}>Bulletin Board</Text>
                    </View>
-                   <View style={{marginTop:10}}>                      
-                            {this.state.data.map((task,index) =>                                                              
-                                            <Bulletin key={index} name={task.name}
-                                            image={task.image} 
-                                            location={task.location}
-                                            />
-                                
-                                )
-                            }              
-                   </View>   
-                   <View style={{marginTop:10}}>                      
-                            {this.state.datasource.map((task,index) =>                                                              
-                                            <Bulletina key={index} created_time={task.created_time}
-                                            task_description={task.task_description} 
-                                            task_title={task.task_title} _id={task.id} introduction={task.introduction}
-                                            ceiling_price={task.ceiling_price} floor_price={task.floor_price} 
-                                            />
-                                
-                                )
-                            }              
-                   </View>   
-                  
-                </ScrollView>    
+                </View>
+           </SafeAreaView>
+        )
+    }
+    refresh(){
+        const gettask={
+            number_task:this.state.number_task,
+            skip:2
+        }
+        this.socket.emit("cl-get-default-tasks",gettask)
+    }
+    render(){
+        return( 
+        <View style={styles.container}>
+            <Search/>
+            {this.state.isLoading
+            ?
+            <SafeAreaView >
+                <View>
+                    <View style={styles.viewimage}>
+                    
+                        <View style={styles.text1}>
+                            <Text style={{fontStyle:'italic'}}>The suitable of for you today !!!</Text>
+                        </View>
+                        <View style={styles.text}>
+                            <Text style={{fontWeight:'bold',fontSize:20}}>Hi </Text>
+                        </View>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                            <View style={styles.texttitle}>
+                                <Text style={{fontWeight:'bold',fontSize:18,color:'#71B7B7',fontStyle:'italic'}}>Recommend Work</Text>
+                            </View>
+                    </View>
+                    <View style={styles.recommend}>
+                        <ScrollView horizontal={true}>
+                            <View style={{flexDirection:'row'}}>
+                                <View style={styles.loading}>
+                                </View>
+                                <View style={styles.loading}>
+                                </View>
+                                <View style={styles.loading}>
+                                </View>
+                            </View>
+                        </ScrollView>
+                   </View>
+                    <View style={{marginLeft:10,marginTop:10,width:130,marginBottom:10,borderBottomWidth:2,borderBottomColor:'#71B7B7'}}>
+                        <Text style={{fontWeight:'bold',fontSize:18,color:'#71B7B7',fontStyle:'italic'}}>Bulletin Board</Text>
+                    </View>
+                </View>
+            </SafeAreaView>
+           /* <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                <ActivityIndicator size='large'  animating />
+            </View>*/
+            :
+
+            <View style={styles.container}>
+                <FlatList data={this.state.datasource}
+                    ListHeaderComponent={this.renderHeader}
+                    renderItem={({item,index})=>{
+                    return(
+                        <FlatListdata item={item} index={index}></FlatListdata>
+                    )
+                }}
+                keyExtractor={(item)=>item._id.toString()}
+                ItemSeparatorComponent={this.ItemSeparatorComponent}
+                showsHorizontalScrollIndicator={false}
+                refreshing={this.state.refreshing}
+                onRefresh={()=>{this.refresh()}}
+                >
+                </FlatList>
             </View>
-           
-               
-           
+        }
+       </View>       
         )
     }
 }   
@@ -336,6 +344,22 @@ const styles = StyleSheet.create({
         elevation: 4,
         borderColor:'#71B7B7'
     },
+    loading:{
+        backgroundColor:'#EEEEEE',
+        marginHorizontal:10,
+        marginVertical:10,
+        borderRadius:8,
+        paddingVertical:10,
+        paddingHorizontal:15,
+        marginTop:20,
+        marginBottom:20,
+        shadowOffset: { width: 0, height: 0 },
+        shadowColor: 'green',
+        shadowOpacity: 0.1,
+        elevation: 4,
+        height:200,
+        width:140
+    },
     nof:{
         backgroundColor:'#71B7B7',
         height:250,
@@ -380,7 +404,7 @@ const styles = StyleSheet.create({
         marginVertical:10,
         elevation:3,
         borderTopColor:'#71B7B7',
-        backgroundColor:'#ffff'
+        backgroundColor:'#EEEEEE'
     },
     searching:{
         backgroundColor:'white',

@@ -1,4 +1,5 @@
 import React from 'react'
+
 // Import react-native components
 import {
   SafeAreaView,
@@ -27,7 +28,7 @@ const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
 // Declare component 
-class Search extends React.Component {
+class SearchMessage extends React.Component {
   
   constructor(props){
     super(props)
@@ -130,30 +131,19 @@ class Search extends React.Component {
           <View style={styles.header}>
             <View style={styles.header_inner}>
               <View>
-                  <Text style={{width: 152, height: 30,fontSize:20,fontWeight:'bold',color:'#2d7474'}}>
-                        TASKEEPER
-                  </Text>
-                
+                <TouchableOpacity  style={{flexDirection:'row'}}onPress={()=>this.props.navigation.navigate("SearchMessage")}>
+                    <Ionicons style={{marginTop:1}} name="ios-arrow-back" size={28} color="#71B7B7" />
+                    <Text style={{width: 152, height: 30,fontSize:20,fontWeight:'bold',color:'#2d7474'}}>History job</Text>
+                </TouchableOpacity>
               </View>
-              <View style={{flexDirection:'row',marginLeft:145}}>
-                <TouchableHighlight
-                  activeOpacity={1}
-                  underlayColor={"#ccd0d5"}
-                  onPress={this._onFocus}
-                  style={styles.search_icon_box}
-                >
-                  <AntDesign name="search1" size={22} color="#000000" />
-                </TouchableHighlight>
-                <TouchableHighlight
-                  activeOpacity={1}
-                  underlayColor={"#ccd0d5"}
-                
-                  style={styles.search_icon_box}
-                >
-                  <AntDesign name="message1" size={22} color="#000000" />
-                </TouchableHighlight>
-              </View>
-              
+              <TouchableHighlight
+                activeOpacity={1}
+                underlayColor={"#ccd0d5"}
+                onPress={this._onFocus}
+                style={styles.search_icon_box}
+              >
+                <AntDesign name="search1" size={22} color="#000000" />
+              </TouchableHighlight>
               <Animated.View
                 style={[ styles.input_box, {transform: [{translateX: this._input_box_translate_x}] } ]}
               >
@@ -167,7 +157,7 @@ class Search extends React.Component {
                 </Animated.View>
                 <TextInput 
                   ref="input"
-                  placeholder="Search "
+                  placeholder="Search Google Map"
                   clearButtonMode="always"
                   value={this.state.keyword}
                   onChangeText={(value) => this.setState({keyword: value}) }
@@ -186,35 +176,35 @@ class Search extends React.Component {
                 ?
                   <View style={styles.image_placeholder_container}>
                     <Image 
-                      source={require('../images/search.jpg')} 
+                      source={require('../../images/map.png')} 
                       style={styles.image_placeholder}
                     />
                     <Text style={styles.image_placeholder_text}>
                       Enter a few words{"\n"}
-                      to search on Taskeeper
+                      to search on Google Map
                     </Text>
                   </View>
                 :
                   <ScrollView >
                     <View style={styles.search_item}>
                       <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                      <Text>developer PHP 1</Text>
+                      <Text>40 nguyên huy tưởng</Text>
                     </View>
                     <View style={styles.search_item}>
                     <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                      <Text>developer PHP 2</Text>
+                      <Text>33 trần hưng đạo</Text>
                     </View>
                     <View style={styles.search_item}>
                     <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                      <Text>developer PHP 3</Text>
+                      <Text>01 trần phú</Text>
                     </View>
                     <View style={styles.search_item}>
                     <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                      <Text>developer PHP 4</Text>
+                      <Text>254 nguyễn văn linh</Text>
                     </View>
                     <View style={styles.search_item}>
                     <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                      <Text>developer PHP 5</Text>
+                      <Text>15 tôn đức thắng</Text>
                     </View>
                   </ScrollView>
               }
@@ -226,12 +216,12 @@ class Search extends React.Component {
   }
 }
 
-export default Search
+export default SearchMessage
 
 const styles = StyleSheet.create({
   header_safe_area: {
     zIndex: 1000,
-    marginTop:20,
+    marginTop:35,
   },
   header: {
     height: 50,
@@ -241,6 +231,7 @@ const styles = StyleSheet.create({
     flex:1,
     overflow: 'hidden',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     position: 'relative'
   },
@@ -283,7 +274,8 @@ const styles = StyleSheet.create({
     top:0,
     left:0,
     backgroundColor: '#faf9f9',
-    width:width-32
+    width:width-34,
+    borderRadius:10
    
   },
   back_icon_box: {
@@ -326,11 +318,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    marginTop:'-50%'
+    marginTop:'-10%',
+    
   },
   image_placeholder: {
-    width: 150,
-    height: 113,
+    width: 190,
+    height: 170,
     alignSelf: 'center'
   },
   image_placeholder_text: {

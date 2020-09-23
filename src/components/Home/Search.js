@@ -1,5 +1,4 @@
 import React from 'react'
-
 // Import react-native components
 import {
   SafeAreaView,
@@ -9,11 +8,12 @@ import {
   TextInput,
   Text,
   Image,
+  FlatList,
   TouchableHighlight,
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-
+import SearchTrending from './SearchTrending'
 // Import react-native-vector-icons
 // from "https://github.com/oblador/react-native-vector-icons"
 
@@ -23,20 +23,31 @@ import { AntDesign } from '@expo/vector-icons';
 import Animated, { Easing } from 'react-native-reanimated'
 const { Value, timing } = Animated
 import { Ionicons } from '@expo/vector-icons'; 
+import io from 'socket.io-client/dist/socket.io'
+import AsyncStorage from '@react-native-community/async-storage';
+import {createStackNavigator} from '@react-navigation/stack';
+import SearchTask from '../Home/SearchTask';
+import SearchUser from '../Home/SearchUser';
+const SearchStack = createStackNavigator();
 // Calculate window size
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
-
+var e;
 // Declare component 
-class SearchMap extends React.Component {
+class Search extends React.Component {
   
   constructor(props){
     super(props)
-
+    this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
     // state
+    e=this;
     this.state = {
       isFocused: true,
-      keyword: ''
+      isLoading:true, 
+      search_string:'',
+      key:'',
+      data:[],
+      dataHistory:""
     }
 
     // animation values
@@ -44,8 +55,27 @@ class SearchMap extends React.Component {
     this._back_button_opacity = new Value(0)
     this._content_translate_y = new Value(height)
     this._content_opacity = new Value(0)
+    this.searchAuto=this.onSearch.bind(this)
+    this.searchtask=this.searchTask.bind(this)
+    this.socket.on("sv-search-autocomplete",function(data){
+       var list=data.data
+      if(data.success==false){
+        console.log(JSON.stringify(data.errors))
+      }else if(data.success==true){
+        e.setState({
+          data:list
+        })
+      }
+    })
+    this.socket.on("sv-search-task",function(data){
+      var list=data.data
+      if(data.success==false){
+        console.log(JSON.stringify(data))
+      }else if(data.success==true){
+        alert('tinh sau')
+      }
+    })
   }
-
   _onFocus = () => {
     // update state
     this.setState({isFocused: false})
@@ -123,7 +153,33 @@ class SearchMap extends React.Component {
     this.refs.input.blur();
 
   }
-  
+ 
+  onSearch(search_string){
+    this.setState({
+      key:search_string
+    })
+    const search={
+      search_string:search_string
+    }
+    this.socket.emit("cl-search-autocomplete",search)
+  }
+  renderItem=({item})=>{
+      return(
+        <TouchableOpacity onPress={()=>this.props.navigation.navigate("SearchUser")}>
+        <View style={styles.search_item}>
+          <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
+            <Text>{item.query_string}</Text>
+        </View>
+        </TouchableOpacity>
+      )
+     
+  }
+  searchTask(){
+    const searchTask={
+      search_string:this.state.search_string
+    }
+    this.socket.emit("cl-search-task",searchTask)
+  }
   render(){
     return (
       <>
@@ -132,18 +188,28 @@ class SearchMap extends React.Component {
             <View style={styles.header_inner}>
               <View>
                   <Text style={{width: 152, height: 30,fontSize:20,fontWeight:'bold',color:'#2d7474'}}>
-                       Google Map
+                        TASKEEPER
                   </Text>
-                
               </View>
-              <TouchableHighlight
-                activeOpacity={1}
-                underlayColor={"#ccd0d5"}
-                onPress={this._onFocus}
-                style={styles.search_icon_box}
-              >
-                <AntDesign name="search1" size={22} color="#000000" />
-              </TouchableHighlight>
+              <View style={{flexDirection:'row',marginLeft:145}}>
+                <TouchableHighlight
+                  activeOpacity={1}
+                  underlayColor={"#ccd0d5"}
+                  onPress={this._onFocus}
+                  style={styles.search_icon_box}
+                >
+                  <AntDesign name="search1" size={22} color="#000000" />
+                </TouchableHighlight>
+                <TouchableHighlight
+                  activeOpacity={1}
+                  underlayColor={"#ccd0d5"}
+                  onPress={()=>this.props.navigation.navigate("searchuser")}
+                  style={styles.search_icon_box}
+                >
+                  <AntDesign name="message1" size={22} color="#000000" />
+                </TouchableHighlight>
+              </View>
+              
               <Animated.View
                 style={[ styles.input_box, {transform: [{translateX: this._input_box_translate_x}] } ]}
               >
@@ -157,11 +223,11 @@ class SearchMap extends React.Component {
                 </Animated.View>
                 <TextInput 
                   ref="input"
-                  placeholder="Search Google Map"
+                  placeholder="Search "
                   clearButtonMode="always"
-                  value={this.state.keyword}
-                  onChangeText={(value) => this.setState({keyword: value}) }
-                  style={styles.input}
+                  onChangeText={(search_string)=>this.onSearch(search_string)}
+                  style={styles.input} 
+                  onSubmitEditing={this.searchtask}
                 />
               </Animated.View>
             </View>
@@ -170,44 +236,17 @@ class SearchMap extends React.Component {
         <Animated.View style={[styles.content, { opacity: this._content_opacity, transform: [{translateY: this._content_translate_y }] }]}>
           <SafeAreaView style={styles.content_safe_area}>
             <View style={styles.content_inner}>
-              <View style={styles.separator} />
-              {
-                this.state.keyword === ''
-                ?
-                  <View style={styles.image_placeholder_container}>
-                    <Image 
-                      source={require('../images/map.png')} 
-                      style={styles.image_placeholder}
+              <View style={styles.separator} />  
+              { !this.state.key
+                  ? 
+                 <SearchTrending/>
+              :
+                <FlatList
+                      data={this.state.data}
+                      renderItem={this.renderItem}
+                      keyExtractor={(item)=>item._id.toString()}
                     />
-                    <Text style={styles.image_placeholder_text}>
-                      Enter a few words{"\n"}
-                      to search on Google Map
-                    </Text>
-                  </View>
-                :
-                  <ScrollView >
-                    <View style={styles.search_item}>
-                      <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                      <Text>40 nguyên huy tưởng</Text>
-                    </View>
-                    <View style={styles.search_item}>
-                    <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                      <Text>33 trần hưng đạo</Text>
-                    </View>
-                    <View style={styles.search_item}>
-                    <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                      <Text>01 trần phú</Text>
-                    </View>
-                    <View style={styles.search_item}>
-                    <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                      <Text>254 nguyễn văn linh</Text>
-                    </View>
-                    <View style={styles.search_item}>
-                    <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                      <Text>15 tôn đức thắng</Text>
-                    </View>
-                  </ScrollView>
-              }
+               }      
             </View>
           </SafeAreaView>
         </Animated.View>
@@ -216,12 +255,38 @@ class SearchMap extends React.Component {
   }
 }
 
-export default SearchMap
-
+export default Search
+const SearchStackScreen = ({navigation}) => {
+  
+  return (
+    <SearchStack.Navigator
+      screenOptions={{
+        headerStyle: {
+         
+          elevation: 0, // Android
+        },
+      
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <SearchStack.Screen
+        name="SearchTask"
+        component={SearchTask}
+        options={{headerShown: false}}
+      />
+       <SearchStack.Screen
+        name="SearchUser"
+        component={SearchUser}
+        options={{headerShown: false}}
+      />
+    </SearchStack.Navigator>
+  );
+};
 const styles = StyleSheet.create({
   header_safe_area: {
     zIndex: 1000,
-    marginTop:20,
+    marginTop:35,
   },
   header: {
     height: 50,
@@ -231,7 +296,6 @@ const styles = StyleSheet.create({
     flex:1,
     overflow: 'hidden',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     position: 'relative'
   },
@@ -274,8 +338,7 @@ const styles = StyleSheet.create({
     top:0,
     left:0,
     backgroundColor: '#faf9f9',
-    width:width-34,
-    borderRadius:10
+    width:width-32,
    
   },
   back_icon_box: {
@@ -288,12 +351,12 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 40,
+    height: 35,
     backgroundColor: '#e4e6eb',
     borderRadius: 16,
     paddingHorizontal: 16,
     marginLeft:-20,
-    fontSize: 15
+    fontSize: 15,
   },
   content: {
     width: width,
@@ -318,12 +381,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    marginTop:'-10%',
-    
+    marginTop:'-50%'
   },
   image_placeholder: {
-    width: 190,
-    height: 170,
+    width: 150,
+    height: 113,
     alignSelf: 'center'
   },
   image_placeholder_text: {
@@ -337,7 +399,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#e6e4eb',
-    marginLeft: 16
+    marginLeft: 16,
+    marginTop:20
   },
   item_icon: {
     marginRight: 15

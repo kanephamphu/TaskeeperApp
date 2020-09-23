@@ -2,11 +2,9 @@ import React from 'react';
 import MapView, {PROVIDER_GOOGLE,Marker,Callout} from "react-native-maps";
 import * as Permissions from 'expo-permissions';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import Search from './Search';
-import SearchMap from './SearchMap';
-import market from '../images/map_marker.png';
+import SearchMap from '../Home/SearchMap';
 
-const locations = require('../locales/locations.json')
+const locations = require('../../locales/locations.json')
 const width = Dimensions.get('window').width
 export default class New extends React.Component {
   constructor(props){
@@ -38,7 +36,6 @@ export default class New extends React.Component {
            <MapView provider={PROVIDER_GOOGLE} 
             style={styles.mapStyle} 
             followsUserLocation
-           
             initialRegion= {{
               latitude,
               longitude,
@@ -50,7 +47,7 @@ export default class New extends React.Component {
                 latitude,
                 longitude,
                }}
-               image={require('../images/map_marker.png')}
+               image={require('../../images/map_marker.png')}
                title='FPT Shop'
                description='Công Ty phần mềm số 1 miền Trung'
                />

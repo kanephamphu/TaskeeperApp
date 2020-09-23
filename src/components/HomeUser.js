@@ -6,11 +6,12 @@ import { Fontisto } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import ScrollableTabView,{DefaultTabBar} from 'react-native-scrollable-tab-view';
-import ProfileUser from './ProfileUser';
-import TaskPage from './TaskPage';
-import HistoryJob from './HistoryJob';
-import update from './ChangeProfileUser';
+import ProfileUser from './Menu/ProfileUser';
+import TaskPage from './Menu/TaskPage';
+import HistoryJob from './Menu/HistoryJob';
+import update from './Menu/ChangeProfileUser';
 import { Ionicons } from '@expo/vector-icons'; 
+import StackSearch from '../components/Home/SearchStackScreen'
 import {createStackNavigator} from '@react-navigation/stack';
 const { width,height } = Dimensions.get("window");
 const ProfileStack = createStackNavigator();
@@ -33,7 +34,7 @@ export default class HomeUser extends React.Component {
             }}
           />}
         >
-          <ProfileStackScreen tabLabel='Information' props={this.props}/>
+          <StackSearch tabLabel='Information' props={this.props}/>
           <HistoryJob tabLabel='History Job' props={this.props}/>
           <TaskPage tabLabel='Task Page'props={this.props}/>
         </ScrollableTabView>
@@ -46,6 +47,7 @@ const ProfileStackScreen = ({navigation}) => {
   return (
     <ProfileStack.Navigator
       screenOptions={{
+        
         headerStyle: {
          
           elevation: 0, // Android

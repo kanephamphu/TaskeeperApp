@@ -13,8 +13,8 @@ import {
     Keyboard
 } from 'react-native'
 
-import background from '../images/anh1.png'
-import logo from '../images/logonew3.png'
+import background from '../../images/anh1.png'
+import logo from '../../images/logonew3.png'
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
@@ -180,6 +180,7 @@ export default class Register extends Component{
                                 placeholder={'Phone'} 
                                 onChangeText={(phone_number)=> this.setState({phone_number})}
                                 value={this.state.phone_number}
+                                keyboardType='numeric'
                                 
                                 placeholderTextColor={'#2d7474'}
                             >
@@ -199,6 +200,7 @@ export default class Register extends Component{
                                 onChangeText={(email)=> this.setState({email})}
                                 value={this.state.email}                      
                                 placeholderTextColor={'#2d7474'}
+                                
                                 keyboardType='email-address'
 
                             >

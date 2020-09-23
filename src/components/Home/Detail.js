@@ -2,7 +2,6 @@ import React,{Component} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,TextInput,FlatList,Image,ScrollView, Dimensions,LinearGradient,SafeAreaView} from 'react-native'
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io'
-import girl from '../images/abc.png';
 import { AntDesign } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
@@ -10,7 +9,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import AsyncStorage from '@react-native-community/async-storage';
 const {height,width} =Dimensions.get('window');
-class Listrecommend extends Component{
+class Detail extends Component{
     constructor(props){
         super(props);
         this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
@@ -26,44 +25,10 @@ class Listrecommend extends Component{
            data:[{
                key:'1',
                name:'Business Analyst',
-               image:require('../images/fourdigit.png'),
+               image:require('../../images/fourdigit.png'),
                location:'Da Nang'
            },
-            {
-                key:'2',
-                name:'Business Analyst',
-                image:require('../images/cmc.png'),
-                location:'Da Nang'
-            },
-            {
-                key:'3',
-                name:'Business Analyst',
-                image:require('../images/nexle.png'),
-                location:'Da Nang'
-            },{
-                key:'4',
-                name:'Business Analyst',
-                image:require('../images/taseco.jpg'),
-                location:'Da Nang'
-            },
-            {
-                key:'5',
-                name:'Business Analyst',
-                image:require('../images/taseco.jpg'),
-                location:'Da Nang'
-            },
-            {
-                key:'6',
-                name:'Business Analyst',
-                image:require('../images/taseco.jpg'),
-                location:'Da Nang'
-            },
-            {
-                key:'7',
-                name:'Business Analyst',
-                image:require('../images/taseco.jpg'),
-                location:'Da Nang'
-            },
+    
            
         ]
         }
@@ -78,7 +43,7 @@ class Listrecommend extends Component{
                     </TouchableOpacity>                                             
                             <TextInput
                                 style={styles.searching}
-                                placeholder="Searching recommend work..." 
+                                placeholder="Searching ..." 
                                 placeholderTextColor='#71B7B7'
                                 underlineColorAndroid="transparent"
                                 />                                        
@@ -107,8 +72,11 @@ class Listrecommend extends Component{
     }
 }
 const Bulletin=({key ,name,image,location})=>{
-    return(  
-             <View style={{backgroundColor:'#71B7B7',    
+    return(
+       
+       
+             <View style={{backgroundColor:'#71B7B7',
+            
             marginHorizontal:10,
             marginVertical:10,
             borderRadius:8,
@@ -152,7 +120,7 @@ const Bulletin=({key ,name,image,location})=>{
     )
 }
 
-export default Listrecommend;
+export default Detail;
 const styles = StyleSheet.create({
     container:{
         flex:1,

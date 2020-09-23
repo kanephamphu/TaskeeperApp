@@ -1,8 +1,8 @@
 import React,{Component} from 'react'
 import {View,Text,StyleSheet,Animated,Image,ActivityIndicator,ImageBackground} from 'react-native'
 import {Actions} from 'react-native-router-flux'
-import Logo from '../images/logonew3.png';
-import background from '../images/anh1.png';
+import Logo from '../../images/logonew3.png';
+import background from '../../images/anh1.png';
 
 
 class Loadingscene extends Component{

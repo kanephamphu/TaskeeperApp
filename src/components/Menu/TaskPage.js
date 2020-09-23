@@ -11,25 +11,25 @@ class TaskPage extends Component{
             data:[{
                 key:'1',
                 name:'Business Analyst',
-                image:require('../images/fourdigit.png'),
+                image:require('../../images/fourdigit.png'),
                 location:'Da Nang',
             },
              {
                  key:'2',
                  name:'Business Analyst',
-                 image:require('../images/cmc.png'),
+                 image:require('../../images/cmc.png'),
                  location:'Da Nang',
              },
              {
                 key:'3',
                 name:'Business Analyst',
-                image:require('../images/cmc.png'),
+                image:require('../../images/cmc.png'),
                 location:'Da Nang',
             },
             {
                 key:'3',
                 name:'Business Analyst',
-                image:require('../images/cmc.png'),
+                image:require('../../images/cmc.png'),
                 location:'Da Nang',
             },
             
