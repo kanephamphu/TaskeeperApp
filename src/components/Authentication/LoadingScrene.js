@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import {Text,StyleSheet,Animated,Image,ImageBackground} from 'react-native'
-import Logo from '../../images/logonew3.png';
+import Logo from '../../images/logowhite.png';
 import background from '../../images/anh1.png';
 
 
@@ -48,7 +48,7 @@ class Loadingscene extends Component{
                         inputRange:[0,1],
                         outputRange:[80,0],
                         useNativeDriver:false  
-                    })
+                    }),borderWidth:1,borderColor:"#2d7474",borderRadius:3
                 }}>
                     <Image style={styles.image} source={Logo}/>
                 </Animated.View>
@@ -84,5 +84,6 @@ const styles = StyleSheet.create({
     image:{
        height:70,
        width:70,
+       borderRadius:3
     }
   });

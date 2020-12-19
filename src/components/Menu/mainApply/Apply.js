@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import io from 'socket.io-client/dist/socket.io'
 import RenderItem from '../mainApply/RenderItem'
 const { height, width } = Dimensions.get('window');
-import Swipeout from 'react-native-swipeout'
 var e;
 export default class Apply extends React.Component {
   constructor(props) {
@@ -22,7 +21,8 @@ export default class Apply extends React.Component {
         name: 'Lê Ngân',
         job: 'Business Analyst',
       },
-      count:0
+      count:0,
+     
     }
     this.refreshFlatlist=this.refreshFlatlist.bind(this)
       this.socket.on("sv-get-applied-job", function (data) {
@@ -37,8 +37,11 @@ export default class Apply extends React.Component {
       }
     })
   };
+  componentDidMount = async () => {
+    this.refreshFlatlist()
+  }
   refreshFlatlist= async () =>  {
-    var token = await AsyncStorage.getItem('token')
+    const token = await AsyncStorage.getItem('token')
     this.setState({
       secret_key: token
     })
@@ -47,9 +50,7 @@ export default class Apply extends React.Component {
     }
     this.socket.emit("cl-get-applied-job", apply)
   }
-  componentDidMount = async () => {
-   this.refreshFlatlist()
-  }
+
   render() {
    
     return (

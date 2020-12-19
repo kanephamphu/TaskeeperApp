@@ -29,16 +29,13 @@ export default class RenderItem extends React.Component {
 
   }
   componentDidMount = async () => {
-    const token = await AsyncStorage.getItem('token')
-    this.setState({
-      secret_key: token,
-      task_id: this.props.item._id,
-    })
+   this.props.parenFlastlist();
   }
-  deleteApplyjob (){
+  deleteApplyjob = async () => {
+    const token = await AsyncStorage.getItem('token')
     const deleteApply = {
-      secret_key: this.state.secret_key,
-      task_id: this.state.task_id
+      secret_key: token,
+      task_id:this.props.item._id
     }
     this.socket.emit("cl-delete-apply-job", deleteApply)
     this.props.parenFlastlist();
@@ -54,27 +51,37 @@ export default class RenderItem extends React.Component {
           }
          ]
  }
+ var task_title = this.props.item.task_title;
+   
+ var count = task_title.length;
+
+ if (count >= 25) {
+     task_title = task_title.slice(0, 20)+"...";
+ }
     return (
       <View style={styles.image_container}>
-        <View style={{ justifyContent: 'center', marginLeft: 20 }}>
+        <View style={{justifyContent: 'space-between',flexDirection: 'row'}}>
+        <View style={{ justifyContent: 'center'}}>
           <AntDesign name="clockcircleo" size={35} color="#009387" />
         </View>
         <View>
-          <View style={{ flexDirection: 'column', marginLeft: 20, alignItems: 'flex-start', width: 170 }}>
+          <View style={{ flexDirection: 'column', marginLeft: 20, alignItems: 'flex-start'}}>
             <View>
               <Text style={styles.time}>{this.props.item.task_type}</Text>
             </View>
             <View>
-              <Text style={styles.company}>{this.props.item.task_title}</Text>
+              <Text style={styles.company}>{task_title}</Text>
             </View>
           </View>
         </View>
+        </View>
+       
         <TouchableOpacity onPress={() => Alert.alert(
           '',
           'Do you want to cancel this jobs ?', [
           { text: 'No', onPress: () => console.log('cancel'), style: 'cancle' }, { text: 'Yes', onPress: () => this.deleteApplyjob()  }
         ], { cancelable: true }
-        )} style={{ marginLeft: 60 }} >
+        )}  >
           <Entypo name="dots-three-vertical" size={24} color="#009387" />
         </TouchableOpacity>
        
@@ -100,9 +107,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 10,
     height: 90,
-    width: 350,
+    width:width-100,
     backgroundColor: 'rgba(200,200,200,0.3)',
-    margin: 20
+    margin: 20,
+    justifyContent: 'space-between'
   },
   time: {
     fontWeight: 'bold',

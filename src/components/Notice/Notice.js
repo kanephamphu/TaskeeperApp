@@ -30,13 +30,14 @@ class Notice extends Component {
                 console.log(JSON.stringify(data))
             } else if (data.success == true) {
                 e.setState({
-                    dataSource: list,
+                    dataSource: list.reverse(),
                     isLoading:true,
                 })
-                console.log(JSON.stringify(list))
+             
                
             }
         })
+    
         this.socket.on("sv-readed-all-notification", function (data) {
             if (data.success == false) {
                 console.log(JSON.stringify(data))
@@ -50,6 +51,9 @@ class Notice extends Component {
         this.setState({
             secret_key: token
         })
+       this.ongetNotice()
+    }
+    ongetNotice(){
         const notice = {
             secret_key: this.state.secret_key,
             number_notification: 10,
@@ -62,6 +66,7 @@ class Notice extends Component {
             secret_key: this.state.secret_key,
         }
         this.socket.emit("cl-readed-all-notification", readall)
+        this.ongetNotice()
     }
     render() {
         return (
@@ -83,11 +88,13 @@ class Notice extends Component {
                 <ActivityIndicator size='large'></ActivityIndicator>
               </View>
                 :
-                <View>
+                <View style={{marginBottom:60}}>
                     <ScrollView>
                         {this.state.dataSource.map((items) => {
                             return (
-                                <View key={items._id} style={{ flexDirection: 'row',
+                                <TouchableOpacity onPress={()=>{items.type=="followed"?this.props.navigation.navigate("Profilefriendnotice", { first_name: items.related_user_first_name, last_name:"", _id: items.related_user_id }):
+                                this.props.navigation.navigate("DetailCandidates",{task_id:items.task_id})}
+                            } key={items._id} style={{ flexDirection: 'row',
                                     height: 100,
                                     alignItems: 'center',
                                     borderBottomWidth: 1,
@@ -97,9 +104,9 @@ class Notice extends Component {
                                         <MaterialIcons name="notifications-active" size={35} color="#71B7B7" />
                                     </View>
                                     <View style={{ flexDirection: 'column', marginBottom: 10, marginTop: 5, marginLeft: 30 }}>
-                                        <View>
+                                        <View >
                                             <Text style={styles.textTitle}>
-                                            {items._id}
+                                            {items.related_user_first_name}
                                         </Text>
                                         </View>
                                         <View>
@@ -116,7 +123,7 @@ class Notice extends Component {
                                 </View>
                                         </View>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             )
                         })}
                     </ScrollView>
@@ -140,13 +147,14 @@ class Notice extends Component {
                                 <Text>Đọc tất cả thông báo !</Text>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
                                     <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
-                                        width: "50%", backgroundColor: '#71B7B7',
+                                        width: "50%", backgroundColor:'#ffff',
+                                        borderWidth:1,borderColor:'#488B8F',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
                                     }}>
-                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
+                                        <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => this.readAllnotice()} style={{
-                                        width: "50%", backgroundColor: '#71B7B7',
+                                        width: "50%", backgroundColor:'#488B8F',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 5
                                     }}>
                                         <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
@@ -228,6 +236,6 @@ const styles = StyleSheet.create({
         padding: 10,
         shadowOpacity: 0.2,
         elevation: 1,
-        marginTop: Platform.OS == 'android' ? 40 : null,
+      
     },
 })

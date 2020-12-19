@@ -2,14 +2,15 @@ import React, { Component } from 'react'
 import {
     View, Text, StyleSheet, TouchableOpacity,
     FlatList, Image, ScrollView, Dimensions,
-    SafeAreaView, Alert,
+    SafeAreaView, Alert,ActivityIndicator,StatusBar
 } from 'react-native'
 import Swiper from 'react-native-swiper';
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io'
-import girl from '../../images/abc.png';
-import job from '../../images/job.png';
-import header from '../../images/header.png';
+import girl from '../../images/home4.png';
+import job from '../../images/home2.png';
+import header from '../../images/home3.png';
+import avatar1 from '../../images/avatar11.png';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,6 +20,7 @@ import FlatListdata from './Listdata/FlatListdata'
 import AsyncStorage from '@react-native-community/async-storage';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { MaterialIcons } from '@expo/vector-icons';
+
 var e;
 const { height, width } = Dimensions.get('window');
 class Home extends Component {
@@ -40,54 +42,15 @@ class Home extends Component {
             secret_key: '',
             refreshing: false,
             show: false,
-            data: [{
-                key: '1',
-                name: 'Business Analyst',
-                image: require('../../images/dac.png'),
-                location: 'Da Nang'
-            },
-            {
-                key: '2',
-                name: 'Business Analyst',
-                image: require('../../images/fptshop.jpg'),
-                location: 'Da Nang'
-            },
-            {
-                key: '3',
-                name: 'Business Analyst',
-                image: require('../../images/logigear.jpg'),
-                location: 'Da Nang'
-            }, {
-                key: '4',
-                name: 'Business Analyst',
-                image: require('../../images/taseco.jpg'),
-                location: 'Da Nang'
-            },
-            {
-                key: '5',
-                name: 'Business Analyst',
-                image: require('../../images/taseco.jpg'),
-                location: 'Da Nang'
-            },
-            {
-                key: '6',
-                name: 'Business Analyst',
-                image: require('../../images/taseco.jpg'),
-                location: 'Da Nang'
-            },
-            {
-                key: '7',
-                name: 'Business Analyst',
-                image: require('../../images/taseco.jpg'),
-                location: 'Da Nang'
-            },
-
-            ],
-            number_task: 10,
-            skip: 0,
+            number_task:10,
+            skip: 10,
             datasource: [],
             datasourcenew: [],
-            test:'abc'
+            test:'abc',
+            datarecommend:[],
+            test:false,
+            isLoadingrecomend: false,
+            location:''
         }
         this.onProfile = this.onProfile.bind(this);
         this.onStack = this.onStack.bind(this);
@@ -154,14 +117,21 @@ class Home extends Component {
             }
         })
         this.socket.on('sv-get-news-feed', function (data) {
-            var list = data.data
-            if (data.success == true) {
-                e.setState({
-                    datasourcenew: list,
-                    isLoading: true
-                })
-               
-            }
+            if(data.success==true){
+                var list = data.data;
+                var dulieu= e.state.datasourcenew;
+                dulieu = dulieu.concat(list)
+                e.setState({datasourcenew:dulieu,isLoading:true,test:false})
+              
+                //var listdatanewfeed=e.state.datasourcenew.push(JSON.stringify(list))
+                //console.log(JSON.stringify(listdatanewfeed))
+            }    
+        })
+        this.socket.on('sv-get-recommend-task', function (data) {
+           e.setState({
+                datarecommend:data.data,
+                isLoadingrecomend:true
+            })                        
         })
     }
 
@@ -177,9 +147,14 @@ class Home extends Component {
         const getnewtask = {
             secret_key: this.state.secret_key,
             number_task: this.state.number_task,
-            skip: this.state.skip
+            skip: 0
         }
         this.socket.emit("cl-get-news-feed", getnewtask)
+        const listrecommend ={
+            secret_key: this.state.secret_key,
+        }
+        this.socket.emit('cl-get-recommend-task',listrecommend)
+      
     }
     applyJob = async (task_id, floor_price, ceiling_price) => {
         this.setState({
@@ -230,17 +205,26 @@ class Home extends Component {
                         </View>
                     </View>
                     <View style={styles.recommend}>
+                        {this.state.isLoadingrecomend==false?
+                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                         <ActivityIndicator size='large'></ActivityIndicator>
+                       </View>
+                        :
                         <ScrollView horizontal={true}>
-                            <View style={{ flexDirection: 'row' }}>
-                                {this.state.data.map((task, index) => <Task key={index} name={task.name}
-                                    image={task.image}
-                                    location={task.location}
+                            <View style={{ flexDirection: 'row',alignItems: 'center',justifyContent: 'center' }}>
+                                {this.state.datarecommend.map((task, index) => 
+                                
+                                <Task key={index} image={task.task_owner_avatar}
+                                  first_name={task.task_owner_first_name} last_name={task.task_owner_last_name} title={task.task_title}
+                                   location={task.location.formatted_address} onStack={this.onDetail} _id={task._id}
                                 />)}
-                                <TouchableOpacity style={{ marginTop: 100, marginRight: 30, marginLeft: 10 }} >
+                                <TouchableOpacity onPress={()=>this.props.navigation.navigate("Listrecommend")} style={{marginLeft:15}} >
                                     <MaterialCommunityIcons name="skip-next-circle" size={50} color='#71B7B7' />
                                 </TouchableOpacity>
                             </View>
                         </ScrollView>
+                        }
+                        
                     </View>
                     <View style={{ marginLeft: 10, marginTop: 10, width: 130, marginBottom: 10, borderBottomWidth: 2, borderBottomColor: '#71B7B7' }}>
         <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }}>Bulletin Board</Text>
@@ -253,11 +237,29 @@ class Home extends Component {
         this.props.navigation.navigate("HomeSearch", { key: search_string })
     }
     refresh() {
+        this.setState({
+            test:true,
+            skip:this.state.skip+10
+        })
         const gettask = {
-            number_task: this.state.number_task,
-            skip: this.state.skip
+            secret_key: this.state.secret_key,
+            number_task: 10,
+            skip:this.state.skip
         }
         this.socket.emit("cl-get-news-feed", gettask)
+       console.log(gettask)
+    }
+    refreshTop() {
+        this.setState({
+            datasourcenew:[]
+        })
+        const gettask = {
+            secret_key: this.state.secret_key,
+            number_task: this.state.number_task,
+            skip:0
+        }
+        this.socket.emit("cl-get-news-feed", gettask)
+       
     }
     onProfile(first, last, _id) {
         this.props.navigation.navigate("Profilefriend", { first_name: first, last_name: last, _id: _id })
@@ -271,14 +273,22 @@ class Home extends Component {
     onHistory(_id) {
         this.props.navigation.navigate("historyfriend", { _id: _id });
     }
+    renderFooter(){
+        return(
+            <View style={{backgroundColor:"#faf9f9",flex:1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size='large'></ActivityIndicator>
+            </View>
+        )
+       
+    }
     render() {
 
         return (
             <View style={styles.container}>
-                <View style={{ marginTop: 40 }}>
+                 <StatusBar />
+                <View style={{ marginTop:10}}>
                     <Search stack={this.onStack} message={this.onMessage} />
                 </View>
-
                 {this.state.isLoading === false
                     ?
                     <ScrollView>
@@ -373,32 +383,7 @@ class Home extends Component {
                                             </Text>
                                         </View>
                                     </View>
-                                    <View style={styles.bodynext} >
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <View>
-                                                <MaterialIcons name="attach-money" size={24} color="black" />
-                                            </View>
-                                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text></Text>
-                                            </View>
-                                        </View>
-                                        <View style={{ flexDirection: 'row', marginLeft: 5 }}>
-                                            <View>
-                                                <Ionicons name="md-time" size={24} color="black" />
-                                            </View>
-                                            <View style={{ marginLeft: 5, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text>Full time</Text>
-                                            </View>
-                                        </View>
-                                        <View style={{ flexDirection: 'row', marginLeft: 5 }}>
-                                            <View>
-                                                <Entypo name="location-pin" size={24} color="black" />
-                                            </View>
-                                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text>Quảng Nam </Text>
-                                            </View>
-                                        </View>
-                                    </View>
+                                   
                                     <View style={styles.bodythree}>
                                         <TouchableOpacity style={styles.iconBulliten1} >
                                             <View>
@@ -526,113 +511,82 @@ class Home extends Component {
                     :
                     <View style={styles.container}>
                         <FlatList data={this.state.datasourcenew}
-                            ListHeaderComponent={this.renderHeader}
+                           ListHeaderComponent={this.renderHeader}
                             renderItem={({ item, index }) => {
                                 return (
+                                    <View>
                                     <FlatListdata item={item} index={index}
                                         stackDetail={this.onDetail}
                                         stackProfile={this.onProfile}
                                         stackHistory={this.onHistory}
                                     ></FlatListdata>
+                                    </View>
                                 )
                             }}
+                            ListFooterComponent={this.state.test==true?this.renderFooter:null}
                             keyExtractor={(item) => item._id.toString()}
                             ItemSeparatorComponent={this.ItemSeparatorComponent}
                             showsHorizontalScrollIndicator={false}
                             refreshing={this.state.refreshing}
-                            onRefresh={() => { this.refresh() }}
-                            onEndReachedThreshold={1}
-                            onEndReached={()=>{this.setState({
-                                test:'minh nha'
-                            })}}
+                            onRefresh={() => { this.refreshTop() }}
+                            onEndReachedThreshold={0}
+                            onEndReached={()=>{this.refresh() }}
                         >
                         </FlatList>
+                        
+                       
                     </View>
                 }
             </View>
         )
     }
 }
-const Bulletin = ({ name, image, location }) => {
+
+const Task = ({ onStack,_id,first_name, image,last_name, location,title }) => {
+    var fullname = title;
+    var count = fullname.length;
+    if (count >= 25) {
+        fullname = fullname.slice(0, 25) + "....";
+    }
+    
     return (
         <View style={{
-            backgroundColor: '#71B7B7',
-            marginHorizontal: 10,
-            marginVertical: 10,
-            borderRadius: 8,
-            paddingVertical: 40,
-            paddingHorizontal: 15,
-            marginTop: 30,
-            marginBottom: 20,
-            height: 250,
-            shadowOffset: { width: 0, height: 0 },
-            shadowColor: 'green',
-            shadowOpacity: 0.1,
-            elevation: 4,
-        }}>
-            <View style={{ marginTop: -60 }}>
-                <Image source={image} style={{
-                    width: 80, marginTop: -10
-                    , height: 80, borderRadius: 50,
-                }}></Image>
-            </View>
-            <View style={{ flexDirection: 'column', flex: 1, marginLeft: 10, fontWeight: 'bold' }}>
-
-                <Text style={{ fontWeight: 'bold', fontSize: 25, fontStyle: 'italic' }}>{name}</Text>
-                <Text >{location}</Text>
-
-            </View>
-
-            <View style={{ flexDirection: 'row', marginLeft: -11 }}>
-                <TouchableOpacity style={styles.iconBulliten} onPress={() => alert('Follow')}>
-                    <AntDesign style={{ marginRight: 5 }} name="pluscircle" size={30} color="#71B7B7" />
-                    <Text>Follow</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconBulliten} onPress={() => alert('Apply')}>
-                    <Ionicons style={{ marginRight: 5 }} name="md-checkmark-circle" size={30} color="#71B7B7" />
-                    <Text>Apply</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconBulliten} onPress={() => alert('save')}>
-                    <Entypo style={{ marginRight: 5 }} name="save" size={30} color="#71B7B7" />
-
-                    <Text>Save</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-
-
-    )
-}
-const Task = ({ name, image, location }) => {
-    return (
-        <View style={{
-            marginTop: 20,
+            marginTop: 10,
             marginLeft: 16,
-            marginBottom: 20,
+            marginBottom: 10,
             borderRadius: 10,
             shadowOffset: { width: 0, height: 0 },
             shadowColor: 'green',
             shadowOpacity: 0.1,
             elevation: 4,
-            justifyContent: 'flex-end', alignItems: 'flex-end'
+            justifyContent:'center', alignItems: 'center'
         }}
         >
-            <TouchableOpacity>
-                <Image source={image} style={{ width: 160, height: height * 0.35, borderRadius: 10 }}>
+            <View >
+                <Image source={image?{uri:image}:avatar1} style={{ width: 230, height: height * 0.3, borderTopLeftRadius: 10,borderTopRightRadius:10 }}>
 
                 </Image>
-                <View style={styles.ImageOverlay}></View>
-                <View style={{ position: 'absolute', marginLeft: 10, height: "100%", alignItems: 'center', justifyContent: 'flex-end', paddingBottom: 10 }}>
-                    <Text style={{ fontSize: 18, color: 'white' }}>{name}</Text>
-                    <View style={{ flexDirection: 'row', }}>
+                <View style={styles.ImageOverlay}>
+                    <TouchableOpacity style={{paddingLeft:10}} onPress={()=>onStack(_id)}>
+                         <Text style={{ fontSize: 18, color: 'black',fontWeight: 'bold'}}>{fullname}</Text>
+                    </TouchableOpacity>
+                
+                    <View style={{ flexDirection: 'row' }}>
                         <View>
-                            <Entypo name="location-pin" size={24} color="white" />
+                            <Entypo name="location-pin" size={22} color="red" />
                         </View>
-                        <Text style={{ fontSize: 18, color: 'white' }}>{location}</Text>
+                        <Text style={{ fontSize: 18, color: 'black' }}></Text>
                     </View>
-
+                  
                 </View>
-            </TouchableOpacity>
+                <TouchableOpacity onPress={()=>onStack(_id)} style={{ width:150,height:30,backgroundColor: '#2d7474',
+                position: 'absolute',bottom:7,left:40,borderRadius:5, shadowOffset: { width: 0, height: 0 },
+                shadowColor: 'green',
+                shadowOpacity: 0.1,
+                elevation: 4,justifyContent: 'center',alignItems: 'center'}}>
+                        <Text style={{fontSize: 18, color: 'white',fontWeight: 'bold'}}>Detail</Text>
+                </TouchableOpacity>
+            </View>
         </View>
         /*<TouchableOpacity>
             <View style={{
@@ -732,8 +686,10 @@ const styles = StyleSheet.create({
     bodythree: {
         flexDirection: 'row',
         borderTopWidth: 1,
-        height: 35,
+        height: 45,
         borderColor: '#71B7B7',
+        position:'absolute',
+        bottom:0, left:15
     },
     iconBulliten2: {
         flexDirection: 'row',
@@ -793,7 +749,7 @@ const styles = StyleSheet.create({
         shadowColor: 'green',
         shadowOpacity: 0.1,
         elevation: 4,
-        width: 160, height: height * 0.35,
+        width: 230, height: height * 0.44,
     },
     nof: {
         backgroundColor: '#71B7B7',
@@ -883,7 +839,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     recommend: {
-        height: height * 0.4,
+        height: height * 0.5,
         marginTop: 10,
         marginRight: 10,
         marginLeft: 10,
@@ -897,11 +853,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end', alignItems: 'center'
     },
     ImageOverlay: {
-        width: 160, height: 81, borderRadius: 10,
-        backgroundColor: '#000000aa',
-        opacity: 0.5,
-        position: 'absolute',
-        bottom: 0
+        width: 230, height: height*0.15, borderBottomEndRadius: 10,borderBottomLeftRadius:10,
+        backgroundColor: '#ffff', alignItems: 'center',padding:5
     },
     iconBulliten1: {
         borderRightWidth: 0.5,

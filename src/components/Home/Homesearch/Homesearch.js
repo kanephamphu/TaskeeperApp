@@ -54,13 +54,14 @@ export default class Homesearch extends Component {
                 </View>
                 <Tabs tabBarUnderlineStyle={{ backgroundColor: '#2d7474' }} >
                     <Tab tabStyle={{ backgroundColor: '#faf9f9' }} activeTabStyle={{ backgroundColor: '#faf9f9' }}
-                        textStyle={{ color: 'black' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }} heading="User"  >
-                        <SearchUser stackDetail={this.onDetail}
+                        textStyle={{ color: 'black' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }} heading="Job"  >
+                        <SearchTask stackDetail={this.onDetail}
                             stackProfile={this.onProfile} search_key={key} />
                     </Tab>
                     <Tab tabStyle={{ backgroundColor: '#faf9f9' }} activeTabStyle={{ backgroundColor: '#faf9f9' }}
-                        textStyle={{ color: 'black' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }} heading="Task">
-                        <SearchTask stackDetail={this.onDetail}
+                        textStyle={{ color: 'black' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }} heading="People">
+                       
+                            <SearchUser stackDetail={this.onDetail}
                             stackProfile={this.onProfile} search_key={key} />
                     </Tab>
                 </Tabs>
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
         height: 85,
         zIndex: 1000,
         backgroundColor: '#faf9f9',
+       marginTop:-30
     },
     input: {
         flex: 1,

@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import { Image, View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, ActivityIndicator, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-community/async-storage';
-import { Entypo } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io';
 import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
 import visa from '../../../images/visacard.png'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 const { width, height } = Dimensions.get("window");
@@ -38,12 +34,12 @@ export default class Connectbank extends React.Component {
                     borderRadius:10,borderColor:'#cccc',
                     backgroundColor:' rgba(229, 229, 229, 0.51)',padding:20,justifyContent: 'center'}}>
                         <Text style={{fontSize:16}}>Link to credit card,debit card</Text>
-                        <TouchableOpacity style={{flexDirection:'row',marginTop:15}}>
+                        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Bankkinglink")} style={{flexDirection:'row',marginTop:15}}>
                             <Text style={{fontSize:18,fontWeight: 'bold'}}>Add connective</Text>
                             <MaterialIcons name="navigate-next" size={28} color="black" />
                         </TouchableOpacity>
                    </View>
-                   <View style={{margin:20}}>
+                   <View   style={{margin:20}}>
                         <Text style={{fontSize:20,fontWeight: 'bold',color: '#2D7474'}}>Linked Banks</Text>
                    </View>
                    <View style={{margin:20,height:100,borderWidth:1,
@@ -86,8 +82,8 @@ const styles = StyleSheet.create({
     header0: {
         height: height * 0.1,
         shadowOffset: { width: 0, height: 3 },
-        padding: 10,
-        marginTop: Platform.OS == 'android' ? 25 : null,
+        paddingLeft: 10,
+        paddingTop:15,
         backgroundColor: '#add2c9',
     },
     body: {

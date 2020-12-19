@@ -562,12 +562,13 @@ class Education extends Component {
                                         <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, height:height*0.4, paddingLeft: 10, marginTop: 10, borderColor: '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} value={this.state.descriptionedit} placeholder="Education description" onChangeText={(descriptionedit) => this.setState({ descriptionedit })} ></TextInput>
                                         </View>
-                                        <View style={{ flexDirection: 'row', margin: 20, justifyContent: 'space-between' }}>
-                                            <TouchableOpacity onPress={() => this.setState({ showedit: false })} style={styles.btnLogin}>
-                                                <Text style={{ fontSize: 20, color: '#ffff' }}>Cancel</Text>
+                                        <View style={{flexDirection: 'row',justifyContent: 'center', alignItems: 'center' ,marginTop: 20 }}>
+                                            <TouchableOpacity onPress={() => this.setState({ showedit: false })} style={{height:40,width:150,backgroundColor:'#488B8F',marginRight:10,borderRadius:5,justifyContent: 'center', alignItems: 'center'}}>
+                                                <Text style={{ fontWeight: 'bold',color:"white",fontSize:18}}>Cancel</Text>
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={this.onEdit} style={styles.btnLogin1}>
-                                                <Text style={{ fontSize: 20, color: '#ffff' }}>Save</Text>
+                                            <TouchableOpacity onPress={this.onEdit} style={{height:40,width:150,borderRadius:5,backgroundColor:'#ffff',
+                                            borderWidth:1,borderColor:'#488B8F',marginLeft:10,justifyContent: 'center', alignItems: 'center'}}>
+                                                <Text style={{ fontWeight: 'bold',color:"#488B8F",fontSize:18}}>Add</Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>

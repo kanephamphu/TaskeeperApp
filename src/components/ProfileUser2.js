@@ -83,9 +83,9 @@ export default class ProfileUser extends React.Component {
           <View style={{ flexDirection: 'column', margin: 10,alignItems: 'center' }}>
             <View
               style={{ alignItems: 'center', margin: 10,position:'relative'
-              ,width: '30%',justifyContent:'center'}}
+              ,width:130,justifyContent:'center'}}
             >
-              <Avatar.Image
+              <Avatar.Image 
                 source={this.state.avatar ? { uri: this.state.avatar } : avatarimage}
                 size={100}
               />
@@ -195,7 +195,7 @@ export default class ProfileUser extends React.Component {
             <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
               <TouchableOpacity onPress={this.props.onUp
               } style={styles.btnLogin}>
-                <Text style={{ fontSize: 20, color: '#ffff' }}>Update</Text>
+                <Text style={{ fontSize: 20, color: '#ffff',fontWeight: 'bold' }}>Update</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     width: width-100,
     height: 40,
     borderRadius: 5,
-    backgroundColor: '#71B7B7',
+    backgroundColor:'#488B8F',
     justifyContent: 'center',
     alignItems: 'center',
     shadowOffset: { width: 0, height: 3 },

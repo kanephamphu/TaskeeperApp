@@ -143,8 +143,8 @@ const styles = StyleSheet.create({
     header0: {
         height: height * 0.1,
         shadowOffset: { width: 0, height: 3 },
-        padding: 10,
-        marginTop: Platform.OS == 'android' ? 25 : null,
+        paddingLeft: 10,
+        paddingTop:15,
         backgroundColor: '#add2c9',
     },
     body: {

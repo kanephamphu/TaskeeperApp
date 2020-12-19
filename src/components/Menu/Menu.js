@@ -13,7 +13,7 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import Collapsible from 'react-native-collapsible';
-import avatar1 from '../../images/avatar.jpg'
+import avatar1 from '../../images/avatar11.png'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 const { height, width } = Dimensions.get('window');
 var e;
@@ -131,14 +131,15 @@ class New extends Component {
         this.socket.emit("cl-user-detail", detail)
     }
     logout = async () => {
+        var token = await AsyncStorage.getItem('token')
+        this.socket.emit("client-send-logout-request", token)
         try {
             await AsyncStorage.removeItem('token');
         } catch (e) {
             console.log(e);
         }
         this.props.navigation.navigate('Login')
-        var token = await AsyncStorage.getItem('token')
-        this.socket.emit("client-send-logout-request", token)
+      
     }
     onSubmitChangePassword = async () => {
         if (this.state.new_password != this.state.confirm_password) {
@@ -162,7 +163,7 @@ class New extends Component {
                 </View>
                 <ScrollView>
                     <View style={styles.header}>
-                        <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flexDirection: 'row',justifyContent:'space-between' }}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate("ProfileUser",
                                 { first_name: this.state.first_name, last_name: this.state.last_name, _id: this.state._user_id })} style={{
                                     borderColor: '#71B7B7',
@@ -172,30 +173,32 @@ class New extends Component {
                                     borderRadius: 30,
                                     width: 150, marginTop: 10,
                                     borderColor: 'green',
-                                    marginLeft: 20, elevation: 10
+                                    marginLeft: 10, elevation: 10
                                 }}>
                                     <ShimmerPlaceholder style={{ height: 120, width:150, borderRadius: 30 }} autoRun visible={this.state.isLoading}>
                                     <Image source={this.state.avatar ? { uri: this.state.avatar } : avatar1}
                                     style={styles.Image} />
                                     </ShimmerPlaceholder>
-                              
                             </TouchableOpacity>
-                            <View style={{ flexDirection: 'column', marginTop: 35, marginLeft: 20 }}>
+                            <View style={{ flexDirection: 'column', marginTop: 35, marginRight: 25,marginLeft: 10}}>
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate("ProfileUser", {
                                     first_name: this.state.first_name, last_name: this.state.last_name,
                                     _id: this.state._user_id
                                 })}>
-                                    <ShimmerPlaceholder style={{ height: 45, marginTop: 2, borderRadius: 7 }} autoRun visible={this.state.isLoading}>
+                                    <ShimmerPlaceholder style={{ height: 45, marginTop: 2, borderRadius: 7,width:180}} autoRun visible={this.state.isLoading}>
                                         <Text style={{ fontWeight: 'bold', fontSize: 30 }}>{this.state.first_name} {this.state.last_name}</Text>
                                     </ShimmerPlaceholder>
 
                                 </TouchableOpacity>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between',marginTop: 10 }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between',marginTop: 10,width:180 }}>
                                     <View style={{ flexDirection: 'row' }} >
                                         <SimpleLineIcons style={{ marginRight: 3 }} name="user-follow" size={12} color="#71B7B7" />
+                                        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Listfollower")}>
                                         <Text style={{ fontSize: 12 }}>
                                             Follower {this.state.follower_number}
                                         </Text>
+                                        </TouchableOpacity>
+                                       
                                     </View>
                                     <View style={{ flexDirection: 'row', marginLeft: 30 }} >
                                         <SimpleLineIcons style={{ marginRight: 3 }} name="user-following" size={12} color="#71B7B7" />
@@ -226,10 +229,7 @@ class New extends Component {
                         </View>
                         <View>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate("Savetask")} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <View style={styles.iconstyle}>
-                                        <FontAwesome name="history" size={30} color="#71B7B7" />
-                                    </View>
+                                <View style={{ flexDirection: 'row',marginLeft:5 }}>
                                     <View style={styles.texticon}>
                                         <Text style={styles.text}>Save jobs</Text>
                                     </View>
@@ -239,10 +239,8 @@ class New extends Component {
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate("HomeApply")} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <View style={styles.iconstyle}>
-                                        <Octicons name="tasklist" size={30} color="#71B7B7" />
-                                    </View>
+                                <View style={{ flexDirection: 'row',marginLeft:5 }}>
+                                  
                                     <View style={styles.texticon}>
                                         <Text style={styles.text}>Apply jobs</Text>
                                     </View>
@@ -252,10 +250,8 @@ class New extends Component {
                                     <MaterialIcons name="navigate-next" size={30} color="#71B7B7" />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={this.toggleExpanded} style={{ flexDirection: 'row' }}>
-                                <View style={styles.iconstyle}>
-                                    <MaterialCommunityIcons name="key-change" size={30} color="#71B7B7" />
-                                </View>
+                            <TouchableOpacity onPress={this.toggleExpanded} style={{ flexDirection: 'row',marginLeft:5 }}>
+                              
                                 <View style={styles.texticon}>
                                     <Text style={styles.text}>Change password</Text>
                                 </View>
@@ -304,10 +300,8 @@ class New extends Component {
                             </Collapsible>
                         </View>
                         <View>
-                            <TouchableOpacity style={{ flexDirection: 'row' }}>
-                                <View style={styles.iconstyle}>
-                                    <MaterialIcons name="language" size={30} color="#71B7B7" />
-                                </View>
+                            <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5 }}>
+                               
                                 <View style={styles.texticon}>
                                     <Text style={styles.text}>Language</Text>
                                 </View>
@@ -315,10 +309,8 @@ class New extends Component {
 
                         </View>
                         <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <View style={styles.iconstyle}>
-                                    <Ionicons name="md-notifications" size={30} color="#71B7B7" />
-                                </View>
+                            <View style={{ flexDirection: 'row',marginLeft:5 }}>
+                               
                                 <View style={styles.texticon}>
                                     <Text style={styles.text}>Notification</Text>
                                 </View>
@@ -331,10 +323,8 @@ class New extends Component {
                             </View>
 
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row' }}>
-                            <View style={styles.iconstyle}>
-                                <Ionicons name="ios-help-buoy" size={30} color="#71B7B7" />
-                            </View>
+                        <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5 }}>
+                           
                             <View style={styles.texticon}>
                                 <Text style={styles.text}>Help</Text>
                             </View>
@@ -348,25 +338,26 @@ class New extends Component {
                             <MaterialIcons style={{ marginLeft: 18 }} name="payment" size={30} color="#71B7B7" />
                             <Text style={{ fontSize: 23, marginLeft: 15 }}>Payment</Text>
                         </View>
-                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.navigate("HomePayment")} >
-                            <View style={styles.iconstyle}>
-                                <MaterialCommunityIcons name="bank" size={30} color="#71B7B7" />
-                            </View>
+                        <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5,justifyContent:'space-between'  }} onPress={() => this.props.navigation.navigate("HomePayment")} >
+                          
                             <View style={styles.texticon}>
                                 <Text style={styles.text}>PayPal,Visa</Text>
                             </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.navigate("Ewallet")} >
                             <View style={styles.iconstyle}>
-                            <FontAwesome5 name="wallet" size={30} color="#71B7B7" />
-                            </View>
+                                    <MaterialIcons name="navigate-next" size={30} color="#71B7B7" />
+                                </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5,justifyContent:'space-between' }} onPress={() => this.props.navigation.navigate("Ewallet")} >
                             <View style={styles.texticon}>
                                 <Text style={styles.text}>E Wallet</Text>
                             </View>
+                            <View style={styles.iconstyle}>
+                                    <MaterialIcons name="navigate-next" size={30} color="#71B7B7" />
+                                </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={this.logout} style={{
-                            flexDirection: 'row', marginTop: 10,
-                            height: height * 0.07, paddingTop: 8
+                            flexDirection: 'row', marginTop: 5,
+                            height: height * 0.07, paddingTop: 8,marginBottom:10
                         }}>
                             <View style={styles.iconstyle}>
                                 <AntDesign name="logout" size={30} color="#71B7B7" />
@@ -462,9 +453,10 @@ const styles = StyleSheet.create({
         height: height * 0.08,
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.2,
-        padding: 10,
+        paddingLeft: 10,
+        paddingTop:15,
         shadowOpacity: 0.2,
         elevation: 1,
-        marginTop: Platform.OS == 'android' ? 40 : null,
+      
     },
 })

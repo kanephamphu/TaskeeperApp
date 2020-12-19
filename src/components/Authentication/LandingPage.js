@@ -50,7 +50,7 @@ export default class LandingPage extends React.Component {
                         <Text style={styles.chapter}>Suitable for everyone</Text>
                         <Text style={styles.detail}>Where you can find your suitable job for yourseft</Text>
                         <Image
-                            source={require("../../images/image1.jpg")}
+                            source={require("../../images/langding1.png")}
                             style={styles.image}
                             resizeMode={"stretch"}
                         />
@@ -66,7 +66,7 @@ export default class LandingPage extends React.Component {
                         <Text style={styles.chapter}>Fast & Serious</Text>
                         <Text style={styles.detail}>The best place to find your job quickly</Text>
                         <Image
-                            source={require("../../images/image2.jpg")}
+                            source={require("../../images/langding2.png")}
                             style={styles.image}
                             resizeMode={"stretch"}
                         />
@@ -82,7 +82,7 @@ export default class LandingPage extends React.Component {
                         <Text style={styles.chapter}>Simple</Text>
                         <Text style={styles.detail}>All operations are very easy to use</Text>
                         <Image
-                            source={require("../../images/image3.jpg")}
+                            source={require("../../images/langding3.png")}
                             style={styles.image}
                             resizeMode={"stretch"}
                         />

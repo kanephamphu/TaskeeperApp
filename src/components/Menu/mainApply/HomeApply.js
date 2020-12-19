@@ -11,18 +11,18 @@ export default class HomeApply extends React.Component {
       <View style={styles.container}>
         <View style={styles.header0}>
           <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.navigate("Menu")}>
-            <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="white" />
+            <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="black" />
             <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 25, marginTop: -2 }}>Jobs</Text>
           </TouchableOpacity>
         </View>
         <Tabs  tabBarUnderlineStyle={{ backgroundColor: '#2d7474' }} tabContainerStyle={{ borderTopWidth: 3, borderColor: '#ffff' }} >
-          <Tab tabStyle={{ backgroundColor: '#ADD2C9' }} activeTabStyle={{ backgroundColor: '#ADD2C9' }}
-            textStyle={{ color: '#ffff' }} activeTextStyle={{ color: 'black', fontWeight: 'bold' }}
+          <Tab tabStyle={{ backgroundColor: '#faf9f9' }} activeTabStyle={{ backgroundColor: '#faf9f9' }}
+           textStyle={{ color: '#444444' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }}
             heading="Apply" >
             <Apply />
           </Tab>
-          <Tab tabStyle={{ backgroundColor: '#ADD2C9' }} activeTabStyle={{ backgroundColor: '#ADD2C9' }}
-            textStyle={{ color: '#ffff' }} activeTextStyle={{ color: 'black', fontWeight: 'bold' }}
+          <Tab tabStyle={{ backgroundColor: '#faf9f9' }} activeTabStyle={{ backgroundColor: '#faf9f9' }}
+             textStyle={{ color: '#444444' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }}
             heading="Approve">
             <Approve />
           </Tab>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
       },
       android: {
         flex: 1,
-        backgroundColor: '#ADD2C9',
+        backgroundColor: '#faf9f9',
       },
       default: {
         // other platforms, web for example
@@ -85,10 +85,11 @@ const styles = StyleSheet.create({
     height: height * 0.08,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
-    padding: 10,
+    paddingLeft: 10,
+        paddingTop:15,
     shadowOpacity: 0.2,
     elevation: 1,
-    marginTop: Platform.OS == 'android' ? 25 : null,
+  
   },
   header: {
     ...Platform.select({

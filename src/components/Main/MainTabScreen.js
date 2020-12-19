@@ -8,14 +8,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Fontisto } from '@expo/vector-icons'; 
 import Home from '../Home/Home';
 import searchtask from '../Home/Homesearch/SearchTask'
 import searchuser from '../Home/Homesearch/SearchUser';
 import MesagePerson from '../Message/MesagePerson'
-import News from '../New/News';
+import HomeManageCandidate from '../New/HomeManageCandidate';
+import DetailCandidates from '../New/DetailCandidates';
 import Map from '../Map/Map';
 import Menu from '../Menu/Menu';
-import Homeuser from '../HomeUser';
 import HomePayment from '../Menu/mainPayment/HomePayment'
 import history from '../Menu/HistoryJob';
 import test from '../test';
@@ -28,7 +29,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign } from '@expo/vector-icons';
 import Listrecommend from '../Home/Listrecommend';
 import Search from '../Home/Search';
-import Listfollower from '../Home/Listfollower'
+import Listfollower from '../Menu/ListFollower'
 import Savetask from '../Menu/mainSave/Savetask';
 import Notice from '../Notice/Notice'
 import Message from '../Message/Message'
@@ -47,93 +48,134 @@ import Ewallet from '../Menu/eWallet/Ewallet';
 import Connectbank from '../Menu/eWallet/Connectbank';
 import Addnewcard from '../Menu/eWallet/Addnewcard';
 import Transfer from '../Menu/eWallet/Transfers'
-import Setamount from '../Menu/eWallet/Setamount'
+import Setamount from '../Menu/eWallet/Setamount';
+import Bankkinglink from '../Menu/eWallet/Bankkinglink'
+import io from 'socket.io-client/dist/socket.io'
+import AsyncStorage from '@react-native-community/async-storage';
 const HomeStack = createStackNavigator();
-
+var e;
 const Tab = createMaterialBottomTabNavigator();
+export default class MainTabScreen extends React.Component{
+  constructor(props){
+    super(props)
+    e=this;
+    this.state={
+      numbernotice:''
+    }
+    this.redNotification=this.redNotification.bind(this)
+    this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
+    this.socket.on("sv-get-total-unread-notification",function(data){
+        e.setState({
+          numbernotice:data.data
+        })
+        console.log(JSON.stringify(data))
+    })
+  }
+  componentDidMount = async () => {
+  this.redNotification()
+  }
+  redNotification= async () =>{
+    const token = await AsyncStorage.getItem('token');
+    const unread={
+      secret_key:token
+    }
+    this.socket.emit("cl-get-total-unread-notification",unread);
+    console.log(unread)
+  }
+  render(){
+    return (  
+      <Tab.Navigator
+      initialRouteName="Home"
+      activeColor="#2d7474"
+      inactiveColor="#add2c9"
+      /*screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === 'Notice') {
+            iconName = focused
+              ? 'ios-notifications'
+              : 'ios-notifications-outline';
+          } 
+  
+          // You can return any component that you like here!
+          return <Ionicons name={iconName} size={26} color='#2d7474'/>;
+        },
+      })}*/
+      tabBarOptions={{
+        activeTintColor: 'tomato',
+        inactiveTintColor: 'gray',
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeStackScreen}
+        options={{
+          tabBarLabel: "Home",
+          tabBarColor: '#faf9f9',
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="ios-home" size={26} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ManageStackScreen"
+        component={ManageStackScreen}
+        options={{
+          tabBarLabel: "Manage",
+          tabBarColor: '#faf9f9',
+          tabBarIcon: ({ color }) => (
+            <Fontisto name="persons" size={22} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen 
+        name="Map"
+        component={MapStackScreen}
+        options={{
+          tabBarLabel: "Map",
+          tabBarColor: '#faf9f9',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5 name="map-marked-alt" size={22} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="NoticeStackScreen"
+        component={NoticeStackScreen}
+        options={{
+          tabBarLabel: "Notice",
+          tabBarColor: '#faf9f9',
+          tabBarIcon: ({ color }) => (
+            <View style={{position:'relative'}}>
+              <Ionicons name="ios-notifications" size={28} color={color} />
+              {this.state.numbernotice=='0'?null:
+              <View style={{width:13,height:13,borderRadius:100,backgroundColor:'red',
+              position: 'absolute',top:0,right:0,justifyContent: 'center',alignItems: 'center'}}>
+                <Text style={{color:'white',fontSize:11}}>{this.state.numbernotice}</Text>
+              </View> 
+              }
+             
+            </View>
+      
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Menu"
+        component={MoreStackScreen}
+        options={{
+          tabBarLabel: "Menu",
+          tabBarColor: '#faf9f9',
+          tabBarIcon: ({ color }) => (
+            <Entypo name="menu" size={26} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+    );
+  }
+}
 
-const MainTabScreen = () => (
-  <Tab.Navigator
-    initialRouteName="Home"
-    activeColor="#2d7474"
-    inactiveColor="#add2c9"
-    /*screenOptions={({ route }) => ({
-      tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
-        if (route.name === 'Notice') {
-          iconName = focused
-            ? 'ios-notifications'
-            : 'ios-notifications-outline';
-        } 
-
-        // You can return any component that you like here!
-        return <Ionicons name={iconName} size={26} color='#2d7474'/>;
-      },
-    })}*/
-    tabBarOptions={{
-      activeTintColor: 'tomato',
-      inactiveTintColor: 'gray',
-    }}
-  >
-    <Tab.Screen
-      name="Home"
-      component={HomeStackScreen}
-      options={{
-        tabBarLabel: "Home",
-        tabBarColor: '#faf9f9',
-        tabBarIcon: ({ color }) => (
-          <Ionicons name="ios-home" size={26} color={color} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="News"
-      component={News}
-      options={{
-        tabBarLabel: "New",
-        tabBarColor: '#faf9f9',
-        tabBarIcon: ({ color }) => (
-          <FontAwesome5 name="newspaper" size={26} color={color} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Map"
-      component={MapStackScreen}
-      options={{
-        tabBarLabel: "Map",
-        tabBarColor: '#faf9f9',
-        tabBarIcon: ({ color }) => (
-          <FontAwesome5 name="map-marked-alt" size={26} color={color} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Notice"
-      component={Notice}
-      options={{
-        tabBarLabel: "Notice",
-        tabBarColor: '#faf9f9',
-        tabBarIcon: ({ color }) => (
-          <Ionicons name="ios-notifications" size={26} color={color} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Menu"
-      component={MoreStackScreen}
-      options={{
-        tabBarLabel: "Menu",
-        tabBarColor: '#faf9f9',
-        tabBarIcon: ({ color }) => (
-          <Entypo name="menu" size={26} color={color} />
-
-        ),
-      }}
-    />
-  </Tab.Navigator>
-)
-export default MainTabScreen;
 const styles = StyleSheet.create({
   searching: {
     backgroundColor: 'white',
@@ -215,6 +257,11 @@ const HomeStackScreen = ({ navigation }) => {
         component={Detail}
         options={{ headerShown: false }}
       />
+       <HomeStack.Screen
+        name="Detailtoo"
+        component={Detail}
+        options={{ headerShown: false }}
+      />
       <HomeStack.Screen
         name="searchtask"
         component={searchtask}
@@ -231,11 +278,7 @@ const HomeStackScreen = ({ navigation }) => {
         component={Listrecommend}
         options={{ headerShown: false }}
       />
-      <HomeStack.Screen
-        name="Listfollower"
-        component={Listfollower}
-        options={{ headerShown: false }}
-      />
+     
       <HomeStack.Screen
         name="ProfileUser"
         component={ProfileUser}
@@ -261,6 +304,71 @@ const MapStackScreen = ({ navigation }) => {
       <HomeStack.Screen
         name="Map"
         component={Map}
+        options={{ headerShown: false }}
+      />
+    </HomeStack.Navigator>
+  );
+};
+const ManageStackScreen = ({ navigation }) => {
+
+  return (
+    <HomeStack.Navigator
+      screenOptions={{
+        headerStyle: {
+
+          elevation: 0, // Android
+        },
+
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <HomeStack.Screen
+        name="HomeManageCandidate"
+        component={HomeManageCandidate}
+        options={{ headerShown: false }}
+      />
+       <HomeStack.Screen
+        name="DetailCandidates"
+        component={DetailCandidates}
+        options={{ headerShown: false }}
+      />
+    </HomeStack.Navigator>
+    
+  );
+};
+const NoticeStackScreen = ({ navigation }) => {
+
+  return (
+    <HomeStack.Navigator
+      screenOptions={{
+        headerStyle: {
+
+          elevation: 0, // Android
+        },
+
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <HomeStack.Screen
+        name="Notice"
+        component={Notice}
+        options={{ headerShown: false }}
+      />
+       <HomeStack.Screen
+        name="Profilefriendnotice"
+        component={Profilefriend}
+        options={{ headerShown: false }}
+      />
+        <HomeStack.Screen
+        name="HomeManageCandidate"
+        component={HomeManageCandidate}
+        options={{ headerShown: false }}
+      />
+       <HomeStack.Screen
+        name="DetailCandidates"
+        component={DetailCandidates}
         options={{ headerShown: false }}
       />
     </HomeStack.Navigator>
@@ -295,9 +403,20 @@ const MoreStackScreen = ({ navigation }) => {
         component={Posttask}
         options={{ headerShown: false }}
       />
+    
+       <HomeStack.Screen
+        name="Detailmenu"
+        component={Detail}
+        options={{ headerShown: false }}
+      />
        <HomeStack.Screen
         name="Ewallet"
         component={Ewallet}
+        options={{ headerShown: false }}
+      />
+        <HomeStack.Screen
+        name="Bankkinglink"
+        component={Bankkinglink}
         options={{ headerShown: false }}
       />
        <HomeStack.Screen
@@ -349,6 +468,11 @@ const MoreStackScreen = ({ navigation }) => {
       <HomeStack.Screen
         name="HomePayment"
         component={HomePayment}
+        options={{ headerShown: false }}
+      />
+        <HomeStack.Screen
+        name="Listfollower"
+        component={Listfollower}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen

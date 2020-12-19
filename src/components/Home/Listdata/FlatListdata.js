@@ -4,11 +4,12 @@ import io from 'socket.io-client/dist/socket.io'
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import avatar from '../../../images/avatar.jpg'
+import avatar from '../../../images/avatar11.png'   
 import { MaterialIcons } from '@expo/vector-icons';
 import iconsuccess from '../../../images/icon1.png';
 import iconerror from '../../../images/icon2.png';
 import AsyncStorage from '@react-native-community/async-storage';
+import moment from 'moment'
 var e;
 const { height, width } = Dimensions.get('window');
 class FlatListdata extends Component {
@@ -24,7 +25,7 @@ class FlatListdata extends Component {
             show:false,
             shownotice:false,
             notice:'',
-            key:''
+            key:'',price:''
 
         }
         this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
@@ -37,14 +38,14 @@ class FlatListdata extends Component {
                         notice:'Chưa điền giới thiệu!',
                         key:"error"
                     })
-                    console.log(JSON.stringify(data.errors.introduction))
+                  
                 } else {
                     e.setState({
                         shownotice:true,
                         notice:'Đã tồn tại!',
                         key:"error",
                     })
-                    console.log(JSON.stringify(data))
+                   
                 }
             } else if (data.success == true) {
                 e.setState({
@@ -89,8 +90,7 @@ class FlatListdata extends Component {
         this.setState({
             secret_key: token,
             _id: this.props.item._id,
-            ceiling_price: this.props.item.price.ceiling_price,
-            floor_price: this.props.item.price.floor_price,
+
         })
     }
     applyJob(){
@@ -99,7 +99,7 @@ class FlatListdata extends Component {
             secret_key: this.state.secret_key,
             task_id: this.state._id,
             introduction: this.state.introduction,
-            price: '123',
+            price: this.state.price,
         }
         this.socket.emit("cl-apply-job", apply)
 
@@ -125,10 +125,15 @@ class FlatListdata extends Component {
         this.props.stack;
     }
     render() {
+        var d = new Date();
         var task_description = this.props.item.task_description;
+        var task_title = this.props.item.task_title;
+        if(task_title.length>=20){
+            task_title = task_title.slice(0,20);
+        }
         var count = task_description.length;
-        if (count >= 40) {
-            task_description = task_description.slice(0, 70);
+        if (count >= 30) {
+            task_description = task_description.slice(0, 30);
         }
         var textnull = "Null"
         return (
@@ -158,53 +163,83 @@ class FlatListdata extends Component {
                         </View>
                     </View>
                     <View style={styles.bodytwo}>
-                        <TouchableOpacity style={{ height: 60, }} onPress={() => this.props.stackDetail(this.props.item._id)}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 23, fontStyle: 'italic', color: '#2d7474' }}>
-                                {this.props.item.task_title}
-                            </Text>
-                        </TouchableOpacity>
-                        <View style={{ height: 70 }}>
-                            <Text style={{ fontSize: 16 }}>
-                                {task_description}
-                            </Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text>
-                                    ...
-                                </Text>
-                                <TouchableOpacity onPress={() => this.props.stackDetail(this.props.item._id)}>
-                                    <Text style={{ color: "#888888" }}> see detail</Text>
-                                </TouchableOpacity>
+                        <TouchableOpacity style={{flexDirection:'row'}} onPress={() => this.props.stackDetail(this.props.item._id)}>
+                            <Text style={{fontWeight: 'bold', fontSize: 23, fontStyle: 'italic', color: '#2d7474'}}>{task_title}</Text>
+                            {task_title.length>=20?
+                            <View style={{marginTop:9,flexDirection:'row'}}>
+                                <Text>...</Text>
+                            </View>:null}
+                            {new Date(this.props.item.created_time).toLocaleDateString()==d.toLocaleDateString()?
+                            <View style={{marginLeft:3}}>
+                                <Text style={{fontWeight:'bold',fontSize:10,marginTop:2,color:'#CD5C5C'}}>(MỚI)</Text>
                             </View>
-                        </View>
-                        <View >
-                            <Text style={{ fontSize: 16 }}>
-                             
-                            </Text>
+                            :null}
+                        </TouchableOpacity>
+                        <View style={{flexDirection:'column',marginTop:10}}>
+                            <Text style={{fontWeight:'bold',fontSize:13}}>TASK DESCRIPTION:</Text>
+                            <View style={{marginTop:10,flexDirection:'row'}}>
+                                <Text style={{marginLeft:20,color:'#0E0E0E',fontSize:13}}>{task_description}</Text>
+                                {count >= 30?
+                                <>
+                                    <Text>...</Text>
+                                    <TouchableOpacity onPress={()=>this.props.stackDetail(this.props.item._id)}>
+                                        <Text style={{ color: "#b30000",fontSize:13 }}> see detail</Text>
+                                    </TouchableOpacity>
+                                </>:null}
+                            </View>
                         </View>
                     </View>
                     <View style={styles.bodynext} >
-                        <View style={{ flexDirection: 'row'}}>
-                            <View>
-                                <MaterialIcons name="attach-money" size={24} color="black" />
-                            </View>
-                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <Text>{this.props.item.price.floor_price} - {this.props.item.price.ceiling_price}</Text>
+                        <View style={{flexDirection:'row',marginTop:-10,alignItems:'center'}}>                        
+                            <Entypo name="location-pin" size={20} color="red"/>  
+                            <View style={{marginLeft:10}}>                      
+                                <Text style={{color:'#0E0E0E',fontSize:13}}>{this.props.item.location.formatted_address}</Text>
                             </View>
                         </View>
-                        <View style={{ flexDirection: 'row', marginLeft: 5 }}>
-                            <View>
-                                <Ionicons name="md-time" size={24} color="black" />
-                            </View>
-                            <View style={{ marginLeft: 5, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text>Full time</Text>
+                        <View style={{flexDirection:'row',marginTop:10}}>                        
+                            <Text style={{color:'#0E0E0E',fontSize:13}}>Updated:</Text> 
+                            <View style={{marginLeft:5}}>                      
+                                {this.props.item.end_year<moment(d).format('YYYY')?
+                                <>
+                                    <Text style={{color:'#0E0E0E',fontSize:13}}>You have expired to apply for this job</Text>
+                                </>
+                                :
+                                <>
+                                    {this.props.item.end_month<moment(d).format('MM')?
+                                    <>
+                                        <Text style={{color:'#0E0E0E',fontSize:13}}>You have expired to apply for this job</Text>
+                                    </>
+                                    :
+                                    <>
+                                        {this.props.item.end_day<=moment(d).format('DD')?
+                                        <>
+                                            <Text style={{color:'#0E0E0E',fontSize:13}}>You have expired to apply for this job</Text>
+                                        </>
+                                        :
+                                        <View style={{flexDirection:'row'}}>
+                                            <Text style={{color:'#0E0E0E',fontSize:13}}>You have </Text>
+                                            <Text style={{color:'#0E0E0E',fontSize:13,fontWeight:'bold'}}>{this.props.item.end_day-moment(d).format('DD')} </Text>
+                                            {this.props.item.end_day-moment(d).format('DD')==1?
+                                            <>
+                                                <Text style={{color:'#0E0E0E',fontSize:13}}>day to apply</Text>
+                                            </>
+                                            :
+                                            <>
+                                                <Text style={{color:'#0E0E0E',fontSize:13}}>days to apply</Text>
+                                            </>
+                                            }
+                                        </View>
+                                        }
+                                    </>
+                                    }
+                                </>
+                                }
                             </View>
                         </View>
-                        <View style={{ flexDirection: 'row', marginLeft: 5 }}>
-                            <View>
-                                <Entypo name="location-pin" size={24} color="black" />
-                            </View>
-                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <Text>Quảng Nam </Text>
+                        <View style={{flexDirection:'row',marginTop:10}}>                        
+                            <Text style={{color:'#0E0E0E',fontSize:13}}>Working Time:</Text> 
+                            <View style={{marginLeft:5}}>
+                                <Text style={{color:'#0E0E0E',fontSize:13,fontWeight:'bold'}}>{this.props.item.working_time.start_time} - {this.props.item.working_time.end_time}</Text> 
                             </View>
                         </View>
                     </View>
@@ -234,15 +269,15 @@ class FlatListdata extends Component {
                      <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ backgroundColor: '#000000aa', flex: 1, }} >
                     <View style={{ backgroundColor: '#000000aa', flex: 1 }}>
                         <View style={{
-                            backgroundColor: '#faf9f9', borderRadius: 20,
-                            height: 300, marginLeft: 40, marginRight: 40, marginTop: 75,
+                            backgroundColor: '#faf9f9', borderRadius: 10,
+                            height: 320, marginLeft: 40, marginRight: 40, marginTop: 75,
                             borderWidth: 2, borderColor: '#009387', padding: 20,
                             alignContent: 'center'
                         }}>
                             <View style={{ alignContent: 'center' }}>
                                 <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Introduction:</Text>
                             </View>
-                            <View style={{height: 180, padding: 10, borderColor: '#808080' }}>
+                            <View style={{height: 130, padding: 10, borderColor: '#808080' }}>
                                 <TextInput multiline={true}
                                     onChangeText={(introduction) => this.setState({ introduction })}
                                     value={this.state.introduction}
@@ -253,12 +288,26 @@ class FlatListdata extends Component {
 
                                 </TextInput>
                             </View>
+                            <View style={{ alignContent: 'center' }}>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Price:</Text>
+                            </View>
+                            <View style={{padding: 10, borderColor: '#808080' }}>
+                                <TextInput
+                                    onChangeText={(price) => this.setState({ price})}
+                                    value={this.state.price}
+                                    placeholderTextColor={'#2d7474'}
+                                    underlineColorAndroid='transparent'
+                                    placeholder='price...'
+                                >
+
+                                </TextInput>
+                            </View>
                             <View style={styles.controlStyle}>
                                 <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false })}>
-                                    <Text style={{ color: '#ffff', fontSize: 20 }}>Cancle</Text>
+                                    <Text style={{ fontWeight: 'bold',color:"#488B8F",fontSize:18 }}>Cancle</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.apply} onPress={this.applyJob}>
-                                    <Text style={{ color: '#ffff', fontSize: 20 }}>Apply</Text>
+                                    <Text style={{ fontWeight: 'bold',color:"white",fontSize:18}}>Apply</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -328,23 +377,28 @@ const styles = StyleSheet.create({
         margin: 10
     },
     bodynext: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         margin: 10,
-        justifyContent:'space-between'
+        width:width-105
     },
     bodythree: {
         flexDirection: 'row',
         borderTopWidth: 1,
-        height: 35,
+        height: 45,
+        right:0,
         borderColor: '#71B7B7',
+        left:0,
+        bottom:0,
+        position:'absolute'
     },
     imageview: {
         shadowOffset: { width: 0, height: 3 },
         shadowColor: 'green',
         shadowOpacity: 0.5,
-        elevation: 10,
+        elevation: 4,
         borderColor: '#71B7B7',
         borderRadius: 50,
+        
     },
     iconBulliten1: {
         borderRightWidth: 0.5,
@@ -362,20 +416,21 @@ const styles = StyleSheet.create({
     },
     cancle: {
         flex: 1,
-        backgroundColor: '#2d7474',
+        backgroundColor:'#ffff',
         alignItems: 'center',
         paddingVertical: 5,
-        borderTopLeftRadius: 10,
-        borderBottomLeftRadius: 10, marginRight: 3
+        borderTopLeftRadius: 5,
+        borderBottomLeftRadius:5, marginRight: 3,
+        borderWidth:1,borderColor:'#488B8F'
 
     },
     apply: {
         flex: 1,
-        backgroundColor: '#2d7474',
+        backgroundColor:'#488B8F',
         alignItems: 'center',
         paddingVertical: 5,
-        borderBottomRightRadius: 10,
-        borderTopRightRadius: 10, marginLeft: 3
+        borderBottomRightRadius: 5,
+        borderTopRightRadius: 5, marginLeft: 3
     },
     controlStyle: {
         flexDirection: 'row',

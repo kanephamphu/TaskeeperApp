@@ -15,7 +15,8 @@ class SearchTrending extends Component {
         e = this;
         this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
-            dataSource: []
+            dataSource: [],
+            dataHistory:[],
         }
         this.socket.on("sv-get-search-trend", function (data) {
             var list = data.data
@@ -47,24 +48,7 @@ class SearchTrending extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
-                    <View style={{ marginLeft: 25 }}>
-                        <Text style={styles.textheader}>Most Searched</Text>
-                    </View>
-                    <View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={styles.nameTask} >
-                                <Text style={styles.textName}>IT</Text>
-                            </View>
-                            <View style={styles.nameTask}>
-                                <Text>Marketing</Text>
-                            </View>
-                            <View style={styles.nameTask}>
-                                <Text>Multimedia</Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
+               
                 <View style={styles.body}>
                     <View style={{ marginTop: 40, borderBottomWidth: 2, borderBottomColor: '#71B7B7' }}>
                         <View style={{ marginLeft: 25 }}>
@@ -72,26 +56,10 @@ class SearchTrending extends Component {
                         </View>
                     </View>
                     <ScrollView>
-                        <View style={styles.search_item}>
+                         {this.state.dataSource.map((item, index) =>  <View key={item._id} style={styles.search_item}>
                             <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                            <Text>#PHP</Text>
-                        </View>
-                        <View style={styles.search_item}>
-                            <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                            <Text>#JAVA</Text>
-                        </View>
-                        <View style={styles.search_item}>
-                            <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                            <Text>#NODE JS</Text>
-                        </View>
-                        <View style={styles.search_item}>
-                            <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                            <Text>#C#</Text>
-                        </View>
-                        <View style={styles.search_item}>
-                            <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
-                            <Text>#HTML CSS</Text>
-                        </View>
+                            <Text>#{item.query_string}</Text>
+                        </View>)}
                     </ScrollView>
                 </View>
             </View>

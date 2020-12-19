@@ -13,7 +13,7 @@ import { Fontisto } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import avatarimage from '../../../images/avatar.jpg'
+import avatarimage from '../../../images/avatar11.png'
 const { height, width } = Dimensions.get('window');
 class SearchUser extends Component {
     constructor(props) {
@@ -108,7 +108,7 @@ class Listdataitem extends Component {
                                     <MaterialIcons name="work" size={24} color="#555555" />
                                 </View>
                                 <View style={styles.viewtext}>
-                                    <Text style={styles.text}>Working information</Text>
+                                    <Text style={styles.text}>Working information:<Text style={{fontWeight: 'bold' }}> {this.props.item.working_information[0].company_name}</Text></Text>
                                 </View>
                             </View>
                             <View style={styles.two}>
@@ -116,7 +116,7 @@ class Listdataitem extends Component {
                                     <MaterialCommunityIcons name="cast-education" size={24} color="#555555" />
                                 </View>
                                 <View style={styles.viewtext}>
-                                    <Text style={styles.text}>Eucation infoamation</Text>
+                                <Text style={styles.text}>Education information:<Text style={{fontWeight: 'bold' }}> {this.props.item.education_information[0].school_name}</Text></Text>
                                 </View>
                             </View>
                             <View style={styles.two}>
@@ -124,7 +124,7 @@ class Listdataitem extends Component {
                                     <Fontisto name="persons" size={24} color="#555555" />
                                 </View>
                                 <View style={styles.viewtext}>
-                                    <Text style={styles.text}>So nguoi follow</Text>
+                                     <Text style={styles.text}>So nguoi follow: <Text style={{fontWeight: 'bold' }}>{this.props.item.follower_number}</Text></Text>
                                 </View>
                             </View>
                         </View>

@@ -4,6 +4,7 @@ import ProfileUser from './Menu/ProfileUser';
 import TaskPage from './Menu/TaskPage';
 import HistoryJob from './Menu/HistoryJob';
 import update from './Menu/ChangeProfileUser';
+import Posttask from '../components/PostTask'
 import { Ionicons } from '@expo/vector-icons';
 import Profile from './ProfileUser2'
 import { createStackNavigator } from '@react-navigation/stack';
@@ -21,6 +22,7 @@ export default class HomeUser extends React.Component {
     this.onPosttask=this.onPosttask.bind(this);
     this.onUpdate=this.onUpdate.bind(this);
     this.onEducation=this.onEducation.bind(this);
+    this.onDetail=this.onDetail.bind(this)
   }
   onPosttask(){
     this.props.navigation.navigate('Posttask')
@@ -30,6 +32,9 @@ export default class HomeUser extends React.Component {
   }
   onEducation(){
     this.props.navigation.navigate('Education')
+  }
+  onDetail(_id){
+    this.props.navigation.navigate('Detailmenu',{_task_id: _id})
   }
   render() {
     const { first_name, last_name, _id } = this.props.route.params;
@@ -58,7 +63,7 @@ export default class HomeUser extends React.Component {
           <Tab tabStyle={{ backgroundColor: '#faf9f9' }} activeTabStyle={{ backgroundColor: '#faf9f9' }}
             textStyle={{ color: '#444444' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }}
             heading="Task Page">
-            <TaskPage onPost={this.onPosttask} />
+            <Posttask detail={this.onDetail} />
           </Tab>
         </Tabs>
       </View>
@@ -147,10 +152,11 @@ const styles = StyleSheet.create({
     height: height * 0.08,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
-    padding: 10,
+    paddingLeft: 10,
+    paddingTop:15,
     shadowOpacity: 0.2,
     elevation: 1,
-    marginTop: Platform.OS == 'android' ? 25 : null,
+    
   },
   header: {
     ...Platform.select({

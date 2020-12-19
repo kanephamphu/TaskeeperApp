@@ -56,6 +56,7 @@ class Search extends React.Component {
     this._content_opacity = new Value(0)
     this.searchAuto = this.onSearch.bind(this)
     this.searchtask = this.searchTask.bind(this)
+
     this.socket.on("sv-search-autocomplete", function (data) {
       var list = data.data
       if (data.success == false) {
@@ -175,6 +176,7 @@ class Search extends React.Component {
     )
 
   }
+ 
   searchTask(task) {
     const searchTask = {
       search_string: task

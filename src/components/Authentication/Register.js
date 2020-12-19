@@ -10,9 +10,10 @@ import {
     Image,
     Dimensions,
     Animated,
+    Modal,TouchableWithoutFeedback,Keyboard
 } from 'react-native'
 import background from '../../images/anh1.png'
-import logo from '../../images/logonew3.png'
+import logo from '../../images/logoblack.png'
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
@@ -40,14 +41,17 @@ export default class Register extends Component{
             month:'08',
             year:'1999',
             nof:'',
-            errors: {}
+            errors: {},
+            shownotice:false
         }
         this.onSubmit1 = this.onSubmit.bind(this)
         this.socket.on("sv-send-register-res",function(data){
             if(data.success==true){
                 e.setState({
                     nof:'Congratulations on your successful registration'
+                   
                 }); 
+                e.props.navigation.navigate('Login')
             }else if(data.success==false){ 
                 var dataserver=data.errors
                 if(data.errors.first_name){
@@ -90,6 +94,11 @@ export default class Register extends Component{
             year: this.state.year
         }
         this.socket.emit("cl-send-register-req",newUser)  
+    }
+    onVerify(){
+        const number={
+
+        }
     }
     showPass =()=>{
         if(this.state.press==false){
@@ -256,6 +265,45 @@ export default class Register extends Component{
                 <TouchableOpacity style={styles.btnLogin} onPress={this.onSubmit1}>
                     <Text style={styles.textlogin}>SIGN IN</Text>
                 </TouchableOpacity>
+                <Modal transparent={true}
+                            visible={this.state.shownotice}
+                            animationType='slide'
+                            style={{ justifyContent: 'center', alignItems: 'center' }}
+                        > 
+                         <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
+                            <View style={{ backgroundColor: '#000000aa', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={{
+                                    backgroundColor: '#faf9f9', borderRadius: 20,
+                                    height: "40%", width: "70%", justifyContent: 'center', alignItems: 'center'
+                                }}>
+                                    <Text style={{fontSize:20,fontWeight: 'bold' }}>Verify Number</Text>
+                                    <TextInput 
+                                    style={styles.inputnotice}
+                                    placeholder={'verify number'}
+                                    onChangeText={(verify_number)=> this.setState({verify_number})}
+                                    value={this.state.verify_number}
+                                    placeholderTextColor={'#2d7474'}
+                                
+                                
+                                ></TextInput>
+                                     <View style={{ flexDirection: 'row',justifyContent:'space-between',width:"70%"}}>
+                                    <TouchableOpacity onPress={() => this.setState({ shownotice: false })} style={{
+                                        width: "50%", backgroundColor: '#71B7B7',
+                                        height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center',marginRight: 5
+                                    }}>
+                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity  style={{
+                                        width: "50%", backgroundColor: '#71B7B7',
+                                        height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center',marginLeft: 5
+                                    }}>
+                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Confirm</Text>
+                                    </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+                            </TouchableWithoutFeedback>
+                        </Modal>
             </View>
         )
     }
@@ -322,6 +370,7 @@ const styles = StyleSheet.create({
         fontSize:15,
         opacity:1,
         marginEnd:-5,
+        fontWeight: 'bold',
     },
     logintext2:{
         color:'#FF0000',
@@ -329,6 +378,7 @@ const styles = StyleSheet.create({
         fontSize:15,
         opacity:1,
         marginEnd:-5,
+        fontWeight: 'bold',
     },
     input:{
         
@@ -345,6 +395,20 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor:'#2d7474'
     },
+    inputnotice:{
+        
+        width:250,
+        height:40,
+        borderRadius:10,
+        fontSize:16,
+        paddingLeft:15,
+        paddingTop:-10,
+        color:'#2d7474',
+        marginHorizontal:25,
+        marginTop:10,
+        borderWidth: 1,
+        borderColor:'#dddd'
+    },
     btnLogin:{
         width:300,
         height:45,
@@ -355,7 +419,8 @@ const styles = StyleSheet.create({
     },
     textlogin:{
         textAlign:'center',
-        color:'rgba(255,255,255,0.7)',
+        color:'#ffff',
+        fontWeight: 'bold',
     },
    
 });

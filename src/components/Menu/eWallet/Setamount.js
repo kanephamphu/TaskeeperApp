@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
 import { Image,TextInput, View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, ActivityIndicator, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-community/async-storage';
-import { Entypo } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io';
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Fontisto } from '@expo/vector-icons'; 
-import { FontAwesome } from '@expo/vector-icons';
-import visa from '../../../images/visacard.png'
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 const { width, height } = Dimensions.get("window");
 var e;
 export default class Setamount extends React.Component {
@@ -20,7 +12,6 @@ export default class Setamount extends React.Component {
         this.state = {
 
         }
-
     };
 
     componentDidMount = async () => {
@@ -121,8 +112,8 @@ const styles = StyleSheet.create({
     header0: {
         height: height * 0.1,
         shadowOffset: { width: 0, height: 3 },
-        padding: 10,
-        marginTop: Platform.OS == 'android' ? 25 : null,
+        paddingLeft: 10,
+        paddingTop:15,
         backgroundColor: '#add2c9',
     },
     body: {

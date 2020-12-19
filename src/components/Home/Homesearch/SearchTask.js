@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {
     View,
     StyleSheet,
-    ActivityIndicator, FlatList
+    ActivityIndicator, FlatList,Text
 } from 'react-native'
 var e;
 import io from 'socket.io-client/dist/socket.io'
@@ -19,6 +19,7 @@ class SearchTask extends Component {
         }
         this.searchTask = this.searchTask.bind(this);
         this.socket.on("sv-search-task", function (data) {
+            console.log(data)
             var list = data.data
             if (data.success == false) {
 
@@ -28,6 +29,7 @@ class SearchTask extends Component {
                     dataSearch: list,
                     isLoading: true
                 })
+                console.log(list)
             }
         })
     }
@@ -36,11 +38,13 @@ class SearchTask extends Component {
     }
     searchTask = () => {
         const searchTask = {
-            search_string: this.props.search_key
+            search_string: this.props.search_key,
+            limit :10,
+			skip : 0
         }
 
         this.socket.emit("cl-search-task", searchTask)
-
+      console.log(searchTask)
     }
     render() {
         return (
@@ -48,6 +52,12 @@ class SearchTask extends Component {
                 {this.state.isLoading === false ?
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size='large'></ActivityIndicator>
+                    </View>
+                    :
+                    this.state.dataSearch.length === 0
+                    ?
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                        <Text>Không tìm thấy công việc này này</Text>
                     </View>
                     :
                     <View style={styles.container1}>

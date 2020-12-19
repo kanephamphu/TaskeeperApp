@@ -20,6 +20,7 @@ class Education extends Component {
     constructor(props) {
         super(props);
         e = this;
+        
         this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             totalSteps: "",
@@ -422,12 +423,13 @@ class Education extends Component {
                                         <View style={{ backgroundColor: '#ffff', width:315, height:height*0.5, paddingLeft: 10, marginTop: 10, borderColor:'#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} placeholder="Education description" onChangeText={(description) => this.setState({ description })} ></TextInput>
                                         </View>
-                                        <View style={{ flexDirection: 'row', margin: 20, justifyContent: 'space-between' }}>
-                                            <TouchableOpacity onPress={() => this.setState({ show: false })} style={styles.btnLogin}>
-                                                <Text style={{ fontSize: 20, color: '#ffff' }}>Cancel</Text>
+                                         <View style={{flexDirection: 'row',justifyContent: 'center', alignItems: 'center' ,marginTop: 20 }}>
+                                            <TouchableOpacity onPress={() => this.setState({ show: false })} style={{height:40,width:150,borderRadius:5,backgroundColor:'#ffff',
+                                            borderWidth:1,borderColor:'#488B8F',marginRight:10,justifyContent: 'center', alignItems: 'center'}}>
+                                                <Text style={{ fontWeight: 'bold',color:"#488B8F",fontSize:18}}>Cancel</Text>
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={this.onSubmit} style={styles.btnLogin1}>
-                                                <Text style={{ fontSize: 20, color: '#ffff' }}>Add</Text>
+                                            <TouchableOpacity onPress={this.onSubmit} style={{height:40,width:150,backgroundColor:'#488B8F',marginLeft:10,borderRadius:5,justifyContent: 'center', alignItems: 'center'}}>
+                                                <Text style={{ fontWeight: 'bold',color:"white",fontSize:18}}>Add</Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>

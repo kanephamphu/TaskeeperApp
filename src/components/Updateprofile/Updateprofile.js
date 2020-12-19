@@ -231,11 +231,23 @@ class Updateprofile extends Component {
                             />
                             <DropDownPicker
                                 items={ [
+                                    { label: '1990', value: '1990' },
+                                    { label: '1991', value: '1991' },
+                                    { label: '1992', value: '1992' },
+                                    { label: '1993', value: '1993' },
+                                    { label: '1994', value: '1994' },
+                                    { label: '1995', value: '1995' },
+                                    { label: '1996', value: '1996' },
+                                    { label: '1997', value: '1997' },
                                     { label: '1998', value: '1998' },
                                     { label: '1999', value: '1999' },
                                     { label: '2000', value: '2000' },
                                     { label: '2001', value: '2001' },
-                                    { label: '2002', value: '2002' },   
+                                    { label: '2002', value: '2002' }, 
+                                    { label: '2003', value: '2003' },  
+                                    { label: '2004', value: '2004' },  
+                                    { label: '2005', value: '2005' },  
+                                    { label: '2006', value: '2006' },    
                                 ]}
                                 placeholder=""
                                 onChangeItem={(year_of_birth) => this.setState({ year_of_birth })}
@@ -313,12 +325,12 @@ const styles = StyleSheet.create({
     },
     btnStyle: {
         borderColor: "#71B7B7",
-        borderWidth: 2,
+        borderWidth: 1,
         width:width-100,
         height: 40,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: '#71B7B7',
+        backgroundColor:'#488B8F',
         borderRadius:5
     },
     textall: {

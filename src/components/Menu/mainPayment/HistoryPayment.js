@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { Foundation } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io'
+import AsyncStorage from '@react-native-community/async-storage';
 const { height, width } = Dimensions.get('window');
 var e;
 export default class HistoryPayment extends React.Component {
@@ -46,9 +47,21 @@ export default class HistoryPayment extends React.Component {
                 job: 'Business Analyst',
             },
         }
+        this.socket.on("sv-get-money-transaction-history",function(data){
+            if(data.success=true){
+               
+            }else{
+                console.log(data)
+            }
+        })
     };
     componentDidMount = async () => {
-
+        const token = await AsyncStorage.getItem('token');
+        const historypayment={
+            secret_key :token,
+			skip :0
+        }
+        this.socket.emit("cl-get-money-transaction-history",historypayment);
     }
 
     render() {

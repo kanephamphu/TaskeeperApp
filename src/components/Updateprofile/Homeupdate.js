@@ -14,7 +14,7 @@ export default class Homeupdate extends React.Component {
      
     }
    
-  }
+  } 
   render() {
 
     return (
@@ -103,10 +103,11 @@ const styles = StyleSheet.create({
     height: height * 0.08,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
-    padding: 10,
+    paddingLeft: 10,
+        paddingTop:15,
     shadowOpacity: 0.2,
     elevation: 1,
-    marginTop: Platform.OS == 'android' ? 25 : null,
+    
   },
   header: {
     ...Platform.select({

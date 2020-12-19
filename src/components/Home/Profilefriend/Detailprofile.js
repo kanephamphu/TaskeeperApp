@@ -28,7 +28,10 @@ export default class Detailprofile extends React.Component {
             gender: '',
             working_information: [],
             education: [],
-            last_name:''
+            last_name: '',
+            from_time: '',
+            to_time: '',
+            time_type: ''
 
         }
 
@@ -44,14 +47,16 @@ export default class Detailprofile extends React.Component {
                     gender: list.gender,
                     working_information: list.working_information,
                     education: list.education_information,
-                    isLoading:true,
-                    last_name:list.last_name,
+                    isLoading: true,
+                    last_name: list.last_name,
+
                 })
 
             } else {
                 console.log(data.errors)
             }
         })
+       
     };
 
     componentDidMount = async () => {
@@ -59,167 +64,181 @@ export default class Detailprofile extends React.Component {
             _user_id: this.props.route.params._id,
         }
         this.socket.emit("cl-user-detail", detail)
+        
     }
+   
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.header0}>
                     <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
                         <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="black" />
-        <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>{this.state.last_name}'s Detail profile</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>{this.state.last_name}'s Detail profile</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ flex: 1 }}>
-                        {this.state.isLoading===false
+                    {this.state.isLoading === false
                         ?
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <ActivityIndicator size='large'></ActivityIndicator>
-                      </View>
+                            <ActivityIndicator size='large'></ActivityIndicator>
+                        </View>
                         :
                         <ScrollView>
-                        <View style={{ marginLeft: 15, marginRight: 15, backgroundColor: '#faf9f9', borderBottomWidth: 1, borderBottomColor: '#DDDDDD', paddingBottom: 15 }}>
-                            <View>
-                                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>WORK</Text>
-                            </View>
-                            {this.state.working_information.map((item) => {
-                                return (
-                                    <View key={item._id} style={{ flexDirection: 'row', marginTop: 10 }}>
-                                        <View style={{
-                                            width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
-                                            justifyContent: 'center', alignItems: 'center'
-                                        }}>
-                                            <MaterialCommunityIcons name="cast-education" size={26} color="#ffff" />
-                                        </View>
-                                        <View style={{
-                                            flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
-                                            width: '80%'
-                                        }}>
-                                            <View>
-                                                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.company_name}</Text>
+                            <View style={{ marginLeft: 15, marginRight: 15, backgroundColor: '#faf9f9', borderBottomWidth: 1, borderBottomColor: '#DDDDDD', paddingBottom: 15 }}>
+                                <View>
+                                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>WORK</Text>
+                                </View>
+                                {this.state.working_information.map((item) => {
+                                    return (
+                                        <View key={item._id} style={{ flexDirection: 'row', marginTop: 10 }}>
+                                            <View style={{
+                                                width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
+                                                justifyContent: 'center', alignItems: 'center'
+                                            }}>
+                                                <MaterialCommunityIcons name="cast-education" size={26} color="#ffff" />
                                             </View>
-                                            <View>
-                                                <Text>{item.time_type}</Text>
-                                            </View>
-                                        </View>
-                                    </View>
-                                )
-                            })
-                            }
-                        </View>
-                        <View style={{ marginLeft: 15, marginRight: 15, backgroundColor: '#faf9f9', borderBottomWidth: 1, borderBottomColor: '#DDDDDD', paddingBottom: 15 }}>
-                            <View style={{ marginTop: 10 }}>
-                                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>EDUCATION</Text>
-                            </View>
+                                            <View style={{
+                                                flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
+                                                width: '70%'
+                                            }}>
+                                                <View>
+                                                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.company_name}</Text>
+                                                </View>
+                                                <View>
+                                                    {item.time_period.time_type == "past" ?
+                                                        <Text>{item.time_period.from_time}-<Text>{item.time_period.to_time}</Text></Text>
+                                                        :
+                                                        <Text>{item.time_period.from_time}</Text>
+                                                    }
 
-                            {this.state.education.map((item) => {
-                                return (
-                                    <View key={item._id} style={{ flexDirection: 'row', marginTop: 10 }}>
-                                        <View style={{
-                                            width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
-                                            justifyContent: 'center', alignItems: 'center'
-                                        }}>
-                                            <MaterialCommunityIcons name="cast-education" size={26} color="#ffff" />
-                                        </View>
-                                        <View style={{
-                                            flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
-                                            width: '80%'
-                                        }}>
-                                            <View>
-                                                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.school_name}</Text>
+                                                </View>
                                             </View>
-                                            <View>
-                                                <Text>{item.time_type}</Text>
+                                            <View style={{justifyContent: 'center',marginRight:10}} ><Text>{item.time_period.time_type}</Text></View>
+                                        </View>
+                                    )
+                                })
+                                }
+                            </View>
+                            <View style={{ marginLeft: 15, marginRight: 15, backgroundColor: '#faf9f9', borderBottomWidth: 1, borderBottomColor: '#DDDDDD', paddingBottom: 15 }}>
+                                <View style={{ marginTop: 10 }}>
+                                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>EDUCATION</Text>
+                                </View>
+
+                                {this.state.education.map((item) => {
+                                    return (
+                                        <View key={item._id} style={{ flexDirection: 'row', marginTop: 10 }}>
+                                            <View style={{
+                                                width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
+                                                justifyContent: 'center', alignItems: 'center'
+                                            }}>
+                                                <MaterialCommunityIcons name="cast-education" size={26} color="#ffff" />
                                             </View>
+                                            <View style={{
+                                                flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
+                                                width: '70%'
+                                            }}>
+                                                <View>
+                                                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.school_name}</Text>
+                                                </View>
+                                                <View>
+                                                    {item.time_period.time_type == "past" ?
+                                                        <Text>{item.time_period.from_time}-<Text>{item.time_period.to_time}</Text></Text>
+                                                        :
+                                                        <Text>{item.time_period.from_time}</Text>
+                                                    }
+
+                                                </View>
+                                            </View>
+                                            <View style={{justifyContent: 'center'}} ><Text>{item.time_period.time_type}</Text></View>
+                                        </View>
+                                    )
+                                })
+                                }
+                            </View>
+                            <View style={{ marginLeft: 15, marginRight: 15, backgroundColor: '#faf9f9', borderBottomWidth: 1, borderBottomColor: '#DDDDDD', paddingBottom: 15 }}>
+                                <View style={{ marginTop: 10 }}>
+                                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>BASIC INFO</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                    <View style={{
+                                        width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
+                                        justifyContent: 'center', alignItems: 'center'
+                                    }}>
+                                        <Ionicons name="md-person" size={26} color="#ffff" />
+                                    </View>
+                                    <View style={{
+                                        flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
+                                        width: '80%'
+                                    }}>
+                                        <View>
+                                            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{this.state.gender === 'undefined' ? null : this.state.gender}</Text>
+                                        </View>
+                                        <View>
+                                            <Text>gender</Text>
                                         </View>
                                     </View>
-                                )
-                            })
-                            }
-                        </View>
-                        <View style={{ marginLeft: 15, marginRight: 15, backgroundColor: '#faf9f9', borderBottomWidth: 1, borderBottomColor: '#DDDDDD', paddingBottom: 15 }}>
-                            <View style={{ marginTop: 10 }}>
-                                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>BASIC INFO</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                                <View style={{
-                                    width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
-                                    justifyContent: 'center', alignItems: 'center'
-                                }}>
-                                    <Ionicons name="md-person" size={26} color="#ffff" />
                                 </View>
-                                <View style={{
-                                    flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
-                                    width: '80%'
-                                }}>
-                                    <View>
-                                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{this.state.gender === 'undefined' ? null : this.state.gender}</Text>
+                                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                    <View style={{
+                                        width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
+                                        justifyContent: 'center', alignItems: 'center'
+                                    }}>
+                                        <FontAwesome name="birthday-cake" size={26} color="#ffff" />
                                     </View>
-                                    <View>
-                                        <Text>gender</Text>
+                                    <View style={{
+                                        flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
+                                        width: '80%'
+                                    }}>
+                                        <View>
+                                            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{this.state.day_of_birth}-{this.state.month_of_birth}-{this.state.year_of_birth}</Text>
+                                        </View>
+                                        <View>
+                                            <Text>birthday</Text>
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
-                            <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                                <View style={{
-                                    width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
-                                    justifyContent: 'center', alignItems: 'center'
-                                }}>
-                                    <FontAwesome name="birthday-cake" size={26} color="#ffff" />
-                                </View>
-                                <View style={{
-                                    flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
-                                    width: '80%'
-                                }}>
-                                    <View>
-                                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{this.state.day_of_birth}-{this.state.month_of_birth}-{this.state.year_of_birth}</Text>
+                                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                    <View style={{
+                                        width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
+                                        justifyContent: 'center', alignItems: 'center'
+                                    }}>
+                                        <MaterialIcons name="email" size={26} color="#ffff" />
                                     </View>
-                                    <View>
-                                        <Text>birthday</Text>
+                                    <View style={{
+                                        flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
+                                        width: '80%'
+                                    }}>
+                                        <View>
+                                            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{this.state.email}</Text>
+                                        </View>
+                                        <View>
+                                            <Text>email</Text>
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
-                            <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                                <View style={{
-                                    width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
-                                    justifyContent: 'center', alignItems: 'center'
-                                }}>
-                                    <MaterialIcons name="email" size={26} color="#ffff" />
-                                </View>
-                                <View style={{
-                                    flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
-                                    width: '80%'
-                                }}>
-                                    <View>
-                                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{this.state.email}</Text>
+                                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                    <View style={{
+                                        width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
+                                        justifyContent: 'center', alignItems: 'center'
+                                    }}>
+                                        <FontAwesome name="mobile-phone" size={26} color="#ffff" />
                                     </View>
-                                    <View>
-                                        <Text>email</Text>
+                                    <View style={{
+                                        flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
+                                        width: '80%'
+                                    }}>
+                                        <View>
+                                            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{this.state.phone_number}</Text>
+                                        </View>
+                                        <View>
+                                            <Text>phone number</Text>
+                                        </View>
                                     </View>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                                <View style={{
-                                    width: 50, height: 50, backgroundColor: '#2d7474', borderRadius: 100,
-                                    justifyContent: 'center', alignItems: 'center'
-                                }}>
-                                    <FontAwesome name="mobile-phone" size={26} color="#ffff" />
-                                </View>
-                                <View style={{
-                                    flexDirection: 'column', marginLeft: 15, justifyContent: 'center',
-                                    width: '80%'
-                                }}>
-                                    <View>
-                                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{this.state.phone_number}</Text>
-                                    </View>
-                                    <View>
-                                        <Text>phone number</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        </View>
-                    </ScrollView>
-                        }
-                   
+                        </ScrollView>
+                    }
+
                 </View>
 
             </View>
@@ -278,8 +297,9 @@ const styles = StyleSheet.create({
     header0: {
         height: height * 0.08,
         shadowOffset: { width: 0, height: 3 },
-        padding: 10,
-        marginTop: Platform.OS == 'android' ? 25 : null,
+        paddingLeft: 10,
+        paddingTop: 15,
+
         backgroundColor: '#faf9f9',
 
     },

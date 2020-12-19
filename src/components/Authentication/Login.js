@@ -11,7 +11,7 @@ import {
     Animated,
 } from 'react-native'
 import background from '../../images/anh1.png'
-import logo from '../../images/logonew3.png'
+import logo from '../../images/logoblack.png'
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -293,6 +293,7 @@ const styles = StyleSheet.create({
     },
     textlogin: {
         textAlign: 'center',
-        color: 'rgba(255,255,255,0.7)',
+        color: '#ffff',
+        fontWeight:'bold'
     }
 });

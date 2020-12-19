@@ -22,6 +22,7 @@ export default class Savetask extends React.Component {
       refeshing: false,
       dataSave: [],
     }
+    this.onDetail=this.onDetail.bind(this);
     this.socket.on("sv-get-saved-task", function (data) {
       var list = data.data
       if (data.success == false) {
@@ -51,6 +52,9 @@ export default class Savetask extends React.Component {
   componentDidMount = async () => {
     this.refreshFlatlist()
   }
+  onDetail(_id){
+    this.props.navigation.navigate('Detailmenu',{_task_id: _id})
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -65,26 +69,26 @@ export default class Savetask extends React.Component {
             <ActivityIndicator size='large'></ActivityIndicator>
           </View>
           :
-          this.state.dataSave.length===0 ? 
-          <View style={{flex:1,alignItems: 'center',justifyContent:'center'}}>
+          this.state.dataSave.length === 0 ?
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
               <Text>Danh sách lưu trống</Text>
-        </View>
-          : 
-          <View style={styles.flatlist}>
-            <FlatList data={this.state.dataSave}
-              renderItem={({ item, index }) => {
-                return (
-                  <View>
-                    <RenderItem item={item} index={index} parenFlastlist={this.refreshFlatlist} ></RenderItem>
-                  </View>
-                )
-              }}
-              keyExtractor={(item) => item._id.toString()}
-              ItemSeparatorComponent={this.ItemSeparatorComponent}
-              showsHorizontalScrollIndicator={false}
-            >
-            </FlatList>
-          </View>
+            </View>
+            :
+            <View style={styles.flatlist}>
+              <FlatList data={this.state.dataSave}
+                renderItem={({ item, index }) => {
+                  return (
+                    <View>
+                      <RenderItem item={item} index={index} parenFlastlist={this.refreshFlatlist} detail={this.onDetail} ></RenderItem>
+                    </View>
+                  )
+                }}
+                keyExtractor={(item) => item._id.toString()}
+                ItemSeparatorComponent={this.ItemSeparatorComponent}
+                showsHorizontalScrollIndicator={false}
+              >
+              </FlatList>
+            </View>
         }
 
       </View>
@@ -99,10 +103,10 @@ class RenderItem extends React.Component {
       show: false,
       secret_key: '',
       _id: '',
-      showarning:false,
-      show1:false,
-      notice:'',
-      key:''
+      showarning: false,
+      show1: false,
+      notice: '',
+      key: ''
     }
     this.socket.on("sv-remove-saved-task", function (data) {
       if (data.success == false) {
@@ -110,8 +114,8 @@ class RenderItem extends React.Component {
       } else if (data.success == true) {
         e.setState({
           show1: true,
-          notice:'Xóa thành công!',
-          key:"success",
+          notice: 'Xóa thành công!',
+          key: "success",
         })
         console.log('xoa thanh cong')
       }
@@ -133,27 +137,40 @@ class RenderItem extends React.Component {
     this.props.parenFlastlist();
   }
   render() {
+    var task_title = this.props.item.task_title;
+   
+    var count = task_title.length;
+   
+    if (count >= 25) {
+        task_title = task_title.slice(0, 20)+"...";
+    }
     return (
+
       <View style={styles.image_container}>
-        <View style={{ justifyContent: 'center', marginLeft: 20 }}>
-          <AntDesign name="clockcircleo" size={35} color="#009387" />
-        </View>
-        <View>
-          <View style={{ flexDirection: 'column', marginLeft: 20, alignItems: 'flex-start', width: 170 }}>
-            <View style={{ marginTop: 1, flexDirection: 'row' }}>
-              <Text >{new Date(this.props.item.saved_time).toLocaleDateString()}</Text>
-              <View style={{ marginLeft: 10 }}>
-                <Text >{new Date(this.props.item.saved_time).toLocaleTimeString()}</Text>
+        <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ justifyContent: 'center', marginLeft: 20 }}>
+            <AntDesign name="clockcircleo" size={35} color="#009387" />
+          </View>
+          <View>
+            <View style={{ flexDirection: 'column', marginLeft: 10, alignItems: 'flex-start', width: width - 200 }}>
+              <View style={{ marginTop: 1, flexDirection: 'row' }}>
+                <Text >{new Date(this.props.item.saved_time).toLocaleDateString()}</Text>
+                <View style={{ marginLeft: 10 }}>
+                  <Text >{new Date(this.props.item.saved_time).toLocaleTimeString()}</Text>
+                </View>
               </View>
-            </View>
-            <View>
-              <Text style={styles.company}>{this.props.item.task_title}</Text>
+              <View>
+                <Text style={styles.company}>{task_title}</Text>
+              </View>
+             
             </View>
           </View>
+          <TouchableOpacity onPress={() => this.setState({ showarning: true })}>
+            <Entypo name="dots-three-vertical" size={24} color="#009387" />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() =>  this.setState({  showarning:true})} style={{ marginLeft: 60 }} >
-          <Entypo name="dots-three-vertical" size={24} color="#009387" />
-        </TouchableOpacity>
+
+
         <Modal transparent={true}
           visible={this.state.showarning}
           animationType='slide'
@@ -169,14 +186,16 @@ class RenderItem extends React.Component {
                 <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
                 <Text>Bạn có thật sự muốn xóa !</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
+
                   <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
-                    width: "50%", backgroundColor: '#71B7B7',
+                    width: "50%", backgroundColor: '#ffff',
+                    borderWidth: 1, borderColor: '#488B8F',
                     height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
                   }}>
-                    <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
+                    <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => this.deleteTasksave()} style={{
-                    width: "50%", backgroundColor: '#71B7B7',
+                    width: "50%", backgroundColor: '#488B8F',
                     height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 5
                   }}>
                     <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
@@ -190,7 +209,7 @@ class RenderItem extends React.Component {
               }}>
                 <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                 <Text>{this.state.notice}</Text>
-                <TouchableOpacity onPress={() => this.setState({ showarning: false,show1:false })} style={{
+                <TouchableOpacity onPress={() => this.setState({ showarning: false, show1: false })} style={{
                   width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                   height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                 }}>
@@ -202,6 +221,8 @@ class RenderItem extends React.Component {
           </View>
         </Modal>
       </View>
+
+
     )
   }
 }
@@ -211,15 +232,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center'
   },
+  container: {
+    flex: 1,
+    justifyContent: 'center', alignItems: 'center'
+  },
   image_container: {
-    paddingVertical: 10,
-    paddingHorizontal: 10,
     flexDirection: 'row',
-    borderRadius: 10,
-    height: 90,
-    width: 350,
+    marginTop: 10, height: 80, width: width - 80, justifyContent: 'space-between',
     backgroundColor: 'rgba(200,200,200,0.3)',
-    margin: 20
+    borderRadius: 10
   },
   time: {
     fontWeight: 'bold',
@@ -258,8 +279,8 @@ const styles = StyleSheet.create({
   header0: {
     height: height * 0.1,
     shadowOffset: { width: 0, height: 3 },
-    padding: 10,
-    marginTop: Platform.OS == 'android' ? 25 : null,
+    paddingLeft: 10,
+    paddingTop: 15,
     backgroundColor: '#faf9f9',
 
   },

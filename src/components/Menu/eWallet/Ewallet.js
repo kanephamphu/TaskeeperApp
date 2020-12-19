@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, ActivityIndicator, ScrollView } from 'react-native';
+import { Image, View, Text ,StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, ActivityIndicator, ScrollView,StatusBar} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Entypo } from '@expo/vector-icons';
@@ -26,6 +26,7 @@ export default class Ewallet extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <StatusBar />
                 <View style={styles.header0}>
                     <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
                         <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="black" />
@@ -128,8 +129,8 @@ const styles = StyleSheet.create({
     header0: {
         height: height * 0.3,
         shadowOffset: { width: 0, height: 3 },
-        padding: 10,
-        marginTop: Platform.OS == 'android' ? 25 : null,
+        paddingLeft: 10,
+        paddingTop:15,
         backgroundColor: '#add2c9',
 
     },
