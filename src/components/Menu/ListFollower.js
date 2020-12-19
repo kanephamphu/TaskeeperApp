@@ -14,7 +14,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import avatarimage from '../../images/avatar.jpg'
+import avatarimage from '../../images/avatar11.png'
 import AsyncStorage from '@react-native-community/async-storage';
 const { height, width } = Dimensions.get('window');
 class ListFollower extends Component {
@@ -29,6 +29,9 @@ class ListFollower extends Component {
             secret_key: '',
         }
         this.socket.on("sv-get-followers",function(data){
+            e.setState({
+                dataFollower:data.data
+            })
             console.log(data)
         })  
     }
@@ -39,72 +42,57 @@ class ListFollower extends Component {
     onFollow = async () => {
         const token = await AsyncStorage.getItem('token');
         const get={
-            secret_key:token
+            user_id:this.props.route.params._id
         }
         this.socket.emit("cl-get-followers",get)
         console.log(get)
     }
     render() {
         return (
-           /* <View style={styles.container}>
-                {this.state.isLoading === true ?
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <ActivityIndicator size='large'></ActivityIndicator>
+            <View style={styles.container}>
+                 <View style={styles.header0}>
+                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
+                        <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="black" />
+                        <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>List Followers</Text>
+                    </TouchableOpacity>
+                </View>
+            {this.state.isLoading === true ?
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size='large'></ActivityIndicator>
+                </View>
+                :
+                this.state.dataFollower.length === 0
+                    ?
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                        <Text>Trống</Text>
                     </View>
                     :
-                    this.state.dataFollower.length === 0
-                        ?
-                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text>Không tìm thấy người này</Text>
-                        </View>
-                        :
-                        <View style={styles.container1}>
-                            <FlatList data={this.state.dataSearch}
-                                renderItem={({ item, index }) => {
-                                    return (
-                                        <Listdataitem item={item} index={index}
-                                        ></Listdataitem>
-                                    )
-                                }}
-                                keyExtractor={(item) => item._id.toString()}
-                                ItemSeparatorComponent={this.ItemSeparatorComponent}
-                                showsHorizontalScrollIndicator={false}
-                            >
-                            </FlatList>
-                        </View>
-                }
-            </View>*/
-            <View style={styles.container}>
-                    <View style={styles.header0}>
-                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.navigate("Menu")}>
-                        <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
-                        <Text style={{ fontWeight: 'bold', fontSize: 25, color: '#2d7474', marginLeft: 15, marginTop: -2 }}>List Follower</Text>
-                    </TouchableOpacity>
+                    <View style={styles.container1}>
+                        <FlatList data={this.state.dataFollower}
+                            renderItem={({ item, index }) => {
+                                return (
+                                    <View key={item._id} style={styles.body}>
+                                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("Profilefriendmenu",{_id: item.follower_id})} >
+                                        <View style={styles.imageview}>
+                                            <Image source={item.avatar? { uri:item.avatar }:avatarimage} style={styles.image}></Image>
+                                        </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("Profilefriendmenu",{_id: item.follower_id})} style={{ flexDirection: 'column',marginLeft:10,justifyContent: 'center', alignItems: 'center'}}>
+                                        <Text style={{fontSize:20,fontWeight: 'bold'}}>{item.follower_first_name} {item.follower_last_name}</Text>
+                                        
+                                    </TouchableOpacity>
+                                </View>
+                                )
+                            }}
+                            keyExtractor={(item) => item._id.toString()}
+                            ItemSeparatorComponent={this.ItemSeparatorComponent}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                        </FlatList>
                     </View>
-                    <View style={styles.body}>
-                        <View >
-                            <View style={styles.imageview}>
-                                <Image source={avatarimage} style={styles.image}></Image>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'column',marginLeft:10,justifyContent: 'center', alignItems: 'center'}}>
-                            <Text style={{fontSize:20,fontWeight: 'bold'}}>Ten</Text>
-                            <Text style={{fontSize:18}}>Mail</Text>
-                        </View>
-                    </View>
-                    <View style={styles.body}>
-                        <View >
-                            <View style={styles.imageview}>
-                                <Image source={avatarimage} style={styles.image}></Image>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'column',marginLeft:10,justifyContent: 'center', alignItems: 'center'}}>
-                            <Text style={{fontSize:20,fontWeight: 'bold'}}>Ten</Text>
-                            <Text style={{fontSize:18}}>Mail</Text>
-                        </View>
-                    </View>
-                    
-            </View>
+            }
+        </View>
+          
         )
     }
 }

@@ -108,7 +108,7 @@ class Listdataitem extends Component {
                                     <MaterialIcons name="work" size={24} color="#555555" />
                                 </View>
                                 <View style={styles.viewtext}>
-                                    <Text style={styles.text}>Working information:<Text style={{fontWeight: 'bold' }}> {this.props.item.working_information[0].company_name}</Text></Text>
+                                    <Text style={styles.text}>Working information:<Text style={{fontWeight: 'bold' }}> {this.props.item.working_information.length==0?null:this.props.item.working_information[0].company_name}</Text></Text>
                                 </View>
                             </View>
                             <View style={styles.two}>
@@ -116,7 +116,7 @@ class Listdataitem extends Component {
                                     <MaterialCommunityIcons name="cast-education" size={24} color="#555555" />
                                 </View>
                                 <View style={styles.viewtext}>
-                                <Text style={styles.text}>Education information:<Text style={{fontWeight: 'bold' }}> {this.props.item.education_information[0].school_name}</Text></Text>
+                                <Text style={styles.text}>Education information:<Text style={{fontWeight: 'bold' }}> {this.props.item.education_information.length==0?null:this.props.item.education_information[0].school_name}</Text></Text>
                                 </View>
                             </View>
                             <View style={styles.two}>

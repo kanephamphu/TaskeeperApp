@@ -124,7 +124,7 @@ class Home extends Component {
                 e.setState({datasourcenew:dulieu,isLoading:true,test:false})
               
                 //var listdatanewfeed=e.state.datasourcenew.push(JSON.stringify(list))
-                //console.log(JSON.stringify(listdatanewfeed))
+              
             }    
         })
         this.socket.on('sv-get-recommend-task', function (data) {
@@ -546,7 +546,7 @@ const Task = ({ onStack,_id,first_name, image,last_name, location,title }) => {
     var fullname = title;
     var count = fullname.length;
     if (count >= 25) {
-        fullname = fullname.slice(0, 25) + "....";
+        fullname = fullname.slice(0,25) + "...";
     }
     
     return (
@@ -563,19 +563,19 @@ const Task = ({ onStack,_id,first_name, image,last_name, location,title }) => {
         }}
         >
             <View >
-                <Image source={image?{uri:image}:avatar1} style={{ width: 230, height: height * 0.3, borderTopLeftRadius: 10,borderTopRightRadius:10 }}>
+                <Image source={image?{uri:image}:avatar1} style={{ width: 250, height: height * 0.3, borderTopLeftRadius: 10,borderTopRightRadius:10 }}>
 
                 </Image>
                 <View style={styles.ImageOverlay}>
-                    <TouchableOpacity style={{paddingLeft:10}} onPress={()=>onStack(_id)}>
-                         <Text style={{ fontSize: 18, color: 'black',fontWeight: 'bold'}}>{fullname}</Text>
+                    <TouchableOpacity style={{marginTop:5}} onPress={()=>onStack(_id)}>
+                         <Text style={{ fontSize: 16, color: 'black',fontWeight: 'bold'}}>{fullname}</Text>
                     </TouchableOpacity>
                 
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row',paddingRight:15}}>
                         <View>
                             <Entypo name="location-pin" size={22} color="red" />
                         </View>
-                        <Text style={{ fontSize: 18, color: 'black' }}></Text>
+                        <Text style={{ fontSize: 13, color: '#888888'}}>{location}</Text>
                     </View>
                   
                 </View>
@@ -749,7 +749,7 @@ const styles = StyleSheet.create({
         shadowColor: 'green',
         shadowOpacity: 0.1,
         elevation: 4,
-        width: 230, height: height * 0.44,
+        width: 250, height: height * 0.45,
     },
     nof: {
         backgroundColor: '#71B7B7',
@@ -839,7 +839,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     recommend: {
-        height: height * 0.5,
+        height: height * 0.51,
         marginTop: 10,
         marginRight: 10,
         marginLeft: 10,
@@ -853,8 +853,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end', alignItems: 'center'
     },
     ImageOverlay: {
-        width: 230, height: height*0.15, borderBottomEndRadius: 10,borderBottomLeftRadius:10,
-        backgroundColor: '#ffff', alignItems: 'center',padding:5
+        width: 250, height: height*0.16, borderBottomEndRadius: 10,borderBottomLeftRadius:10,
+        backgroundColor: '#ffff',paddingLeft:10,paddingRight:10
     },
     iconBulliten1: {
         borderRightWidth: 0.5,

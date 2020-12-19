@@ -29,7 +29,7 @@ class SearchTask extends Component {
                     dataSearch: list,
                     isLoading: true
                 })
-                console.log(list)
+               
             }
         })
     }
@@ -44,7 +44,6 @@ class SearchTask extends Component {
         }
 
         this.socket.emit("cl-search-task", searchTask)
-      console.log(searchTask)
     }
     render() {
         return (

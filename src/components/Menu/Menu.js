@@ -193,7 +193,7 @@ class New extends Component {
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between',marginTop: 10,width:180 }}>
                                     <View style={{ flexDirection: 'row' }} >
                                         <SimpleLineIcons style={{ marginRight: 3 }} name="user-follow" size={12} color="#71B7B7" />
-                                        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Listfollower")}>
+                                        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Listfollower",{ _id: this.state._user_id})}>
                                         <Text style={{ fontSize: 12 }}>
                                             Follower {this.state.follower_number}
                                         </Text>

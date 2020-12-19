@@ -98,9 +98,9 @@ export default class Profilefriend extends React.Component {
                     education: list.education_information,
                     avatar: list.avatar,
                     follower_number: list.follower_number,
-                    votes: 4
+                    votes: list.votes.vote_count
                 })
-    
+                console.log(data.data)
             } else {
                 console.log(data.errors)
             }
@@ -238,6 +238,7 @@ export default class Profilefriend extends React.Component {
     }
     render() {
         const { first_name, last_name, _id } = this.props.route.params;
+        var number=this.state.votes
         return (
             <View style={styles.container}>
                 <Modal transparent={true}
@@ -475,7 +476,7 @@ export default class Profilefriend extends React.Component {
                                 <MaterialCommunityIcons name="vote" size={24} color="#555555" />
                             </View>
                             <View style={styles.viewtext}>
-                                <Text style={styles.text}>Số lượt đánh giá: {this.state.votes}</Text>
+                                <Text style={styles.text}>Số lượt đánh giá trung bình: {number}</Text>
                             </View>
                         </View>
                     </View>

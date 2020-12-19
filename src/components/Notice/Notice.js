@@ -30,7 +30,7 @@ class Notice extends Component {
                 console.log(JSON.stringify(data))
             } else if (data.success == true) {
                 e.setState({
-                    dataSource: list.reverse(),
+                    dataSource: list,
                     isLoading:true,
                 })
              

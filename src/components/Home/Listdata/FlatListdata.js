@@ -239,7 +239,7 @@ class FlatListdata extends Component {
                         <View style={{flexDirection:'row',marginTop:10}}>                        
                             <Text style={{color:'#0E0E0E',fontSize:13}}>Working Time:</Text> 
                             <View style={{marginLeft:5}}>
-                                <Text style={{color:'#0E0E0E',fontSize:13,fontWeight:'bold'}}>{this.props.item.working_time.start_time} - {this.props.item.working_time.end_time}</Text> 
+                                <Text style={{color:'#0E0E0E',fontSize:13,fontWeight:'bold'}}>{this.props.item.working_time!=null?this.props.item.working_time.start_time:null} - {this.props.item.working_time!=null?this.props.item.working_time.end_time:null}</Text> 
                             </View>
                         </View>
                     </View>

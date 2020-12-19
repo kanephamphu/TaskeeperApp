@@ -113,7 +113,7 @@ export default class Detailprofile extends React.Component {
 
                                                 </View>
                                             </View>
-                                            <View style={{justifyContent: 'center',marginRight:10}} ><Text>{item.time_period.time_type}</Text></View>
+                                            <View style={{justifyContent: 'center'}} ><Text>{item.time_period.time_type}</Text></View>
                                         </View>
                                     )
                                 })

@@ -68,7 +68,7 @@ export default class MainTabScreen extends React.Component{
         e.setState({
           numbernotice:data.data
         })
-        console.log(JSON.stringify(data))
+       
     })
   }
   componentDidMount = async () => {
@@ -80,7 +80,7 @@ export default class MainTabScreen extends React.Component{
       secret_key:token
     }
     this.socket.emit("cl-get-total-unread-notification",unread);
-    console.log(unread)
+   
   }
   render(){
     return (  
@@ -488,6 +488,11 @@ const MoreStackScreen = ({ navigation }) => {
       <HomeStack.Screen
         name="history"
         component={history}
+        options={{ headerShown: false }}
+      />
+       <HomeStack.Screen
+        name="Profilefriendmenu"
+        component={Profilefriend}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen
