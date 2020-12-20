@@ -37,9 +37,6 @@ export default class Apply extends React.Component {
       }
     })
   };
-  componentDidMount = async () => {
-    this.refreshFlatlist()
-  }
   refreshFlatlist= async () =>  {
     const token = await AsyncStorage.getItem('token')
     this.setState({
@@ -51,6 +48,10 @@ export default class Apply extends React.Component {
     this.socket.emit("cl-get-applied-job", apply)
   }
 
+  componentDidMount = async () => {
+    this.refreshFlatlist()
+  }
+ 
   render() {
    
     return (

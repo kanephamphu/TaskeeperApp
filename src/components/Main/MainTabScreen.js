@@ -68,11 +68,13 @@ export default class MainTabScreen extends React.Component{
         e.setState({
           numbernotice:data.data
         })
-       
+        console.log(data)
     })
   }
+
   componentDidMount = async () => {
-  this.redNotification()
+   this.redNotification()
+  
   }
   redNotification= async () =>{
     const token = await AsyncStorage.getItem('token');
@@ -80,10 +82,10 @@ export default class MainTabScreen extends React.Component{
       secret_key:token
     }
     this.socket.emit("cl-get-total-unread-notification",unread);
-   
+    console.log(unread)
   }
   render(){
-    return (  
+    return (    
       <Tab.Navigator
       initialRouteName="Home"
       activeColor="#2d7474"
@@ -146,6 +148,7 @@ export default class MainTabScreen extends React.Component{
           tabBarLabel: "Notice",
           tabBarColor: '#faf9f9',
           tabBarIcon: ({ color }) => (
+
             <View style={{position:'relative'}}>
               <Ionicons name="ios-notifications" size={28} color={color} />
               {this.state.numbernotice=='0'?null:

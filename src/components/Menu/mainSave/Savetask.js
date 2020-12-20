@@ -184,7 +184,7 @@ class RenderItem extends React.Component {
                 height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
               }}>
                 <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
-                <Text>Bạn có thật sự muốn xóa !</Text>
+                <Text>Do you want to cancel this jobs ?</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
 
                   <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{

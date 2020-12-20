@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, Dimensions } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io'
 import { AntDesign } from '@expo/vector-icons';
-
+import AsyncStorage from '@react-native-community/async-storage';
 const { height, width } = Dimensions.get('window');
 var e;
 export default class Appprove extends React.Component {
@@ -12,7 +12,8 @@ export default class Appprove extends React.Component {
     e = this;
     this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
-
+      dataApprove:[],
+      isLoading:false,
       data: [
         {
           _id: '1',
@@ -58,16 +59,35 @@ export default class Appprove extends React.Component {
         job: 'Business Analyst',
       },
     }
+    this.socket.on("sv-get-approved-job", function (data) {
+      var list = data.data
+      if (data.success == false) {
+        console.log(JSON.stringify(data))
+      } else if (data.success == true) {
+        e.setState({
+          dataApprove: list,
+          isLoading: true,
+        })
+        console.log(data.data)
+      }
+    })
   };
   componentDidMount = async () => {
-
+    const token = await AsyncStorage.getItem('token')
+    this.setState({
+      secret_key: token
+    })
+    const apply = {
+      secret_key: this.state.secret_key
+    }
+    this.socket.emit("cl-get-approved-job", apply)
   }
 
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.flatlist}>
-          <FlatList data={this.state.data}
+          <FlatList data={this.state.dataApprove}
             renderItem={({ item, index }) => {
               return (
                 <RenderItem item={item} index={index}></RenderItem>
@@ -84,21 +104,26 @@ export default class Appprove extends React.Component {
 
 class RenderItem extends React.Component {
   render() {
+    var task_title = this.props.item.task_title;
+   
+    var count = task_title.length;
+   
+    if (count >= 35) {
+        task_title = task_title.slice(0, 35)+"...";
+    }
     return (
-      <View style={styles.image_container}>
+      <View  style={styles.image_container}>
         <View style={{ justifyContent: 'center', marginLeft: 20 }}>
           <AntDesign name="clockcircleo" size={35} color="#009387" />
         </View>
         <View>
           <View style={{ flexDirection: 'column', marginLeft: 20, alignItems: 'flex-start', width: 170 }}>
+           
             <View>
-              <Text style={styles.time}>{this.props.item.time}</Text>
+              <Text style={styles.company}>{this.props.item.task_type}</Text>
             </View>
             <View>
-              <Text style={styles.company}>{this.props.item.company}</Text>
-            </View>
-            <View>
-              <Text style={styles.position}>{this.props.item.position}</Text>
+              <Text style={styles.position}>{task_title }</Text>
             </View>
           </View>
         </View>
@@ -147,7 +172,8 @@ const styles = StyleSheet.create({
   },
   company: {
     fontWeight: 'bold',
-    fontSize: 18
+    fontSize: 19,
+    color: '#2d7474'
 
   },
   position: {

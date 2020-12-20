@@ -4,9 +4,6 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 const { height, width } = Dimensions.get('window');
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import jwt_decode from 'jwt-decode'

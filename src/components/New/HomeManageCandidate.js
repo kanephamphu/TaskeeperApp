@@ -1,5 +1,5 @@
 import  React, { Component } from 'react';
-import { View, Text, StyleSheet,Button,TouchableOpacity,Animated,ScrollView,Dimensions,FlatList } from 'react-native';
+import { View, Text, StyleSheet,Dimensions,FlatList } from 'react-native';
 import ScrollableTabView,{DefaultTabBar} from 'react-native-scrollable-tab-view';
 import { Ionicons } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 

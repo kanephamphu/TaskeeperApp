@@ -3,9 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, Dimensions,
 import io from 'socket.io-client/dist/socket.io'
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
 import avatar from '../../../images/avatar11.png'   
-import { MaterialIcons } from '@expo/vector-icons';
 import iconsuccess from '../../../images/icon1.png';
 import iconerror from '../../../images/icon2.png';
 import AsyncStorage from '@react-native-community/async-storage';

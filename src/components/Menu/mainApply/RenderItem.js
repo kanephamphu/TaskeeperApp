@@ -5,36 +5,49 @@ import AsyncStorage from '@react-native-community/async-storage';
 import io from 'socket.io-client/dist/socket.io'
 import { AntDesign } from '@expo/vector-icons';
 import Swipeout from 'react-native-swipeout'
+import iconsuccess from '../../../images/icon1.png';
+import iconerror from '../../../images/icon2.png';
+import iconwarning from '../../../images/icon3.png';
 const { height, width } = Dimensions.get('window');
+var e;
 export default class RenderItem extends React.Component {
   constructor(props) {
     super(props)
+    e=this;
     this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
       show: false,
       secret_key: '',
       task_id: '',
+      showarning: false,
+      show1: false,
+      notice: '',
+      key: ''
     }
+    this.deleteApplyjob=this.deleteApplyjob.bind(this)
     this.socket.on("sv-delete-apply-job", function (data) {
       if (data.success == false) {
         console.log(JSON.stringify(data))
-        console.log('that bai')
-      } else {
+      } else if (data.success == true) {
+        e.setState({
+          show1: true,
+          notice: 'Xóa thành công!',
+          key: "success",
+        })
         console.log('xoa thanh cong')
-        /* Alert.alert('','Delete success',[
-           {text:'Yes'}
-         ],{cancelable:true})*/
       }
     })
 
   }
   componentDidMount = async () => {
-   this.props.parenFlastlist();
-  }
-  deleteApplyjob = async () => {
     const token = await AsyncStorage.getItem('token')
-    const deleteApply = {
+    this.setState({
       secret_key: token,
+    })
+  }
+  deleteApplyjob () {
+    const deleteApply = {
+      secret_key:this.state.secret_key,
       task_id:this.props.item._id
     }
     this.socket.emit("cl-delete-apply-job", deleteApply)
@@ -76,15 +89,58 @@ export default class RenderItem extends React.Component {
         </View>
         </View>
        
-        <TouchableOpacity onPress={() => Alert.alert(
-          '',
-          'Do you want to cancel this jobs ?', [
-          { text: 'No', onPress: () => console.log('cancel'), style: 'cancle' }, { text: 'Yes', onPress: () => this.deleteApplyjob()  }
-        ], { cancelable: true }
-        )}  >
+        <TouchableOpacity onPress={() => this.setState({ showarning: true })}>
           <Entypo name="dots-three-vertical" size={24} color="#009387" />
         </TouchableOpacity>
-       
+        <Modal transparent={true}
+          visible={this.state.showarning}
+          animationType='slide'
+          style={{ justifyContent: 'center', alignItems: 'center' }}
+        >
+          <View style={{ backgroundColor: '#000000aa', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            {this.state.show1 === false
+              ?
+              <View style={{
+                backgroundColor: '#faf9f9', borderRadius: 20,
+                height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
+              }}>
+                <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
+                <Text>Do you want to cancel this jobs ?</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
+
+                  <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
+                    width: "50%", backgroundColor: '#ffff',
+                    borderWidth: 1, borderColor: '#488B8F',
+                    height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
+                  }}>
+                    <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.deleteApplyjob()} style={{
+                    width: "50%", backgroundColor: '#488B8F',
+                    height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 5
+                  }}>
+                    <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              :
+              <View style={{
+                backgroundColor: '#faf9f9', borderRadius: 20,
+                height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
+              }}>
+                <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
+                <Text>{this.state.notice}</Text>
+                <TouchableOpacity onPress={() => this.setState({ showarning: false, show1: false })} style={{
+                  width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
+                  height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
+                }}>
+                  <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
+                </TouchableOpacity>
+              </View>
+            }
+
+          </View>
+        </Modal>
       </View>
      
     )

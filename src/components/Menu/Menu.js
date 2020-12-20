@@ -4,14 +4,9 @@ import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io'
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Fontisto } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons'; 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { Octicons } from '@expo/vector-icons';
 import Collapsible from 'react-native-collapsible';
 import avatar1 from '../../images/avatar11.png'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';

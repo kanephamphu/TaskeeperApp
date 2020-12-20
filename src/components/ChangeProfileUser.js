@@ -1,11 +1,9 @@
 import  React, { Component } from 'react';
 import { View, Text, StyleSheet,TextInput, Picker, ScrollView, ToastAndroid,TouchableOpacity ,Dimensions} from 'react-native';
-import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 const {height,width} =Dimensions.get('window');
 import { Ionicons } from '@expo/vector-icons'; 
 import AnimatedMultistep from "react-native-animated-multistep";
 import io from 'socket.io-client/dist/socket.io';
-import AsyncStorage from '@react-native-community/async-storage';
 import StepOne from '../components/StepOne';
 import StepTwo from '../components/StepTwo';
 import StepThree from '../components/StepThree';

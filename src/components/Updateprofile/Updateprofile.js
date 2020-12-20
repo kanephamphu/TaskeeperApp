@@ -3,8 +3,6 @@ import { Image, View, TouchableOpacity, TextInput, Text, StyleSheet, Modal, Scro
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 const { height, width } = Dimensions.get('window');
 import DropDownPicker from 'react-native-dropdown-picker';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io';
 import iconsuccess from '../../images/icon1.png';
 import iconerror from '../../images/icon2.png';

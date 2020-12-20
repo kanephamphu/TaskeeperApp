@@ -577,8 +577,8 @@ const Task = ({ onStack,_id,first_name, image,last_name, location,title }) => {
                     </View>
                   
                 </View>
-                <TouchableOpacity onPress={()=>onStack(_id)} style={{ width:150,height:30,backgroundColor: '#2d7474',
-                position: 'absolute',bottom:7,left:40,borderRadius:5, shadowOffset: { width: 0, height: 0 },
+                <TouchableOpacity onPress={()=>onStack(_id)} style={{ width:"90%",height:30,backgroundColor: '#2d7474',
+                position: 'absolute',bottom:7,left:"5%",borderRadius:5, shadowOffset: { width: 0, height: 0 },
                 shadowColor: 'green',
                 shadowOpacity: 0.1,
                 elevation: 4,justifyContent: 'center',alignItems: 'center'}}>
