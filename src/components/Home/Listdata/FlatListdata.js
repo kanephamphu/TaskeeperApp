@@ -170,7 +170,7 @@ class FlatListdata extends Component {
                                 <Text>...</Text>
                             </View>:null}
                             {new Date(this.props.item.created_time).toLocaleDateString()==d.toLocaleDateString()?
-                            <View style={{marginLeft:3}}>
+                            <View style={{marginLeft:5}}>
                                 <Text style={{fontWeight:'bold',fontSize:10,marginTop:2,color:'#CD5C5C'}}>(MỚI)</Text>
                             </View>
                             :null}

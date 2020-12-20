@@ -30,7 +30,8 @@ class ListFollower extends Component {
         }
         this.socket.on("sv-get-followers",function(data){
             e.setState({
-                dataFollower:data.data
+                dataFollower:data.data,
+                isLoading:true
             })
             console.log(data)
         })  
@@ -56,7 +57,7 @@ class ListFollower extends Component {
                         <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>List Followers</Text>
                     </TouchableOpacity>
                 </View>
-            {this.state.isLoading === true ?
+            {this.state.isLoading === false ?
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <ActivityIndicator size='large'></ActivityIndicator>
                 </View>

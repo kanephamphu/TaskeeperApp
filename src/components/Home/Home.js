@@ -121,10 +121,8 @@ class Home extends Component {
                 var list = data.data;
                 var dulieu= e.state.datasourcenew;
                 dulieu = dulieu.concat(list)
-                e.setState({datasourcenew:dulieu,isLoading:true,test:false})
-              
+                e.setState({datasourcenew:dulieu,isLoading:true,test:false});        
                 //var listdatanewfeed=e.state.datasourcenew.push(JSON.stringify(list))
-              
             }    
         })
         this.socket.on('sv-get-recommend-task', function (data) {

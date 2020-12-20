@@ -80,8 +80,7 @@ export default class Profilefriend extends React.Component {
             isFollowing:false,
             checkloading: false,
         }
-        this.onFollow = this.onFollow.bind(this)
-        this.onUnFollow = this.onUnFollow.bind(this)
+      
         this.socket.on("sv-user-detail", function (data) {
             var list = data.data
             if (data.success == true) {
@@ -100,7 +99,7 @@ export default class Profilefriend extends React.Component {
                     follower_number: list.follower_number,
                     votes: list.votes.vote_count
                 })
-                console.log(data.data)
+               
             } else {
                 console.log(data.errors)
             }
@@ -147,7 +146,7 @@ export default class Profilefriend extends React.Component {
                     isFollowing:data.isFollowing,
                     checkloading:true
                })
-               
+              
             }else{
                 console.log(data)
             }
@@ -196,24 +195,30 @@ export default class Profilefriend extends React.Component {
         return rating;
     }
     onFollow= async ( _id) => {
+        e.setState({
+            isFollowing:true
+        })
         const token = await AsyncStorage.getItem('token')
         const follow = {
             secret_key:token,
             user_id: _id
         }
         this.socket.emit("cl-follow-user", follow);
-        this.onCheckFollower()
+       
         console.log(follow)
 
     }
     onUnFollow= async ( _id) =>{
+        e.setState({
+            isFollowing:false
+        })
         const token = await AsyncStorage.getItem('token')
         const follow = {
             secret_key:token,
             user_id: _id
         }
         this.socket.emit("cl-unfollow-user", follow);
-        this.onCheckFollower()
+       
         console.log(follow)
     }
     onVote= async ( _id) =>  {

@@ -22,45 +22,7 @@ export default class HRM extends React.Component {
           loadingdata: false,
           dataTask:[
           ],
-          /*data:[
-            {
-                _id:'1',
-                alert:'Tôi là thủy thông minh',
-                logo:'https://scontent.fdad5-1.fna.fbcdn.net/v/t1.0-9/119127441_952017761944999_8145693642973309693_n.jpg?_nc_cat=108&_nc_sid=09cbfe&_nc_ohc=AIb2SUsS9aYAX8amtaN&_nc_ht=scontent.fdad5-1.fna&oh=c4e29b5f36e04bdcbbc073fd2cc32dd5&oe=5FABFD92',
-                position: 'Business Analyst',
-                amount: '4 appliers'
-            
-            },
-            {
-                _id:'2',
-                alert:'Tôi là tín ngu',
-                logo:'https://scontent.fdad5-1.fna.fbcdn.net/v/t1.0-9/107836953_1391168744400098_147588760794913815_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_ohc=tNP_MSssercAX8zkGDR&_nc_ht=scontent.fdad5-1.fna&oh=3c2430bf79f068d3a14c6c5e21be7790&oe=5FAC4BA8',
-                position: 'Business Analyst',
-                amount: '4 appliers'
-             
-            },
-            {
-                _id:'3',
-                logo:'https://iweb.tatthanh.com.vn/pic/3/blog/images/logo-cong-nghe(7).jpg',
-                position: 'Business Analyst',
-                amount: '4 appliers'
-             
-            },
-            {
-                _id:'4',
-                logo:'https://iweb.tatthanh.com.vn/pic/3/blog/images/logo-cong-nghe(7).jpg',
-                position: 'Business Analyst',
-                amount: '4 appliers'
-             
-            },
-            {
-                _id:'5',
-                logo:'https://iweb.tatthanh.com.vn/pic/3/blog/images/logo-cong-nghe(7).jpg',
-                position: 'Business Analyst',
-                amount: '4 appliers'
-             
-            },
-          ],*/
+        
         }
         this.socket.on("sv-get-task-manage",function(data){
           var list=data.data
@@ -69,7 +31,7 @@ export default class HRM extends React.Component {
           if(data.success==false){
             console.log(JSON.stringify(data))
           }else if(data.success==true){
-              console.log(JSON.stringify(list))
+             
             e.setState({
               dataTask:list,
               loadingdata:true
