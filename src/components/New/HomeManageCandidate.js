@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         },
         android: {
           flex: 1,  
-          backgroundColor: 'rgba(113, 183, 183, 0.3)',
+          backgroundColor: '#faf9f9',
           /*backgroundColor:'#faf9f9'*/
         },
         default: {
@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
       padding: 10,
       shadowOpacity: 0.2,
       elevation: 1,
+      backgroundColor: '#faf9f9'
      
   },
     header:{

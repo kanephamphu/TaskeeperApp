@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, Dimensions, ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, FlatList, Dimensions, ActivityIndicator,Image} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import io from 'socket.io-client/dist/socket.io'
 import RenderItem from '../mainApply/RenderItem'
+import noitem from '../../../images/box.png';
 const { height, width } = Dimensions.get('window');
 var e;
 export default class Apply extends React.Component {
@@ -64,7 +65,8 @@ export default class Apply extends React.Component {
       this.state.dataApply.length ===0 
         ?
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "#ffff" }}>
-          <Text>Blank task apply list</Text>
+           <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
+          <Text>No item</Text>
         </View>
         :
         <View style={styles.container}>

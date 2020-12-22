@@ -6,8 +6,8 @@ import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import avatar from '../../images/avatar.jpg';
 import { MaterialIcons } from '@expo/vector-icons';
-import iconsuccess from '../../images/icon1.png';
-import iconerror from '../../images/icon2.png';
+import iconsuccess from '../../images/checked.png';
+import iconerror from '../../images/close.png';
 import avatarimage from '../../images/avatar.jpg'
 import AsyncStorage from '@react-native-community/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';

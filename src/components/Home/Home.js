@@ -101,7 +101,7 @@ class Home extends Component {
                 if (data.errors.message) {
                     Alert.alert(
                         'Notice',
-                        'Đa save', [
+                        'Already Exist!', [
                         { text: 'Ok' }
                     ], { cancelable: true }
                     )
@@ -110,7 +110,7 @@ class Home extends Component {
                 console.log("lua thanh cong")
                 Alert.alert(
                     'Notice',
-                    'Save Success', [
+                    'Saved Successfully!', [
                     { text: 'Ok' }
                 ], { cancelable: true }
                 )
@@ -122,7 +122,7 @@ class Home extends Component {
                 var dulieu= e.state.datasourcenew;
                 dulieu = dulieu.concat(list)
                 e.setState({datasourcenew:dulieu,isLoading:true,test:false});        
-                //var listdatanewfeed=e.state.datasourcenew.push(JSON.stringify(list))
+                //var listdatanewfeed=e.state.datasourcenew.push(JSON.stringify(list))             
             }    
         })
         this.socket.on('sv-get-recommend-task', function (data) {
@@ -527,7 +527,7 @@ class Home extends Component {
                             showsHorizontalScrollIndicator={false}
                             refreshing={this.state.refreshing}
                             onRefresh={() => { this.refreshTop() }}
-                            onEndReachedThreshold={0}
+                            onEndReachedThreshold={1}
                             onEndReached={()=>{this.refresh() }}
                         >
                         </FlatList>
@@ -561,9 +561,12 @@ const Task = ({ onStack,_id,first_name, image,last_name, location,title }) => {
         }}
         >
             <View >
-                <Image source={image?{uri:image}:avatar1} style={{ width: 250, height: height * 0.3, borderTopLeftRadius: 10,borderTopRightRadius:10 }}>
+                <TouchableOpacity onPress={()=>onStack(_id)}>
+                    <Image source={image?{uri:image}:avatar1} style={{ width: 250, height: height * 0.3, borderTopLeftRadius: 10,borderTopRightRadius:10 }}>
 
-                </Image>
+                    </Image>
+                </TouchableOpacity>
+            
                 <View style={styles.ImageOverlay}>
                     <TouchableOpacity style={{marginTop:5}} onPress={()=>onStack(_id)}>
                          <Text style={{ fontSize: 16, color: 'black',fontWeight: 'bold'}}>{fullname}</Text>

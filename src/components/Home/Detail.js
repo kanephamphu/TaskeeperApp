@@ -8,8 +8,8 @@ import avatarimage from '../../images/avatar11.png';
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import iconsuccess from '../../images/icon1.png';
-import iconerror from '../../images/icon2.png';
+import iconsuccess from '../../images/checked.png';
+import iconerror from '../../images/close.png';
 import AsyncStorage from '@react-native-community/async-storage';
 import avatar1 from '../../images/avatar11.png';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -102,13 +102,13 @@ class Detail extends Component {
                 console.log(JSON.stringify(data))
                 e.setState({
                     shownotice: true,
-                    notice: 'Đã tồn tại!',
+                    notice: 'Already Exist!',
                     key: "error",
                 })
             } else if (data.success == true) {
                 e.setState({
                     shownotice: true,
-                    notice: 'Lưu thành công!',
+                    notice: 'Saved Successfully!',
                     key: "success",
                 })
             }
@@ -118,13 +118,13 @@ class Detail extends Component {
                 if (data.errors.introduction) {
                     e.setState({
                         shownotice: true,
-                        notice: 'Chưa điền giới thiệu!',
+                        notice: 'Please enter your introduction!',
                         key: "error"
                     })
                 } else {
                     e.setState({
                         shownotice: true,
-                        notice: 'Đã tồn tại!',
+                        notice: 'Applied Successfully!',
                         key: "error",
                     })
                 }
@@ -133,7 +133,7 @@ class Detail extends Component {
                 e.setState({
                     show: false,
                     shownotice: true,
-                    notice: 'Tham gia thành công!',
+                    notice: 'Already Exist!',
                     key: "success",
                 })
             }
@@ -164,7 +164,6 @@ class Detail extends Component {
                     position: list.position
 
                 })
-
             } else {
                 console.log(data.erro)
             }
@@ -244,16 +243,19 @@ class Detail extends Component {
 
                             <View style={styles.bodyone}>
                                 {this.state.task_owner_id != this.props.route.params.task_owner_id ? <><View style={{ flexDirection: 'row' }}>
-                                    <View style={styles.imageview}>
+                                    <TouchableOpacity onPress={() => this.props.navigation.navigate("Profilefriend", {
+                                            first_name: this.state.task_owner_first_name,
+                                            last_name: this.state.task_owner_last_name, _id:this.state.task_owner_id
+                                        })} style={styles.imageview}>
                                         <Image source={this.state.avatar ? { uri: this.state.avatar } : avatarimage} style={styles.image}></Image>
-                                    </View>
+                                    </TouchableOpacity>
                                     <View style={{
                                         flexDirection: 'column', marginLeft: 10, paddingTop: 10,
                                         marginRight: 10
                                     }}>
                                         <TouchableOpacity onPress={() => this.props.navigation.navigate("Profilefriend", {
                                             first_name: this.state.task_owner_first_name,
-                                            last_name: this.state.task_owner_last_name, _id: 10
+                                            last_name: this.state.task_owner_last_name, _id:this.state.task_owner_id
                                         })}>
                                             <Text style={{ fontWeight: 'bold', fontSize: 20, }} >{fullname}</Text>
                                         </TouchableOpacity>
@@ -317,7 +319,7 @@ class Detail extends Component {
                                     - {this.state.tags}
                                 </Text>*/}
                                     <Text style={styles.textJobRe}>
-                                        - {this.state.task_requirement}
+                                        - {!this.state.task_requirement?null:this.state.task_requirement}
                                     </Text>
                                 </View>
                                 <View style={{ marginTop: 30 }}>
@@ -377,7 +379,7 @@ class Detail extends Component {
                                 </Text>
                                 </View>
                                 <View style={{ marginLeft: 25, marginTop: 10, marginRight: 20, marginBottom: 50 }}>
-                                    <FlatList numColumns={3} data={this.state.tags} renderItem={({ item, index }) => {
+                                    <FlatList numColumns={2} data={this.state.tags} renderItem={({ item, index }) => {
                                         return (
                                             <View style={{ borderWidth: 1, backgroundColor: '#EEEEEE', borderColor: '#D2D2D2', alignItems: 'center', justifyContent: 'center', borderRadius: 5, height: 30, paddingLeft: 20, paddingRight: 20, marginBottom: 10, marginRight: 10 }}>
                                                 <Text style={{ color: '#505050', lineHeight: 20, fontSize: 13 }}>{item}</Text>
@@ -403,7 +405,7 @@ class Detail extends Component {
 
                                     <ScrollView horizontal={false}>
                                         <View style={{ alignItems: 'center', justifyContent: 'center', paddingRight: 15 }}>
-                                            {this.state.datarecommend.map((task, index) => <Task key={index} image={task.task_owner_avatar}
+                                            {!this.state.datarecommend?null:this.state.datarecommend.map((task, index) => <Task key={index} image={task.task_owner_avatar}
                                                 first_name={task.task_owner_first_name} last_name={task.task_owner_last_name} title={task.task_title}
                                                 location={task.location.formatted_address} onStack={this.onDetail} onStack1={this.onDetail1} _id={task._id}
                                             />)}
@@ -514,6 +516,17 @@ const Task = ({ onStack, _id, first_name, image, last_name, location, title, onS
         }}
         >
             <View>
+                <TouchableOpacity onPress={() => {
+                    if (onStack1(_id)) {
+                        onStack1(_id)
+                    }
+                    else  if(onStack(_id)){
+                        onStack(_id)
+                    }
+                }
+            }>
+
+                </TouchableOpacity>
                 <Image source={image ? { uri: image } : avatar1} style={{ width: width - 20, height: height * 0.30, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
 
                 </Image>
@@ -534,11 +547,9 @@ const Task = ({ onStack, _id, first_name, image, last_name, location, title, onS
                         <View style={{ marginRight: 10 }}>
                             <Entypo name="location" size={22} color="red" />
                         </View>
-                        <Text style={{ fontSize: 18, color: '#888888' }}>{location}</Text>
+                        <Text style={{ fontSize: 16, color: '#888888' }}>{location}</Text>
                     </View>
-
-                </View>
-                <TouchableOpacity onPress={() => {
+                    <TouchableOpacity onPress={() => {
                     if (onStack1(_id)) {
                         onStack1(_id)
                     }
@@ -548,14 +559,16 @@ const Task = ({ onStack, _id, first_name, image, last_name, location, title, onS
                 }
 
                 } style={{
-                    width: 300, height: 35, backgroundColor: '#2d7474',
-                    position: 'absolute', bottom: 10, left: 46, borderRadius: 5, shadowOffset: { width: 0, height: 0 },
+                    width: "100%", height: 35, backgroundColor: '#2d7474',
+                    position: 'absolute', bottom: 10, borderRadius: 5, shadowOffset: { width: 0, height: 0 },
                     shadowColor: 'green',
                     shadowOpacity: 0.1,
                     elevation: 4, justifyContent: 'center', alignItems: 'center'
                 }}>
                     <Text style={{ fontSize: 18, color: 'white', fontWeight: 'bold' }}>Detail</Text>
                 </TouchableOpacity>
+                </View>
+               
             </View>
         </View>
         /*<TouchableOpacity>

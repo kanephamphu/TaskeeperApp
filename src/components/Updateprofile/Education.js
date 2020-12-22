@@ -9,9 +9,10 @@ import jwt_decode from 'jwt-decode';
 import io from 'socket.io-client/dist/socket.io';
 import AsyncStorage from '@react-native-community/async-storage';
 import { AntDesign } from '@expo/vector-icons';
-import iconsuccess from '../../images/icon1.png';
-import iconerror from '../../images/icon2.png';
-import iconwarning from '../../images/icon3.png';
+import iconsuccess from '../../images/checked.png';
+import iconerror from '../../images/close.png';
+import iconwarning from '../../images/warning.png';
+import noitem from '../../images/box.png';
 import Swipeout from 'react-native-swipeout'
 
 var e;
@@ -20,7 +21,7 @@ class Education extends Component {
     constructor(props) {
         super(props);
         e = this;
-        
+
         this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             totalSteps: "",
@@ -50,13 +51,15 @@ class Education extends Component {
             notice: '',
             key: '',
             keycheck: '',
-            showarning:false,
-            show1:false,
+            showarning: false,
+            show1: false,
             school_nameedit: '',
             descriptionedit: '',
             time_typeedit: '',
             from_timeedit: '',
             to_timeedit: '',
+            keycheck1: ''
+
 
         };
         this.onEdit = this.onEdit.bind(this);
@@ -67,49 +70,13 @@ class Education extends Component {
                 e.setState({
                     show: false,
                     shownotice: true,
-                    notice: 'Thêm thành công!',
+                    notice: 'Successfully!',
                     key: "success"
                 })
 
             }
             else if (data.success == false) {
 
-                if (data.errors.school_name) {
-                    e.setState({
-                        shownotice: true,
-                        notice: 'Chưa điền tên trường học !',
-                        key: "error",
-                        keycheck: 'school_name'
-                    })
-                } else if (data.errors.time_type) {
-                    e.setState({
-                        shownotice: true,
-                        notice: 'Chưa chọn kiểu thời gian !',
-                        key: "error",
-                        keycheck: 'time_type'
-                    })
-                } else if (data.errors.from_time) {
-                    e.setState({
-                        shownotice: true,
-                        notice: 'Chưa chọn năm bắt đầu !',
-                        key: "error",
-                        keycheck: 'from_time'
-                    })
-                } else if (data.errors.to_time) {
-                    e.setState({
-                        shownotice: true,
-                        notice: 'Chưa chọn năm kết thúc !',
-                        key: "error",
-                        keycheck: 'to_time'
-                    })
-                } else if (data.errors.description) {
-                    e.setState({
-                        shownotice: true,
-                        notice: 'Chưa điền miêu tả trường học !',
-                        key: "error",
-                        keycheck: 'description'
-                    })
-                }
             }
         });
         this.socket.on('sv-edu-info-detail', function (data) {
@@ -128,7 +95,7 @@ class Education extends Component {
             if (data.success == true) {
                 e.setState({
                     show1: true,
-                    notice: 'Xóa thành công!',
+                    notice: 'Deleted successfully!',
                     key: "success"
                 })
             }
@@ -141,47 +108,12 @@ class Education extends Component {
                 e.setState({
                     showedit: false,
                     shownotice: true,
-                    notice: 'Sửa thành công!',
+                    notice: 'Updated successfully!',
                     key: "success"
                 })
             }
             else if (data.success == false) {
-                if (data.errors.school_name) {
-                    e.setState({
-                        shownotice: true,
-                        notice: 'Chưa điền tên trường học !',
-                        key: "error",
-                        keycheck: 'school_name'
-                    })
-                } else if (data.errors.description) {
-                    e.setState({
-                        shownotice: true,
-                        notice: 'Chưa điền miêu tả trường học !',
-                        key: "error",
-                        keycheck: 'description'
-                    })
-                } else if (data.errors.time_type) {
-                    e.setState({
-                        shownotice: true,
-                        notice: 'Chưa chọn kiểu thời gian !',
-                        key: "error",
-                        keycheck: 'time_type'
-                    })
-                } else if (data.errors.from_time) {
-                    e.setState({
-                        shownotice: true,
-                        notice: 'Chưa chọn năm bắt đầu !',
-                        key: "error",
-                        keycheck: 'from_time'
-                    })
-                } else if (data.errors.to_time) {
-                    e.setState({
-                        shownotice: true,
-                        notice: 'Chưa chọn năm kết thúc !',
-                        key: "error",
-                        keycheck: 'to_time'
-                    })
-                }
+                console.log(JSON.stringify(data))
             }
         })
 
@@ -207,17 +139,108 @@ class Education extends Component {
 
     }
     onSubmit() {
-        const addEducation = {
-            secret_key: this.state.secret_key,
-            school_name: this.state.school_name,
-            description: this.state.description,
-            time_type: this.state.time_type.value,
-            from_time: this.state.from_time.value,
-            to_time: this.state.to_time.value,
-        }
-        this.socket.emit("cl-new-edu", addEducation)
+        if (this.state.school_name !== '') {
+            if (this.state.time_type === '') {
+                e.setState({
+                    notice: 'Please choose your time type !',
+                    key: "error",
+                    keycheck: 'time',
+                    keycheck1: 'time_type'
+                })
+            } else if (this.state.time_type.value === 'past') {
+                if (this.state.from_time === '') {
+                    e.setState({
+                        notice: 'Please choose your from time!',
+                        key: "error",
+                        keycheck: 'time',
+                        keycheck1: 'from_time'
+                    })
+                }
+                else if (this.state.to_time === '') {
+                    e.setState({
+                        notice: 'Please choose your to time !',
+                        key: "error",
+                        keycheck: 'time',
+                        keycheck1: 'to_time'
+                    })
+                }
+                else if (this.state.from_time.value >= this.state.to_time.value) {
+                    e.setState({
 
-        this.onRefresh()
+                        notice: 'To time must be greater than or equal to from time !',
+                        key: "error",
+                        keycheck: 'time',
+                        keycheck1: 'to_time'
+                    })
+                } else if (this.state.description === '') {
+                    e.setState({
+                        notice: 'Please enter your description!',
+                        key: "error",
+                        keycheck: 'description',
+                        keycheck1: ''
+                    })
+                } else {
+                    const addEducation = {
+                        secret_key: this.state.secret_key,
+                        school_name: this.state.school_name,
+                        description: this.state.description,
+                        time_type: this.state.time_type.value,
+                        from_time: this.state.from_time.value,
+                        to_time: this.state.to_time.value,
+                    }
+                    this.socket.emit("cl-new-edu", addEducation)
+
+                    this.onRefresh()
+                }
+
+            } else if (this.state.from_time === '') {
+                e.setState({
+                    notice: 'Please choose your from time!',
+                    key: "error",
+                    keycheck: 'time',
+                    keycheck1: 'from_time'
+                })
+            } else if (this.state.time_type.value === 'present') {
+                if (this.state.from_time === '') {
+                    e.setState({
+                        notice: 'Please choose your from time!',
+                        key: "error",
+                        keycheck: 'time',
+                        keycheck1: 'from_time'
+                    })
+                } else if (this.state.description === '') {
+                    e.setState({
+                        notice: 'Please enter your description!',
+                        key: "error",
+                        keycheck: 'description',
+                        keycheck1: ''
+                    })
+                } else {
+                    const addEducation = {
+                        secret_key: this.state.secret_key,
+                        school_name: this.state.school_name,
+                        description: this.state.description,
+                        time_type: this.state.time_type.value,
+                        from_time: this.state.from_time.value,
+                        to_time: this.state.to_time.value,
+                    }
+                    this.socket.emit("cl-new-edu", addEducation)
+
+                    this.onRefresh()
+                }
+            }
+        }
+        else {
+            e.setState({
+                notice: 'Please enter your school name !',
+                key: "error",
+                keycheck: 'school_name',
+                keycheck1: ''
+            })
+        }
+
+
+
 
     }
     onDelete(_id) {
@@ -226,23 +249,101 @@ class Education extends Component {
             education_id: _id
         }
         this.socket.emit("cl-delete-edu", deleteedu)
-      
+
         this.onRefresh()
     }
     onEdit() {
-        const editEducation = {
-            secret_key: this.state.secret_key,
-            edu_id: this.state.edu_id,
-            school_name: this.state.school_nameedit,
-            description: this.state.descriptionedit,
-            time_type: this.state.time_typeedit,
-            from_time: this.state.from_timeedit,
-            to_time: this.state.to_timeedit,
+        if (this.state.school_nameedit !== '') {
+            if (this.state.time_typeedit !== '') {
+                if (this.state.time_typeedit === 'past') {
+                    if (this.state.from_timeedit !== '') {
+                        if (this.state.to_timeedit !== '') {
+                            if (this.state.from_timeedit <= this.state.to_timeedit) {
+                                if (this.state.descriptionedit !== '') {
+                                    const editEducation = {
+                                        secret_key: this.state.secret_key,
+                                        edu_id: this.state.edu_id,
+                                        school_name: this.state.school_nameedit,
+                                        description: this.state.descriptionedit,
+                                        time_type: this.state.time_typeedit,
+                                        from_time: this.state.from_timeedit,
+                                        to_time: this.state.to_timeedit,
 
+                                    }
+                                    this.socket.emit("cl-edit-edu", editEducation)
+                                    this.onRefresh()
+                                } else {
+                                    e.setState({
+                                        notice: 'Please enter your description!',
+                                        key: "error",
+                                        keycheck: 'description'
+                                    })
+                                }
+                            } else {
+                                e.setState({
+                                    notice: 'To time must be greater than or equal tofrom time !',
+                                    key: "error",
+                                    keycheck: 'time',
+
+                                })
+                            }
+                        } else {
+                            e.setState({
+                                notice: 'Please choose your to time !',
+                                key: "error",
+                                keycheck: 'time',
+                                keycheck1: 'to_time'
+                            })
+                        }
+                    } else {
+                        e.setState({
+                            notice: 'Please choose your from time!',
+                            key: "error",
+                            keycheck: 'time',
+                            keycheck1: 'from_time'
+                        })
+                    }
+                } else if (this.state.time_typeedit === 'present') {
+                        if (this.state.from_timeedit !== '') {
+                            if (this.state.descriptionedit !== '') {
+                                const editEducation = {
+                                    secret_key: this.state.secret_key,
+                                    edu_id: this.state.edu_id,
+                                    school_name: this.state.school_nameedit,
+                                    description: this.state.descriptionedit,
+                                    time_type: this.state.time_typeedit,
+                                    from_time: this.state.from_timeedit,
+                                    to_time:'',
+        
+                                }
+                                this.socket.emit("cl-edit-edu", editEducation)
+                                console.log(editEducation)
+                                this.onRefresh()
+                            } else {
+                                e.setState({
+                                    notice: 'Please enter your description!',
+                                    key: "error",
+                                    keycheck: 'description'
+                                })
+                            }
+                        }else e.setState({
+                            notice: 'Please choose your from time!',
+                            key: "error",
+                            keycheck: 'time',
+                            keycheck1: 'from_time'
+                        })
+                }
+            }
+           
+
+        }else {
+            e.setState({
+                notice: 'Please enter your school name!',
+                key: "error",
+                keycheck: 'school_name'
+            })
         }
-        this.socket.emit("cl-edit-edu", editEducation)
-     
-        this.onRefresh()
+
     }
     setInput(edu_id, school_name, description, time_type, from_time, to_time) {
         this.setState({
@@ -254,7 +355,7 @@ class Education extends Component {
             edu_id: edu_id
         })
     }
-    setInputdelete(edu_id){
+    setInputdelete(edu_id) {
         this.setState({
             edu_id: edu_id
         })
@@ -280,6 +381,7 @@ class Education extends Component {
                     <ScrollView  >
                         {this.state.data.map((item) => {
                             return (
+                                
                                 <View key={item._id} style={{
                                     flexDirection: 'column', margin: 10
                                     , backgroundColor: '#ffff', shadowOffset: { width: 0, height: 0 },
@@ -298,14 +400,14 @@ class Education extends Component {
                                             <View style={{ marginLeft: 5, padding: 5, width: width - 100 }}>
                                                 <Text>
                                                     Education at
-                                            <Text style={{ fontWeight: 'bold' }}> {item.school_name}</Text>
+                                                    <Text style={{ fontWeight: 'bold' }}> {item.school_name}</Text>
                                                 </Text>
                                             </View>
                                         </View>
                                         <TouchableOpacity onPress={() => {
-                                            this.setState({  showarning:true});
+                                            this.setState({ showarning: true });
                                             this.setInputdelete(item._id)
-                                        } }>
+                                        }}>
                                             <AntDesign name="closecircleo" size={20} color="red" />
                                         </TouchableOpacity>
                                     </View>
@@ -320,7 +422,7 @@ class Education extends Component {
                                             </View>
                                             <View style={{ flexDirection: 'row' }}>
                                                 <View>
-                                                    <Text>+ Năm:</Text>
+                                                    <Text>+ Year:</Text>
                                                 </View>
                                                 <View style={{ width: width - 130, marginLeft: 5 }}>
                                                     <Text style={{ fontWeight: 'bold' }}>{item.time_period.from_time}{item.time_period.to_time == null ? null : " - "}{item.time_period.to_time === null ? null : item.time_period.to_time}</Text>
@@ -341,10 +443,17 @@ class Education extends Component {
 
                             )
                         })}
+                      
                         <TouchableOpacity onPress={() => this.setState({ show: true })} style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <Ionicons name="ios-add-circle" size={40} color="#71B7B7" />
                             <Text style={{ color: '#71B7B7', fontWeight: 'bold' }}>Add education</Text>
                         </TouchableOpacity>
+                        {this.state.data.length===0?
+                            <View style={{flex:1,justifyContent: 'center', alignItems: 'center' ,marginTop:40}}>
+                                <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
+                            </View>
+                            :null
+                        }
                         <Modal transparent={true}
                             visible={this.state.show}
                             animationType='slide'
@@ -358,15 +467,17 @@ class Education extends Component {
                                         <View style={{ marginTop: 10 }}>
                                             <Text >Education name:</Text>
                                         </View>
-                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, paddingLeft: 10, marginTop: 10, borderColor:'#71B7B7', borderWidth: 1, borderRadius: 3 }}>
-                                            <TextInput multiline={true}  placeholder="Education name" onChangeText={(school_name) => this.setState({ school_name })} ></TextInput>
+                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width: 315, paddingLeft: 10, marginTop: 10, borderColor: this.state.keycheck == "school_name" ? 'red' : '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
+                                            <TextInput multiline={true} placeholder="Education name" onChangeText={(school_name) => this.setState({ school_name })} ></TextInput>
                                         </View>
-                                        <View style={{ marginTop: 10 }}>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "school_name" ? this.state.notice : null}</Text>
+                                        <View >
                                             <Text>Time:</Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10, height: 30 }}>
                                             <DropDownPicker
                                                 items={[
+                                                   
                                                     { label: 'present', value: 'present' },
                                                     { label: 'past', value: 'past' },
                                                 ]}
@@ -377,14 +488,43 @@ class Education extends Component {
                                                     backgroundColor: '#ffff',
                                                     width: 105,
                                                     height: height,
-                                                    borderColor:'#71B7B7',
+                                                    borderColor: this.state.keycheck1 == "time_type" ? 'red' : '#71B7B7',
                                                     borderWidth: 1,
                                                 }}
                                             />
                                             <DropDownPicker
                                                 items={[
+                                                    { label: '1990', value: 1990 },
+                                                    { label: '1991', value: 1991 },
+                                                    { label: '1992', value: 1992 },
+                                                    { label: '1993', value: 1993 },
+                                                    { label: '1994', value: 1994 },
+                                                    { label: '1995', value: 1995 },
+                                                    { label: '1996', value: 1996 },
+                                                    { label: '1997', value: 1997 },
+                                                    { label: '1998', value: 1998 },
+                                                    { label: '1999', value: 1999 },
                                                     { label: '2000', value: 2000 },
-                                                    { label: '2100', value: 2100 },
+                                                    { label: '2001', value: 2001 },
+                                                    { label: '2002', value: 2002},
+                                                    { label: '2003', value: 2003 },
+                                                    { label: '2004', value: 2004 },
+                                                    { label: '2005', value: 2005},
+                                                    { label: '2006', value: 2006 },
+                                                    { label: '2007', value: 2007 },
+                                                    { label: '2008', value: 2008 },
+                                                    { label: '2009', value: 2009 },
+                                                    { label: '2010', value: 2010 },
+                                                    { label: '2011', value: 2011 },
+                                                    { label: '2012', value: 2012 },
+                                                    { label: '2013', value: 2013 },
+                                                    { label: '2014', value: 2014 },
+                                                    { label: '2015', value: 2015 },
+                                                    { label: '2016', value: 2016 },
+                                                    { label: '2017', value: 2017 },
+                                                    { label: '2018', value: 2018 },
+                                                    { label: '2019', value: 2019 },
+                                                    { label: '2020', value: 2020 },
                                                 ]}
                                                 defaultNull
                                                 placeholder="From"
@@ -393,7 +533,7 @@ class Education extends Component {
                                                     backgroundColor: '#ffff',
                                                     width: 105,
                                                     height: height,
-                                                    borderColor:'#71B7B7',
+                                                    borderColor: this.state.keycheck1 == "from_time" ? 'red' : '#71B7B7',
                                                     borderWidth: 1,
                                                 }}
                                             />
@@ -401,35 +541,68 @@ class Education extends Component {
                                                 this.state.time_type.value === "past" ?
                                                     <DropDownPicker
                                                         items={[
-                                                            { label: '2000', value: 2000 },
-                                                            { label: '2100', value: 2100 },
+                                                            { label: '1990', value: 1990 },
+                                                    { label: '1991', value: 1991 },
+                                                    { label: '1992', value: 1992 },
+                                                    { label: '1993', value: 1993 },
+                                                    { label: '1994', value: 1994 },
+                                                    { label: '1995', value: 1995 },
+                                                    { label: '1996', value: 1996 },
+                                                    { label: '1997', value: 1997 },
+                                                    { label: '1998', value: 1998 },
+                                                    { label: '1999', value: 1999 },
+                                                    { label: '2000', value: 2000 },
+                                                    { label: '2001', value: 2001 },
+                                                    { label: '2002', value: 2002},
+                                                    { label: '2003', value: 2003 },
+                                                    { label: '2004', value: 2004 },
+                                                    { label: '2005', value: 2005},
+                                                    { label: '2006', value: 2006 },
+                                                    { label: '2007', value: 2007 },
+                                                    { label: '2008', value: 2008 },
+                                                    { label: '2009', value: 2009 },
+                                                    { label: '2010', value: 2010 },
+                                                    { label: '2011', value: 2011 },
+                                                    { label: '2012', value: 2012 },
+                                                    { label: '2013', value: 2013 },
+                                                    { label: '2014', value: 2014 },
+                                                    { label: '2015', value: 2015 },
+                                                    { label: '2016', value: 2016 },
+                                                    { label: '2017', value: 2017 },
+                                                    { label: '2018', value: 2018 },
+                                                    { label: '2019', value: 2019 },
+                                                    { label: '2020', value: 2020 },
                                                         ]}
                                                         defaultNull
                                                         placeholder="To"
                                                         onChangeItem={(to_time) => this.setState({ to_time })}
                                                         style={{
                                                             backgroundColor: '#ffff',
-                                                            width:105,
+                                                            width: 105,
                                                             height: height,
-                                                            borderColor:'#71B7B7',
+                                                            borderColor: this.state.keycheck1 == "to_time" ? 'red' : '#71B7B7',
                                                             borderWidth: 1,
                                                         }}
                                                     /> : null
                                             }
                                         </View>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "time" ? this.state.notice : null}</Text>
                                         <View style={{ marginTop: 10 }}>
                                             <Text>Education description:</Text>
                                         </View>
-                                        <View style={{ backgroundColor: '#ffff', width:315, height:height*0.5, paddingLeft: 10, marginTop: 10, borderColor:'#71B7B7', borderWidth: 1, borderRadius: 3 }}>
+                                        <View style={{ backgroundColor: '#ffff', width: 315, height: height * 0.5, paddingLeft: 10, marginTop: 10, borderColor: this.state.keycheck == "description" ? 'red' : '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} placeholder="Education description" onChangeText={(description) => this.setState({ description })} ></TextInput>
                                         </View>
-                                         <View style={{flexDirection: 'row',justifyContent: 'center', alignItems: 'center' ,marginTop: 20 }}>
-                                            <TouchableOpacity onPress={() => this.setState({ show: false })} style={{height:40,width:150,borderRadius:5,backgroundColor:'#ffff',
-                                            borderWidth:1,borderColor:'#488B8F',marginRight:10,justifyContent: 'center', alignItems: 'center'}}>
-                                                <Text style={{ fontWeight: 'bold',color:"#488B8F",fontSize:18}}>Cancel</Text>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "description" ? this.state.notice : null}</Text>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
+                                            <TouchableOpacity onPress={() => this.setState({ show: false, keycheck: '', keycheck1: '' })} style={{
+                                                height: 40, width: 150, borderRadius: 5, backgroundColor: '#ffff',
+                                                borderWidth: 1, borderColor: '#488B8F', marginRight: 10, justifyContent: 'center', alignItems: 'center'
+                                            }}>
+                                                <Text style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancel</Text>
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={this.onSubmit} style={{height:40,width:150,backgroundColor:'#488B8F',marginLeft:10,borderRadius:5,justifyContent: 'center', alignItems: 'center'}}>
-                                                <Text style={{ fontWeight: 'bold',color:"white",fontSize:18}}>Add</Text>
+                                            <TouchableOpacity onPress={this.onSubmit} style={{ height: 40, width: 150, backgroundColor: '#488B8F', marginLeft: 10, borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}>
+                                                <Text style={{ fontWeight: 'bold', color: "white", fontSize: 18 }}>Add</Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -448,7 +621,10 @@ class Education extends Component {
                                 }}>
                                     <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                                     <Text>{this.state.notice}</Text>
-                                    <TouchableOpacity onPress={() => this.setState({ shownotice: false })} style={{
+                                    <TouchableOpacity onPress={() => this.setState({
+                                        shownotice: false, keycheck: '', school_name: '', time_type: '',
+                                        from_time: '', to_time: '', description: ''
+                                    })} style={{
                                         width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                                     }}>
@@ -463,45 +639,47 @@ class Education extends Component {
                             style={{ justifyContent: 'center', alignItems: 'center' }}
                         >
                             <View style={{ backgroundColor: '#000000aa', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                {this.state.show1===false
-                                ?
-                                <View style={{
-                                    backgroundColor: '#faf9f9', borderRadius: 20,
-                                    height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
-                                }}>
-                                    <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
-                                    <Text>Bạn có thật sự muốn xóa !</Text>
-                                    <View style={{ flexDirection: 'row',justifyContent:'space-between',width:"70%"}}>
-                                    <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
-                                        width: "50%", backgroundColor: '#71B7B7',
-                                        height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center',marginRight: 5
+                                {this.state.show1 === false
+                                    ?
+                                    <View style={{
+                                        backgroundColor: '#faf9f9', borderRadius: 20,
+                                        height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
                                     }}>
-                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => this.onDelete(this.state.edu_id)} style={{
-                                        width: "50%", backgroundColor: '#71B7B7',
-                                        height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center',marginLeft: 5
-                                    }}>
-                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
-                                    </TouchableOpacity>
+                                        <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
+                                        <Text>Do you want to detele !</Text>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
+
+                                            <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
+                                                width: "50%", backgroundColor: '#ffff',
+                                                borderWidth: 1, borderColor: '#488B8F',
+                                                height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
+                                            }}>
+                                                <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.onDelete(this.state.edu_id)} style={{
+                                                width: "50%", backgroundColor: '#488B8F',
+                                                height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 5
+                                            }}>
+                                                <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
-                                </View>
-                                :
-                                <View style={{
-                                    backgroundColor: '#faf9f9', borderRadius: 20,
-                                    height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
-                                }}>
-                                    <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
-                                    <Text>{this.state.notice}</Text>
-                                    <TouchableOpacity onPress={() => this.setState({ showarning:false,show1:false })} style={{
-                                        width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
-                                        height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
+                                    :
+                                    <View style={{
+                                        backgroundColor: '#faf9f9', borderRadius: 20,
+                                        height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
                                     }}>
-                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
-                                    </TouchableOpacity>
-                                </View>
+                                        <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
+                                        <Text>{this.state.notice}</Text>
+                                        <TouchableOpacity onPress={() => this.setState({ showarning: false, show1: false })} style={{
+                                            width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
+                                            height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
+                                        }}>
+                                            <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 }
-                                
+
                             </View>
                         </Modal>
                         <Modal transparent={true}
@@ -517,11 +695,12 @@ class Education extends Component {
                                         <View style={{ marginTop: 10 }}>
                                             <Text >Education name:</Text>
                                         </View>
-                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, paddingLeft: 10, marginTop: 10, borderColor: '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
+                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width: 315, paddingLeft: 10, marginTop: 10, borderColor: this.state.keycheck == "school_name" ? 'red' : '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} placeholder="Education name" onChangeText={(school_nameedit) => this.setState({ school_nameedit })} value={this.state.school_nameedit} ></TextInput>
 
                                         </View>
-                                        <View style={{ marginTop: 10 }}>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "school_name" ? this.state.notice : null}</Text>
+                                        <View >
                                             <Text>Time:</Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10, height: 30 }}>
@@ -536,16 +715,45 @@ class Education extends Component {
                                                 defaultValue={this.state.time_typeedit}
                                                 style={{
                                                     backgroundColor: '#ffff',
-                                                    width:105,
+                                                    width: 105,
                                                     height: height,
-                                                    borderColor:'#71B7B7',
+                                                    borderColor: this.state.keycheck1 == "time_type" ? 'red' : '#71B7B7',
                                                     borderWidth: 1,
                                                 }}
                                             />
                                             <DropDownPicker
                                                 items={[
+                                                    { label: '1990', value: 1990 },
+                                                    { label: '1991', value: 1991 },
+                                                    { label: '1992', value: 1992 },
+                                                    { label: '1993', value: 1993 },
+                                                    { label: '1994', value: 1994 },
+                                                    { label: '1995', value: 1995 },
+                                                    { label: '1996', value: 1996 },
+                                                    { label: '1997', value: 1997 },
+                                                    { label: '1998', value: 1998 },
+                                                    { label: '1999', value: 1999 },
                                                     { label: '2000', value: 2000 },
-                                                    { label: '2100', value: 2100 },
+                                                    { label: '2001', value: 2001 },
+                                                    { label: '2002', value: 2002},
+                                                    { label: '2003', value: 2003 },
+                                                    { label: '2004', value: 2004 },
+                                                    { label: '2005', value: 2005},
+                                                    { label: '2006', value: 2006 },
+                                                    { label: '2007', value: 2007 },
+                                                    { label: '2008', value: 2008 },
+                                                    { label: '2009', value: 2009 },
+                                                    { label: '2010', value: 2010 },
+                                                    { label: '2011', value: 2011 },
+                                                    { label: '2012', value: 2012 },
+                                                    { label: '2013', value: 2013 },
+                                                    { label: '2014', value: 2014 },
+                                                    { label: '2015', value: 2015 },
+                                                    { label: '2016', value: 2016 },
+                                                    { label: '2017', value: 2017 },
+                                                    { label: '2018', value: 2018 },
+                                                    { label: '2019', value: 2019 },
+                                                    { label: '2020', value: 2020 },
                                                 ]}
                                                 defaultNull
                                                 placeholder="From"
@@ -553,9 +761,9 @@ class Education extends Component {
                                                 defaultValue={this.state.from_timeedit}
                                                 style={{
                                                     backgroundColor: '#ffff',
-                                                    width:105,
+                                                    width: 105,
                                                     height: height,
-                                                    borderColor:'#71B7B7',
+                                                    borderColor: this.state.keycheck1 == "from_time" ? 'red' : '#71B7B7',
                                                     borderWidth: 1,
                                                 }}
                                             />
@@ -563,8 +771,38 @@ class Education extends Component {
                                                 this.state.time_typeedit === "past" ?
                                                     <DropDownPicker
                                                         items={[
-                                                            { label: '2000', value: 2000 },
-                                                            { label: '2100', value: 2100 },
+                                                            { label: '1990', value: 1990 },
+                                                    { label: '1991', value: 1991 },
+                                                    { label: '1992', value: 1992 },
+                                                    { label: '1993', value: 1993 },
+                                                    { label: '1994', value: 1994 },
+                                                    { label: '1995', value: 1995 },
+                                                    { label: '1996', value: 1996 },
+                                                    { label: '1997', value: 1997 },
+                                                    { label: '1998', value: 1998 },
+                                                    { label: '1999', value: 1999 },
+                                                    { label: '2000', value: 2000 },
+                                                    { label: '2001', value: 2001 },
+                                                    { label: '2002', value: 2002},
+                                                    { label: '2003', value: 2003 },
+                                                    { label: '2004', value: 2004 },
+                                                    { label: '2005', value: 2005},
+                                                    { label: '2006', value: 2006 },
+                                                    { label: '2007', value: 2007 },
+                                                    { label: '2008', value: 2008 },
+                                                    { label: '2009', value: 2009 },
+                                                    { label: '2010', value: 2010 },
+                                                    { label: '2011', value: 2011 },
+                                                    { label: '2012', value: 2012 },
+                                                    { label: '2013', value: 2013 },
+                                                    { label: '2014', value: 2014 },
+                                                    { label: '2015', value: 2015 },
+                                                    { label: '2016', value: 2016 },
+                                                    { label: '2017', value: 2017 },
+                                                    { label: '2018', value: 2018 },
+                                                    { label: '2019', value: 2019 },
+                                                    { label: '2020', value: 2020 },
+                                                            
                                                         ]}
                                                         defaultNull
                                                         placeholder="To"
@@ -572,26 +810,31 @@ class Education extends Component {
                                                         defaultValue={this.state.to_timeedit}
                                                         style={{
                                                             backgroundColor: '#ffff',
-                                                            width:105,
+                                                            width: 105,
                                                             height: height,
-                                                            borderColor:'#71B7B7',
+                                                            borderColor: this.state.keycheck1 == "to_time" ? 'red' : '#71B7B7',
                                                             borderWidth: 1,
                                                         }}
                                                     /> : null
                                             }
                                         </View>
-                                        <View style={{ marginTop: 10 }}>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "time" ? this.state.notice : null}</Text>
+                                        <View >
                                             <Text>Education description:</Text>
                                         </View>
-                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, height:height*0.5, paddingLeft: 10, marginTop: 10, borderColor: '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
+                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width: 315, height: height * 0.5, paddingLeft: 10, marginTop: 10, borderColor: this.state.keycheck == "description" ? 'red' : '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} value={this.state.descriptionedit} placeholder="Education description" onChangeText={(descriptionedit) => this.setState({ descriptionedit })} ></TextInput>
                                         </View>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "description" ? this.state.notice : null}</Text>
                                         <View style={{ flexDirection: 'row', margin: 20, justifyContent: 'space-between' }}>
-                                            <TouchableOpacity onPress={() => this.setState({ showedit: false })} style={styles.btnLogin}>
-                                                <Text style={{ fontSize: 20, color: '#ffff' }}>Cancel</Text>
+                                            <TouchableOpacity onPress={() => this.setState({ showedit: false, keycheck: '', keycheck1: '' })} style={{
+                                                height: 40, width: 150, borderRadius: 5, backgroundColor: '#ffff',
+                                                borderWidth: 1, borderColor: '#488B8F', marginRight: 10, justifyContent: 'center', alignItems: 'center'
+                                            }}>
+                                                <Text style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancel</Text>
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={this.onEdit} style={styles.btnLogin1}>
-                                                <Text style={{ fontSize: 20, color: '#ffff' }}>Save</Text>
+                                            <TouchableOpacity onPress={this.onEdit} style={{ height: 40, width: 150, backgroundColor: '#488B8F', marginLeft: 10, borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}>
+                                                <Text style={{ fontWeight: 'bold', color: "#ffff", fontSize: 18 }}>Save</Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -654,8 +897,8 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderColor: '#71B7B7',
         borderWidth: 1,
-        marginRight:5
-     
+        marginRight: 5
+
     },
     btnLogin1: {
         width: 120,
@@ -671,7 +914,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderColor: '#71B7B7',
         borderWidth: 1,
-        marginLeft:5,
+        marginLeft: 5,
     },
     textall: {
         marginTop: 20,

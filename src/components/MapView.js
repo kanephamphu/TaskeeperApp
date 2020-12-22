@@ -2,6 +2,7 @@ import React from 'react';
 import MapView,{ Marker } from 'react-native-maps';
 
 const MyMapView = (props) => {
+    
     return (
         <MapView
             style={{ flex: 1 }}

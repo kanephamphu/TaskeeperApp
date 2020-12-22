@@ -18,8 +18,8 @@ import Animated from 'react-native-reanimated'
 import { Foundation } from '@expo/vector-icons'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment'
-import iconsuccess from '../images/icon1.png'
-import iconerror from '../images/icon2.png'
+import iconsuccess from '../images/checked.png'
+import iconerror from '../images/close.png'
 import MultiSelect from 'react-native-multiple-select'
 import MapInput from '../components/MapInput'
 import MyMapView from '../components/MapView'
@@ -415,8 +415,8 @@ class TaskPage extends Component{
         })
 
       };
- 	    onDetail(a) {
-        this.props.detail(a)
+ 	    onDetail(a,b) {
+        this.props.detail(a,b)
     	}
       componentDidMount=async()=>{
         this.onRefresh()
@@ -1582,7 +1582,7 @@ class TaskPage extends Component{
                                 <Text style={{fontWeight:'bold',fontSize:25,color:'#71B7B7',marginLeft:15,marginTop:-2}}>New Task</Text>
                             </TouchableOpacity>
                             <TouchableOpacity  onPress={this.onSubmit} >
-                                <Text style={{fontWeight:'bold',fontSize:25,color:'#71B7B7',marginLeft:15,marginTop:-2}}>Post</Text>
+                                <Text style={{fontWeight:'bold',fontSize:25,color:'#71B7B7',marginLeft:15,marginTop:-2,marginRight:8}}>Post</Text>
                             </TouchableOpacity>
                             </View>
                         </View>

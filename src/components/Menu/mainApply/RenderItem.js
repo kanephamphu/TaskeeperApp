@@ -5,9 +5,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 import io from 'socket.io-client/dist/socket.io'
 import { AntDesign } from '@expo/vector-icons';
 import Swipeout from 'react-native-swipeout'
-import iconsuccess from '../../../images/icon1.png';
-import iconerror from '../../../images/icon2.png';
-import iconwarning from '../../../images/icon3.png';
+import iconsuccess from '../../../images/checked.png';
+import iconerror from '../../../images/close.png';
+import iconwarning from '../../../images/warning.png';
 const { height, width } = Dimensions.get('window');
 var e;
 export default class RenderItem extends React.Component {
@@ -31,7 +31,7 @@ export default class RenderItem extends React.Component {
       } else if (data.success == true) {
         e.setState({
           show1: true,
-          notice: 'Xóa thành công!',
+          notice: 'Deleted successfully!',
           key: "success",
         })
         console.log('xoa thanh cong')
@@ -113,7 +113,7 @@ export default class RenderItem extends React.Component {
                     borderWidth: 1, borderColor: '#488B8F',
                     height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
                   }}>
-                    <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
+                    <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => this.deleteApplyjob()} style={{
                     width: "50%", backgroundColor: '#488B8F',

@@ -4,8 +4,8 @@ import io from 'socket.io-client/dist/socket.io'
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import avatar from '../../../images/avatar11.png'   
-import iconsuccess from '../../../images/icon1.png';
-import iconerror from '../../../images/icon2.png';
+import iconsuccess from '../../../images/checked.png';
+import iconerror from '../../../images/close.png';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment'
 var e;
@@ -33,14 +33,14 @@ class FlatListdata extends Component {
                 if (data.errors.introduction) {
                     e.setState({             
                         shownotice:true,
-                        notice:'Chưa điền giới thiệu!',
+                        notice:'Please enter your introduction!',
                         key:"error"
                     })
                   
                 } else {
                     e.setState({
                         shownotice:true,
-                        notice:'Đã tồn tại!',
+                        notice:'Already Exist!',
                         key:"error",
                     })
                    
@@ -49,20 +49,12 @@ class FlatListdata extends Component {
                 e.setState({
                     show: false ,
                     shownotice:true,
-                    notice:'Tham gia thành công!',
+                    notice:'Applied Successfully!',
                     key:"success",
                 })
             }
         })
-        /*this.follow=this.followTask.bind(this)
-        this.socket.on("sv-follow-user",function(data){
-            if(data.success==false){
-                console.log(JSON.stringify(data))
-                alert('Đã follow ')
-            }else if(data.success==true){
-                alert('follow success')
-            }
-        })*/
+      
         this.save = this.saveTask.bind(this);
         this.socket.on("sv-save-task", function (data) {
             if (data.success == false) {
@@ -70,14 +62,14 @@ class FlatListdata extends Component {
                 if (data.errors.message) {
                     e.setState({
                         shownotice:true,
-                        notice:'Đã tồn tại!',
+                        notice:'Already Exist!',
                         key:"error",
                     })
                 }
             } else if (data.success == true) {
                e.setState({
                    shownotice:true,
-                   notice:'Lưu thành công!',
+                   notice:'Saved Successfully!',
                    key:"success",
                })
             }
@@ -126,8 +118,8 @@ class FlatListdata extends Component {
         var d = new Date();
         var task_description = this.props.item.task_description;
         var task_title = this.props.item.task_title;
-        if(task_title.length>=20){
-            task_title = task_title.slice(0,20);
+        if(task_title.length>=25){
+            task_title = task_title.slice(0,40);
         }
         var count = task_description.length;
         if (count >= 30) {
@@ -177,7 +169,7 @@ class FlatListdata extends Component {
                             <Text style={{fontWeight:'bold',fontSize:13}}>TASK DESCRIPTION:</Text>
                             <View style={{marginTop:10,flexDirection:'row'}}>
                                 <Text style={{marginLeft:20,color:'#0E0E0E',fontSize:13}}>{task_description}</Text>
-                                {count >= 30?
+                                {count >= 40?
                                 <>
                                     <Text>...</Text>
                                     <TouchableOpacity onPress={()=>this.props.stackDetail(this.props.item._id)}>
@@ -275,7 +267,7 @@ class FlatListdata extends Component {
                             <View style={{ alignContent: 'center' }}>
                                 <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Introduction:</Text>
                             </View>
-                            <View style={{height: 130, padding: 10, borderColor: '#808080' }}>
+                            <View style={{height: 130, padding: 10, borderColor:'#808080', borderWidth: 2, borderColor: '#009387', }}>
                                 <TextInput multiline={true}
                                     onChangeText={(introduction) => this.setState({ introduction })}
                                     value={this.state.introduction}

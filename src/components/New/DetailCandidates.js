@@ -55,10 +55,11 @@ export default class DetailCandidates extends React.Component {
       //_id:decode._id
     })
     const task ={
-      task_id : this.props.route.params.task_id,
+      task_id :this.props.route.params.task_id,
       secret_key:this.state.secret_key, 
     }
     this.socket.emit("cl-get-candidate-apply-job",task)
+    
   }
   renderInner = () => (
     <View style={styles.panel}>

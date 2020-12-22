@@ -4,8 +4,8 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 const { height, width } = Dimensions.get('window');
 import DropDownPicker from 'react-native-dropdown-picker';
 import io from 'socket.io-client/dist/socket.io';
-import iconsuccess from '../../images/icon1.png';
-import iconerror from '../../images/icon2.png';
+import iconsuccess from '../../images/checked.png';
+import iconerror from '../../images/close.png';
 import AsyncStorage from '@react-native-community/async-storage';
 
 var gender = [
@@ -72,7 +72,7 @@ class Updateprofile extends Component {
                 e.setState({
                     showedit:false,
                     shownotice:true,
-                    notice:'Sửa thành công!',
+                    notice:'Updated successfully!',
                     key:"success"
                 })
                
@@ -82,48 +82,48 @@ class Updateprofile extends Component {
                 if (data.errors.first_name) {
                     e.setState({             
                         shownotice:true,
-                        notice:'Chưa điền họ!',
+                        notice:'Please enter your first name!',
                         key:"error"
                     })
                 } else if (data.errors.last_name) {
                     e.setState({             
                         shownotice:true,
-                        notice:'Chưa điền tên!',
+                        notice:'Please enter your last name!',
                         key:"error"
                     })
 
                 } else if (data.errors.email) {
                     e.setState({             
                         shownotice:true,
-                        notice:'Chưa điền email!',
+                        notice:'Please enter your email!',
                         key:"error"
                     })
 
                 } else if (data.errors.phone_number) {
                     e.setState({             
                         shownotice:true,
-                        notice:'Chưa điền số điện thoại!',
+                        notice:'Please enter your phone number!',
                         key:"error"
                     })
                 }
                 else if (data.errors.day_of_birth) {
                     e.setState({             
                         shownotice:true,
-                        notice:'Chưa điền ngày sinh!',
+                        notice:'Please enter your day of birth!',
                         key:"error"
                     })
                 }
                 else if (data.errors.month_of_birth) {
                     e.setState({             
                         shownotice:true,
-                        notice:'Chưa điền tháng sinh!',
+                        notice:'Please enter your month of birth!',
                         key:"error"
                     })
                 }
                 else if (data.errors.year_of_birth) {
                     e.setState({             
                         shownotice:true,
-                        notice:'Chưa điền năm sinh!',
+                        notice:'Please enter your year of birth!',
                         key:"error"
                     })
                 }

@@ -8,9 +8,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io';
-import iconsuccess from '../../images/icon1.png';
-import iconerror from '../../images/icon2.png';
-import iconwarning from '../../images/icon3.png';
+import iconsuccess from '../../images/checked.png';
+import iconerror from '../../images/close.png';
+import iconwarning from '../../images/warning.png';
+import noitem from '../../images/box.png';
 import AsyncStorage from '@react-native-community/async-storage';
 
 var e;
@@ -66,7 +67,7 @@ class Education extends Component {
                 e.setState({
                     show: false,
                     shownotice:true,
-                    notice:'Thêm thành công!',
+                    notice:'Successfully!',
                     key:"success"
                 })
             }
@@ -74,38 +75,38 @@ class Education extends Component {
                 if(data.errors.company_name){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa điền tên nơi làm việc !',
+                        notice:'Please enter your company name!',
                         key:"error"
                     })
                 }else   if(data.errors.description){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa điền miêu tả trường học !',
+                        notice:'Please enter your description!',
                         key:"error"
                     })
                 }
                 else   if(data.errors.position){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa điền vị trí làm việc !',
+                        notice:'Please enter your position!',
                         key:"error"
                     })
                 }else   if(data.errors.time_type){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa chọn kiểu thời gian !',
+                        notice:'Please choose your type time!',
                         key:"error"
                     })
                 }else   if(data.errors.from_time){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa chọn năm bắt đầu !',
+                        notice:'Please choose your from time!!',
                         key:"error"
                     })
                 }else   if(data.errors.to_time){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa chọn năm kết thúc !',
+                        notice:'Please choose your to time!',
                         key:"error"
                     })
                 }
@@ -128,7 +129,7 @@ class Education extends Component {
                 e.setState({
                     showedit: false,
                     shownotice: true,
-                    notice: 'Sửa thành công!',
+                    notice: 'Updated successfully!',
                     key: "success"
                 })
             }
@@ -137,38 +138,38 @@ class Education extends Component {
                 if(data.errors.company_name){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa điền tên công ty !',
+                        notice:'Please enter your company name!',
                         key:"error"
                     })
                 }else   if(data.errors.description){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa điền miêu tả công ty !',
+                        notice:'Please enter your description!',
                         key:"error"
                     })
                 }
                 else   if(data.errors.position){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa điền vị trí làm việc !',
+                        notice:'Please enter position!',
                         key:"error"
                     })
                 }else   if(data.errors.time_type){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa chọn kiểu thời gian !',
+                        notice:'Please choose your time type!',
                         key:"error"
                     })
                 }else   if(data.errors.from_time){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa chọn năm bắt đầu !',
+                        notice:'Please choose your from time!',
                         key:"error"
                     })
                 }else   if(data.errors.to_time){
                     e.setState({
                         shownotice:true,
-                        notice:'Chưa chọn năm kết thúc !',
+                        notice:'Please choose your to time!',
                         key:"error"
                     })
                 }
@@ -178,7 +179,7 @@ class Education extends Component {
             if (data.success == true) {
                 e.setState({
                     show1: true,
-                    notice:'Xóa thành công!',
+                    notice:'Deleted successfully!',
                     key:"success"
                 })
             }
@@ -344,6 +345,12 @@ class Education extends Component {
                             <Ionicons name="ios-add-circle" size={40} color="#71B7B7" />
                             <Text style={{ color: '#71B7B7', fontWeight: 'bold' }}>Add Working</Text>
                         </TouchableOpacity>
+                        {this.state.data.length===0?
+                            <View style={{flex:1,justifyContent: 'center', alignItems: 'center' ,marginTop:40}}>
+                                <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
+                            </View>
+                            :null
+                        }
                         <Modal transparent={true}
                             visible={this.state.showarning}
                             animationType='slide'
@@ -359,18 +366,20 @@ class Education extends Component {
                                     <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
                                     <Text>Bạn có thật sự muốn xóa !</Text>
                                     <View style={{ flexDirection: 'row',justifyContent:'space-between',width:"70%"}}>
+                                   
                                     <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
-                                        width: "50%", backgroundColor: '#71B7B7',
-                                        height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center',marginRight: 5
-                                    }}>
-                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => this.onDelete(this.state.work_id)} style={{
-                                        width: "50%", backgroundColor: '#71B7B7',
-                                        height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center',marginLeft: 5
-                                    }}>
-                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
-                                    </TouchableOpacity>
+                                                width: "50%", backgroundColor: '#ffff',
+                                                borderWidth: 1, borderColor: '#488B8F',
+                                                height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
+                                            }}>
+                                                <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.onDelete(this.state.work_id)} style={{
+                                                width: "50%", backgroundColor: '#488B8F',
+                                                height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 5
+                                            }}>
+                                                <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
+                                            </TouchableOpacity>
                                     </View>
                                 </View>
                                 :
@@ -428,10 +437,39 @@ class Education extends Component {
                                                 style={styles.picker3}
                                             />
                                             <DropDownPicker
-                                                items={[
+                                              items={ [
+                                                { label: '1990', value: 1990 },
+                                                    { label: '1991', value: 1991 },
+                                                    { label: '1992', value: 1992 },
+                                                    { label: '1993', value: 1993 },
+                                                    { label: '1994', value: 1994 },
+                                                    { label: '1995', value: 1995 },
+                                                    { label: '1996', value: 1996 },
+                                                    { label: '1997', value: 1997 },
+                                                    { label: '1998', value: 1998 },
+                                                    { label: '1999', value: 1999 },
                                                     { label: '2000', value: 2000 },
-                                                    { label: '2100', value: 2100 },
-                                                ]}
+                                                    { label: '2001', value: 2001 },
+                                                    { label: '2002', value: 2002},
+                                                    { label: '2003', value: 2003 },
+                                                    { label: '2004', value: 2004 },
+                                                    { label: '2005', value: 2005},
+                                                    { label: '2006', value: 2006 },
+                                                    { label: '2007', value: 2007 },
+                                                    { label: '2008', value: 2008 },
+                                                    { label: '2009', value: 2009 },
+                                                    { label: '2010', value: 2010 },
+                                                    { label: '2011', value: 2011 },
+                                                    { label: '2012', value: 2012 },
+                                                    { label: '2013', value: 2013 },
+                                                    { label: '2014', value: 2014 },
+                                                    { label: '2015', value: 2015 },
+                                                    { label: '2016', value: 2016 },
+                                                    { label: '2017', value: 2017 },
+                                                    { label: '2018', value: 2018 },
+                                                    { label: '2019', value: 2019 },
+                                                    { label: '2020', value: 2020 },
+                                            ]}
                                                 defaultNull
                                                 placeholder="From"
                                                 onChangeItem={(from_time) => this.setState({ from_time })}
@@ -440,10 +478,39 @@ class Education extends Component {
                                             {
                                                 this.state.time_type.value === "past" ?
                                                     <DropDownPicker
-                                                        items={[
-                                                            { label: '2000', value: 2000 },
-                                                            { label: '2100', value: 2100 },
-                                                        ]}
+                                                    items={ [
+                                                        { label: '1990', value: 1990 },
+                                                    { label: '1991', value: 1991 },
+                                                    { label: '1992', value: 1992 },
+                                                    { label: '1993', value: 1993 },
+                                                    { label: '1994', value: 1994 },
+                                                    { label: '1995', value: 1995 },
+                                                    { label: '1996', value: 1996 },
+                                                    { label: '1997', value: 1997 },
+                                                    { label: '1998', value: 1998 },
+                                                    { label: '1999', value: 1999 },
+                                                    { label: '2000', value: 2000 },
+                                                    { label: '2001', value: 2001 },
+                                                    { label: '2002', value: 2002},
+                                                    { label: '2003', value: 2003 },
+                                                    { label: '2004', value: 2004 },
+                                                    { label: '2005', value: 2005},
+                                                    { label: '2006', value: 2006 },
+                                                    { label: '2007', value: 2007 },
+                                                    { label: '2008', value: 2008 },
+                                                    { label: '2009', value: 2009 },
+                                                    { label: '2010', value: 2010 },
+                                                    { label: '2011', value: 2011 },
+                                                    { label: '2012', value: 2012 },
+                                                    { label: '2013', value: 2013 },
+                                                    { label: '2014', value: 2014 },
+                                                    { label: '2015', value: 2015 },
+                                                    { label: '2016', value: 2016 },
+                                                    { label: '2017', value: 2017 },
+                                                    { label: '2018', value: 2018 },
+                                                    { label: '2019', value: 2019 },
+                                                    { label: '2020', value: 2020 },  
+                                                    ]}
                                                         defaultNull
                                                         placeholder="To"
                                                         onChangeItem={(to_time) => this.setState({ to_time })}
@@ -458,11 +525,12 @@ class Education extends Component {
                                             <TextInput multiline={true} placeholder="Working description" onChangeText={(description) => this.setState({ description })} ></TextInput>
                                         </View>
                                         <View style={{ flexDirection: 'row', margin: 20, justifyContent: 'space-between' }}>
-                                            <TouchableOpacity onPress={() => this.setState({ show: false })} style={styles.btnLogin}>
-                                                <Text style={{ fontSize: 20, color: '#ffff' }}>Cancel</Text>
+                                            <TouchableOpacity onPress={() => this.setState({ show: false })} style={{height:40,width:150,backgroundColor:'#ffff',borderWidth:1,borderColor:'#488B8F',marginRight:10,borderRadius:5,justifyContent: 'center', alignItems: 'center'}}>
+                                                <Text style={{  fontWeight: 'bold',color:"#488B8F",fontSize:18 }}>Cancel</Text>
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={this.onSubmit} style={styles.btnLogin1}>
-                                                <Text style={{ fontSize: 20, color: '#ffff' }}>Add</Text>
+                                            <TouchableOpacity onPress={this.onSubmit} style={{height:40,width:150,borderRadius:5,backgroundColor:'#488B8F',
+                                            marginLeft:10,justifyContent: 'center', alignItems: 'center'}}>
+                                                <Text style={{  fontWeight: 'bold',color:"#ffff",fontSize:18 }}>Add</Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -528,10 +596,39 @@ class Education extends Component {
                                                 style={styles.picker3}
                                             />
                                             <DropDownPicker
-                                                items={[
+                                               items={ [
+                                                { label: '1990', value: 1990 },
+                                                    { label: '1991', value: 1991 },
+                                                    { label: '1992', value: 1992 },
+                                                    { label: '1993', value: 1993 },
+                                                    { label: '1994', value: 1994 },
+                                                    { label: '1995', value: 1995 },
+                                                    { label: '1996', value: 1996 },
+                                                    { label: '1997', value: 1997 },
+                                                    { label: '1998', value: 1998 },
+                                                    { label: '1999', value: 1999 },
                                                     { label: '2000', value: 2000 },
-                                                    { label: '2100', value: 2100 },
-                                                ]}
+                                                    { label: '2001', value: 2001 },
+                                                    { label: '2002', value: 2002},
+                                                    { label: '2003', value: 2003 },
+                                                    { label: '2004', value: 2004 },
+                                                    { label: '2005', value: 2005},
+                                                    { label: '2006', value: 2006 },
+                                                    { label: '2007', value: 2007 },
+                                                    { label: '2008', value: 2008 },
+                                                    { label: '2009', value: 2009 },
+                                                    { label: '2010', value: 2010 },
+                                                    { label: '2011', value: 2011 },
+                                                    { label: '2012', value: 2012 },
+                                                    { label: '2013', value: 2013 },
+                                                    { label: '2014', value: 2014 },
+                                                    { label: '2015', value: 2015 },
+                                                    { label: '2016', value: 2016 },
+                                                    { label: '2017', value: 2017 },
+                                                    { label: '2018', value: 2018 },
+                                                    { label: '2019', value: 2019 },
+                                                    { label: '2020', value: 2020 },   
+                                            ]}
                                                 defaultNull
                                                 placeholder="From"
                                                 onChangeItem={(from_timeedit) => this.setState({ from_timeedit: from_timeedit.value })}
@@ -541,10 +638,39 @@ class Education extends Component {
                                             {
                                                 this.state.time_typeedit === "past" ?
                                                     <DropDownPicker
-                                                        items={[
-                                                            { label: '2000', value: 2000 },
-                                                            { label: '2100', value: 2100 },
-                                                        ]}
+                                                    items={ [
+                                                        { label: '1990', value: 1990 },
+                                                    { label: '1991', value: 1991 },
+                                                    { label: '1992', value: 1992 },
+                                                    { label: '1993', value: 1993 },
+                                                    { label: '1994', value: 1994 },
+                                                    { label: '1995', value: 1995 },
+                                                    { label: '1996', value: 1996 },
+                                                    { label: '1997', value: 1997 },
+                                                    { label: '1998', value: 1998 },
+                                                    { label: '1999', value: 1999 },
+                                                    { label: '2000', value: 2000 },
+                                                    { label: '2001', value: 2001 },
+                                                    { label: '2002', value: 2002},
+                                                    { label: '2003', value: 2003 },
+                                                    { label: '2004', value: 2004 },
+                                                    { label: '2005', value: 2005},
+                                                    { label: '2006', value: 2006 },
+                                                    { label: '2007', value: 2007 },
+                                                    { label: '2008', value: 2008 },
+                                                    { label: '2009', value: 2009 },
+                                                    { label: '2010', value: 2010 },
+                                                    { label: '2011', value: 2011 },
+                                                    { label: '2012', value: 2012 },
+                                                    { label: '2013', value: 2013 },
+                                                    { label: '2014', value: 2014 },
+                                                    { label: '2015', value: 2015 },
+                                                    { label: '2016', value: 2016 },
+                                                    { label: '2017', value: 2017 },
+                                                    { label: '2018', value: 2018 },
+                                                    { label: '2019', value: 2019 },
+                                                    { label: '2020', value: 2020 },
+                                                    ]}
                                                         defaultNull
                                                         placeholder="To"
                                                         onChangeItem={(to_timeedit) => this.setState({ to_timeedit: to_timeedit.value })}
@@ -560,12 +686,12 @@ class Education extends Component {
                                             <TextInput multiline={true} value={this.state.descriptionedit} placeholder="Education description" onChangeText={(descriptionedit) => this.setState({ descriptionedit })} ></TextInput>
                                         </View>
                                         <View style={{flexDirection: 'row',justifyContent: 'center', alignItems: 'center' ,marginTop: 20 }}>
-                                            <TouchableOpacity onPress={() => this.setState({ showedit: false })} style={{height:40,width:150,backgroundColor:'#488B8F',marginRight:10,borderRadius:5,justifyContent: 'center', alignItems: 'center'}}>
-                                                <Text style={{ fontWeight: 'bold',color:"white",fontSize:18}}>Cancel</Text>
+                                        <TouchableOpacity onPress={() => this.setState({ showedit: false })} style={{height:40,width:150,backgroundColor:'#ffff',borderWidth:1,borderColor:'#488B8F',marginRight:10,borderRadius:5,justifyContent: 'center', alignItems: 'center'}}>
+                                                <Text style={{  fontWeight: 'bold',color:"#488B8F",fontSize:18 }}>Cancel</Text>
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={this.onEdit} style={{height:40,width:150,borderRadius:5,backgroundColor:'#ffff',
-                                            borderWidth:1,borderColor:'#488B8F',marginLeft:10,justifyContent: 'center', alignItems: 'center'}}>
-                                                <Text style={{ fontWeight: 'bold',color:"#488B8F",fontSize:18}}>Add</Text>
+                                            <TouchableOpacity onPress={this.onEdit} style={{height:40,width:150,borderRadius:5,backgroundColor:'#488B8F',
+                                            marginLeft:10,justifyContent: 'center', alignItems: 'center'}}>
+                                                <Text style={{  fontWeight: 'bold',color:"#ffff",fontSize:18 }}>Add</Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>

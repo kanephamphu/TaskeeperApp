@@ -14,6 +14,9 @@ import {
 } from 'react-native'
 import background from '../../images/anh1.png'
 import logo from '../../images/logoblack.png'
+import iconsuccess from '../../images/checked.png';
+import iconerror from '../../images/close.png';
+import iconwarning from '../../images/warning.png';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
@@ -42,16 +45,18 @@ export default class Register extends Component{
             year:'1999',
             nof:'',
             errors: {},
-            shownotice:false
+            shownotice:false,
+            notice:'',key:''
         }
         this.onSubmit1 = this.onSubmit.bind(this)
         this.socket.on("sv-send-register-res",function(data){
             if(data.success==true){
                 e.setState({
-                    nof:'Congratulations on your successful registration'
-                   
+                    notice:'Registered Successfully!',
+                    shownotice:true,
+                    key:'success'
                 }); 
-                e.props.navigation.navigate('Login')
+                
             }else if(data.success==false){ 
                 var dataserver=data.errors
                 if(data.errors.first_name){
@@ -269,40 +274,22 @@ export default class Register extends Component{
                             visible={this.state.shownotice}
                             animationType='slide'
                             style={{ justifyContent: 'center', alignItems: 'center' }}
-                        > 
-                         <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
+                        >
                             <View style={{ backgroundColor: '#000000aa', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                 <View style={{
                                     backgroundColor: '#faf9f9', borderRadius: 20,
-                                    height: "40%", width: "70%", justifyContent: 'center', alignItems: 'center'
+                                    height: 210, width: "70%", justifyContent: 'center', alignItems: 'center'
                                 }}>
-                                    <Text style={{fontSize:20,fontWeight: 'bold' }}>Verify Number</Text>
-                                    <TextInput 
-                                    style={styles.inputnotice}
-                                    placeholder={'verify number'}
-                                    onChangeText={(verify_number)=> this.setState({verify_number})}
-                                    value={this.state.verify_number}
-                                    placeholderTextColor={'#2d7474'}
-                                
-                                
-                                ></TextInput>
-                                     <View style={{ flexDirection: 'row',justifyContent:'space-between',width:"70%"}}>
-                                    <TouchableOpacity onPress={() => this.setState({ shownotice: false })} style={{
-                                        width: "50%", backgroundColor: '#71B7B7',
-                                        height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center',marginRight: 5
+                                    <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
+                                    <Text>{this.state.notice}</Text>
+                                    <TouchableOpacity onPress={() => {e.setState({shownotice:false}),this.props.navigation.navigate('Login')}} style={{
+                                        width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
+                                        height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                                     }}>
-                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
+                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity  style={{
-                                        width: "50%", backgroundColor: '#71B7B7',
-                                        height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center',marginLeft: 5
-                                    }}>
-                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Confirm</Text>
-                                    </TouchableOpacity>
-                                    </View>
                                 </View>
                             </View>
-                            </TouchableWithoutFeedback>
                         </Modal>
             </View>
         )

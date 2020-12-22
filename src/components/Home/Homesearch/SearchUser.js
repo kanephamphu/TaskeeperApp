@@ -58,7 +58,7 @@ class SearchUser extends Component {
                     this.state.dataSearch.length === 0
                         ?
                         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text>Không tìm thấy người này</Text>
+                            <Text>Couldn't find this person</Text>
                         </View>
                         :
                         <View style={styles.container1}>
@@ -124,7 +124,7 @@ class Listdataitem extends Component {
                                     <Fontisto name="persons" size={24} color="#555555" />
                                 </View>
                                 <View style={styles.viewtext}>
-                                     <Text style={styles.text}>So nguoi follow: <Text style={{fontWeight: 'bold' }}>{this.props.item.follower_number}</Text></Text>
+                                     <Text style={styles.text}>Follower: <Text style={{fontWeight: 'bold' }}>{this.props.item.follower_number}</Text></Text>
                                 </View>
                             </View>
                         </View>

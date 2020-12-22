@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { Image, View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, ActivityIndicator, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions, FlatList, ActivityIndicator, Modal,Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Entypo } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io'
 import { AntDesign } from '@expo/vector-icons';
-import iconsuccess from '../../../images/icon1.png';
-import iconerror from '../../../images/icon2.png';
-import iconwarning from '../../../images/icon3.png';
+import iconsuccess from '../../../images/checked.png';
+import iconerror from '../../../images/close.png';
+import iconwarning from '../../../images/warning.png';
+import noitem from '../../../images/box.png';
 const { width, height } = Dimensions.get("window");
 var e;
 export default class Savetask extends React.Component {
@@ -71,7 +72,8 @@ export default class Savetask extends React.Component {
           :
           this.state.dataSave.length === 0 ?
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <Text>Danh sách lưu trống</Text>
+              <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
+              <Text>No item</Text>
             </View>
             :
             <View style={styles.flatlist}>
@@ -114,7 +116,7 @@ class RenderItem extends React.Component {
       } else if (data.success == true) {
         e.setState({
           show1: true,
-          notice: 'Xóa thành công!',
+          notice: 'Deleted successfully!',
           key: "success",
         })
         console.log('xoa thanh cong')
@@ -192,7 +194,7 @@ class RenderItem extends React.Component {
                     borderWidth: 1, borderColor: '#488B8F',
                     height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
                   }}>
-                    <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
+                    <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => this.deleteTasksave()} style={{
                     width: "50%", backgroundColor: '#488B8F',

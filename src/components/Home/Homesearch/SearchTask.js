@@ -56,7 +56,7 @@ class SearchTask extends Component {
                     this.state.dataSearch.length === 0
                     ?
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text>Không tìm thấy công việc này này</Text>
+                        <Text>Couldn't find this job</Text>
                     </View>
                     :
                     <View style={styles.container1}>

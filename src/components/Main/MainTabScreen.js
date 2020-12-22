@@ -370,7 +370,7 @@ const NoticeStackScreen = ({ navigation }) => {
         options={{ headerShown: false }}
       />
        <HomeStack.Screen
-        name="DetailCandidates"
+        name="DetailCandidates1"
         component={DetailCandidates}
         options={{ headerShown: false }}
       />

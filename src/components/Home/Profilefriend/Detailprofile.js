@@ -88,7 +88,8 @@ export default class Detailprofile extends React.Component {
                                 <View>
                                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>WORK</Text>
                                 </View>
-                                {this.state.working_information.map((item) => {
+                                {
+                                this.state.working_information.length==0?null:this.state.working_information.map((item) => {
                                     return (
                                         <View key={item._id} style={{ flexDirection: 'row', marginTop: 10 }}>
                                             <View style={{
@@ -124,7 +125,7 @@ export default class Detailprofile extends React.Component {
                                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>EDUCATION</Text>
                                 </View>
 
-                                {this.state.education.map((item) => {
+                                {this.state.education.length==0?null:this.state.education.map((item) => {
                                     return (
                                         <View key={item._id} style={{ flexDirection: 'row', marginTop: 10 }}>
                                             <View style={{

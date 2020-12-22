@@ -4,9 +4,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import io from 'socket.io-client/dist/socket.io';
-import iconsuccess from '../../images/icon1.png';
-import iconerror from '../../images/icon2.png';
-import iconwarning from '../../images/icon3.png';
+import iconsuccess from '../../images/checked.png';
+import iconerror from '../../images/close.png';
+import iconwarning from '../../images/warning.png';
 const { height, width } = Dimensions.get('window');
 var e;
 class Notice extends Component {
@@ -32,28 +32,35 @@ class Notice extends Component {
                 e.setState({
                     dataSource: list,
                     isLoading:true,
-                })
-             
-               
+                })     
+                console.log(data.data)       
             }
         })
-    
+        this.readNotice=this.readNotice.bind(this)
         this.socket.on("sv-readed-all-notification", function (data) {
             if (data.success == false) {
                 console.log(JSON.stringify(data))
             } else if (data.success == true) {
-                e.setState({ show1: true, notice: "Đã đọc tất cả", key: "success" })
+                e.setState({ show1: true, notice: "Have read all", key: "success" })
             }
         })
+        this.socket.on("sv-readed-notification", function (data) {
+            if (data.success == false) {
+                console.log(JSON.stringify(data))
+            } else if (data.success == true) {
+                console.log(JSON.stringify(data))
+            }
+        })
+        this.ongetNotice=this.ongetNotice.bind(this)
     };
     componentDidMount = async () => {
-        const token = await AsyncStorage.getItem('token')
+       this.ongetNotice()
+    }
+    ongetNotice = async () => {
+        const token = await AsyncStorage.getItem('token');
         this.setState({
             secret_key: token
         })
-       this.ongetNotice()
-    }
-    ongetNotice(){
         const notice = {
             secret_key: this.state.secret_key,
             number_notification: 10,
@@ -66,6 +73,20 @@ class Notice extends Component {
             secret_key: this.state.secret_key,
         }
         this.socket.emit("cl-readed-all-notification", readall)
+        this.ongetNotice()
+    }
+    readNotice(_id,task_id,check,related_user_first_name,related_user_id){
+        const readclone={
+            secret_key: this.state.secret_key,
+            notifcation_id:_id
+        }
+        this.socket.emit("cl-readed-notification",readclone)
+        if(check=="followed"){
+            this.props.navigation.navigate("Profilefriendnotice", { first_name:related_user_first_name, last_name:"", _id: related_user_id })
+        }else{
+            this.props.navigation.navigate("DetailCandidates1",{task_id:task_id})
+        }
+       
         this.ongetNotice()
     }
     render() {
@@ -92,9 +113,8 @@ class Notice extends Component {
                     <ScrollView>
                         {this.state.dataSource.map((items) => {
                             return (
-                                <TouchableOpacity onPress={()=>{items.type=="followed"?this.props.navigation.navigate("Profilefriendnotice", { first_name: items.related_user_first_name, last_name:"", _id: items.related_user_id }):
-                                this.props.navigation.navigate("DetailCandidates",{task_id:items.task_id})}
-                            } key={items._id} style={{ flexDirection: 'row',
+                                <TouchableOpacity onPress={()=>this.readNotice(items._id,items.task_id,items.type,items.related_user_first_name,items.related_user_id)}
+                                  key={items._id} style={{ flexDirection: 'row',
                                     height: 100,
                                     alignItems: 'center',
                                     borderBottomWidth: 1,
@@ -144,14 +164,14 @@ class Notice extends Component {
                                 height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
                             }}>
                                 <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
-                                <Text>Đọc tất cả thông báo !</Text>
+                                <Text>Do you want to read all notification!</Text>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
                                     <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
                                         width: "50%", backgroundColor:'#ffff',
                                         borderWidth:1,borderColor:'#488B8F',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
                                     }}>
-                                        <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Trở về</Text>
+                                        <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => this.readAllnotice()} style={{
                                         width: "50%", backgroundColor:'#488B8F',
