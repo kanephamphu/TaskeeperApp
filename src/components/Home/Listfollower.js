@@ -24,7 +24,7 @@ class Listfollower extends Component {
                 e.setState({
                     data: listdata,
                 })
-                console.log(JSON.stringify(listdata))
+             
             }
         })
 

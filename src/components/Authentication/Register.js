@@ -14,9 +14,8 @@ import {
 } from 'react-native'
 import background from '../../images/anh1.png'
 import logo from '../../images/logoblack.png'
-import iconsuccess from '../../images/checked.png';
+import iconsuccess from '../../images/chucmung.png';
 import iconerror from '../../images/close.png';
-import iconwarning from '../../images/warning.png';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
@@ -59,31 +58,89 @@ export default class Register extends Component{
                 
             }else if(data.success==false){ 
                 var dataserver=data.errors
+                console.log(data)
                 if(data.errors.first_name){
-                    e.setState({
-                        nof:dataserver.first_name.message
-                    });  
+                    if(data.errors.first_name.rule==='regex'){
+                        e.setState({
+                            nof:"The first name format is invalid!",
+                            key:'first'
+                        }); 
+                    }else{
+                        e.setState({
+                            nof:'Please enter your first name!',
+                            key:'first'
+                        });  
+                    }
+                  
                 }else  if(data.errors.last_name){
-                    e.setState({
-                        nof:dataserver.last_name.message
-                    });  
+                    if(data.errors.last_name.rule==='regex'){
+                        e.setState({
+                            nof:"The last name format is invalid!",
+                            key:'last'
+                        }); 
+                    }else{
+                        e.setState({
+                            nof:'Please enter your last name!',
+                            key:'last'
+                        });  
+                    }
                 }else  if(data.errors.phone_number){
+                    if(data.errors.phone_number.rule==='phoneNumber'){
+                        e.setState({
+                            nof:"The phone number format is invalid!",
+                            key:'phone'
+                        });  
+                    }else
+                    if(data.errors.phone_number.rule==='required'){
+                        e.setState({
+                            nof:"Please enter your phone number!",
+                            key:'phone'
+                        });
+                    }
+                }
+                else if(data.errors.rule==='phoneNumber'){
                     e.setState({
-                        nof:dataserver.phone_number.message
-                    });  
+                        nof:"Phone number already exists!",
+                        key:'phone'
+                    });
                 }else  if(data.errors.email){
+            
+                    if(data.errors.email.rule==='required'){
+                        e.setState({
+                            nof:'Please enter your email!',
+                            key:'email'
+                        });
+                    }else {
+                        e.setState({
+                            nof:"The email format is invalid!",
+                            key:'email'
+                        });
+                       
+                    }
+                }else if(data.errors.rule==='email'){
                     e.setState({
-                        nof:dataserver.email.message
-                    });  
-                }else  if(data.errors.password){
-                    e.setState({
-                        nof:dataserver.password.message
-                    });  
-                }else if(data.errors){
-                    e.setState({
-                        nof:dataserver.message
-                    });  
-                }                    
+                        nof:"Email already exists!",
+                        key:'email'
+                    });
+                }
+                else  if(data.errors.password){
+                    if(data.errors.password.rule=='required'){
+                        e.setState({
+                            nof:'Please enter your password!',
+                            key:'pass'
+                        });
+                    }else  if(data.errors.password.rule=='wrong-password'){
+                        e.setState({
+                            nof:"Incorrect password!",
+                            key:'pass'
+                        });
+                    }else if(data.errors.password.rule=='minLength'){
+                        e.setState({
+                            nof:"The password can not be less than 8!",
+                            key:'pass'
+                        });
+                    }
+                }                   
             }       
         });
     }
@@ -142,13 +199,24 @@ export default class Register extends Component{
                 <View><Text style={styles.logintext}>REGISTRATION</Text></View>
                 <View style={styles.textcontainer}>
                     <Text style={styles.logintext1}>Already have an account ?  </Text>
-                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("Taskeeper")}>
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("Login")}>
                         <Text style={styles.logintext2} >Log in</Text>
                     </TouchableOpacity>               
                 </View>
                 <View>
                         <TextInput 
-                            style={styles.input}
+                            style={{ width:300,
+                                height:40,
+                                borderRadius:10,
+                                fontSize:16,
+                                paddingLeft:45,
+                                paddingTop:-10,
+                                backgroundColor:'#ffff',
+                                color:'#2d7474',
+                                marginHorizontal:25,
+                                marginTop:10,
+                                borderWidth: 1,
+                                borderColor:this.state.key==='first'?'red':'#2d7474'}}
                             placeholder={'First Name'}
                             onChangeText={(first_name)=> this.setState({first_name})}
                             value={this.state.first_name}
@@ -169,7 +237,18 @@ export default class Register extends Component{
                 <View>
                         
                         <TextInput 
-                            style={styles.input}
+                            style={{ width:300,
+                                height:40,
+                                borderRadius:10,
+                                fontSize:16,
+                                paddingLeft:45,
+                                paddingTop:-10,
+                                backgroundColor:'#ffff',
+                                color:'#2d7474',
+                                marginHorizontal:25,
+                                marginTop:10,
+                                borderWidth: 1,
+                                borderColor:this.state.key==='last'?'red':'#2d7474'}}
                             placeholder={'Last Name'} 
                             onChangeText={last_name=> this.setState({last_name})}
                             value={this.state.last_name}
@@ -188,7 +267,18 @@ export default class Register extends Component{
                  </View>               
                         <View>                         
                             <TextInput 
-                                style={styles.input}
+                                style={{ width:300,
+                                    height:40,
+                                    borderRadius:10,
+                                    fontSize:16,
+                                    paddingLeft:45,
+                                    paddingTop:-10,
+                                    backgroundColor:'#ffff',
+                                    color:'#2d7474',
+                                    marginHorizontal:25,
+                                    marginTop:10,
+                                    borderWidth: 1,
+                                    borderColor:this.state.key==='phone'?'red':'#2d7474'}}
                                 placeholder={'Phone'} 
                                 onChangeText={(phone_number)=> this.setState({phone_number})}
                                 value={this.state.phone_number}
@@ -207,7 +297,18 @@ export default class Register extends Component{
                         </View>
                         <View>
                             <TextInput 
-                                style={styles.input}
+                                style={{ width:300,
+                                    height:40,
+                                    borderRadius:10,
+                                    fontSize:16,
+                                    paddingLeft:45,
+                                    paddingTop:-10,
+                                    backgroundColor:'#ffff',
+                                    color:'#2d7474',
+                                    marginHorizontal:25,
+                                    marginTop:10,
+                                    borderWidth: 1,
+                                    borderColor:this.state.key==='email'?'red':'#2d7474'}}
                                 placeholder={'Email'} 
                                 onChangeText={(email)=> this.setState({email})}
                                 value={this.state.email}                      
@@ -229,7 +330,18 @@ export default class Register extends Component{
                
                         <View>
                             <TextInput 
-                                style={styles.input}
+                                 style={{ width:300,
+                                    height:40,
+                                    borderRadius:10,
+                                    fontSize:16,
+                                    paddingLeft:45,
+                                    paddingTop:-10,
+                                    backgroundColor:'#ffff',
+                                    color:'#2d7474',
+                                    marginHorizontal:25,
+                                    marginTop:10,
+                                    borderWidth: 1,
+                                    borderColor:this.state.key==='pass'?'red':'#2d7474'}}
                                 placeholder={'Password'} 
                                 onChangeText={(password)=> this.setState({password})}
                                 value={this.state.password}
@@ -282,7 +394,7 @@ export default class Register extends Component{
                                 }}>
                                     <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                                     <Text>{this.state.notice}</Text>
-                                    <TouchableOpacity onPress={() => {e.setState({shownotice:false}),this.props.navigation.navigate('Login')}} style={{
+                                    <TouchableOpacity onPress={() => {e.setState({shownotice:false,key:''}),this.props.navigation.navigate('Login')}} style={{
                                         width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                                     }}>
@@ -307,7 +419,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#faf9f9'
     },
     textnof:{
-        color:'#FF0000'
+        color: 'red',
+        fontStyle:'italic'
     },
     textcontainer:{
         flexDirection:'row',

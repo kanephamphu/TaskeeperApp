@@ -281,7 +281,7 @@ class Education extends Component {
                                 }
                             } else {
                                 e.setState({
-                                    notice: 'To time must be greater than or equal tofrom time !',
+                                    notice: 'To time must be greater than or equal to from time !',
                                     key: "error",
                                     keycheck: 'time',
 

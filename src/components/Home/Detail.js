@@ -117,23 +117,28 @@ class Detail extends Component {
             if (data.success == false) {
                 if (data.errors.introduction) {
                     e.setState({
-                        shownotice: true,
-                        notice: 'Please enter your introduction!',
-                        key: "error"
+                      
+                      
                     })
-                } else {
+
+                } if(data.errors.price){
+                    e.setState({
+                       
+                    })
+                }else {
                     e.setState({
                         shownotice: true,
-                        notice: 'Applied Successfully!',
+                        notice: 'Already Exist!',
                         key: "error",
                     })
+
                 }
-                console.log(JSON.stringify(data))
+                console.log(data)
             } else if (data.success == true) {
                 e.setState({
-                    show: false,
+                  
                     shownotice: true,
-                    notice: 'Already Exist!',
+                    notice: 'Applied Successfully!',
                     key: "success",
                 })
             }
@@ -164,8 +169,9 @@ class Detail extends Component {
                     position: list.position
 
                 })
+               
             } else {
-                console.log(data.erro)
+                
             }
         })
         this.socket.on('sv-get-recommend-task-based-on-id', function (data) {
@@ -197,15 +203,35 @@ class Detail extends Component {
         }
         this.socket.emit('cl-get-recommend-task-based-on-id', listrecommend)
     }
-    applyJob = async () => {
-        const token = await AsyncStorage.getItem('token')
-        const apply = {
-            secret_key: token,
-            task_id: this.props.route.params._task_id,
-            introduction: this.state.introduction,
-            price: this.state.price,
+    applyJob () {
+        let a=e.state.price;
+        let b=parseInt(a)
+        if(e.state.introduction==''){
+            e.setState({
+                notice: 'Please enter your introduction!',
+                key: "intro"
+            })
+        }else if(e.state.price==''){
+            e.setState({
+                notice: 'Please enter your price!',
+                key: "price"
+            })
+        }else if(b!==b){
+            e.setState({
+                notice: 'The price is invalid!',
+                key: "price"
+            })
+        }else{
+            e.setState({ show: false })
+            const apply = {
+                secret_key: e.state.secret_key,
+                task_id: e.props.route.params._task_id,
+                introduction: e.state.introduction,
+                price: e.state.price,
+            }
+            e.socket.emit("cl-apply-job", apply)
         }
-        this.socket.emit("cl-apply-job", apply)
+      
 
     }
     saveTask = async () => {
@@ -268,12 +294,17 @@ class Detail extends Component {
                                 </View>
 
                                     <View style={{ flexDirection: 'row', marginRight: 20 }}>
-                                        <TouchableOpacity onPress={() => this.setState({ show: true })} style={styles.iconview1}>
-                                            <AntDesign name="pluscircle" size={24} color="black" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={this.save} style={styles.iconview2}>
-                                            <Entypo name="save" size={24} color="black" />
-                                        </TouchableOpacity>
+                                      
+                                          <TouchableOpacity onPress={() => this.setState({ show: true })} style={styles.iconview1}>
+                                          <AntDesign name="pluscircle" size={24} color="black" />
+                                         </TouchableOpacity>
+                                      
+                                       
+                                           <TouchableOpacity onPress={this.save} style={styles.iconview2}>
+                                           <Entypo name="save" size={24} color="black" />
+                                          </TouchableOpacity>
+                                     
+                                       
                                     </View></> : null}
                             </View>
                             <View style={styles.bodytwo}>
@@ -424,24 +455,27 @@ class Detail extends Component {
                         <View style={{ backgroundColor: '#000000aa', flex: 1 }}>
                             <View style={{
                                 backgroundColor: '#faf9f9', borderRadius: 10,
-                                height: 320, marginLeft: 40, marginRight: 40, marginTop: 75,
+                                height: 330, marginLeft: 40, marginRight: 40, marginTop: 75,
                                 borderWidth: 2, borderColor: '#009387', padding: 20,
                                 alignContent: 'center'
                             }}>
                                 <View style={{ alignContent: 'center' }}>
                                     <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Introduction:</Text>
                                 </View>
-                                <View style={{ height: 130, padding: 10, borderColor: '#808080' }}>
+                                <View style={{ height: 120, padding: 10, borderColor: '#808080' }}>
                                     <TextInput multiline={true}
                                         onChangeText={(introduction) => this.setState({ introduction })}
                                         value={this.state.introduction}
-                                        placeholderTextColor={'#2d7474'}
+                                        placeholderTextColor={this.state.key=='intro'?'red':'#2d7474'}
                                         underlineColorAndroid='transparent'
                                         placeholder='introduction...'
                                     >
 
                                     </TextInput>
                                 </View>
+                               <View>
+                                   <Text style={{fontStyle: 'italic',color:'red'}}>{this.state.key=='intro'?this.state.notice:null}</Text>
+                               </View>
                                 <View style={{ alignContent: 'center' }}>
                                     <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Price:</Text>
                                 </View>
@@ -449,15 +483,18 @@ class Detail extends Component {
                                     <TextInput
                                         onChangeText={(price) => this.setState({ price })}
                                         value={this.state.price}
-                                        placeholderTextColor={'#2d7474'}
+                                        placeholderTextColor={this.state.key=='price'?'red':'#2d7474'}
                                         underlineColorAndroid='transparent'
                                         placeholder='price...'
                                     >
 
                                     </TextInput>
                                 </View>
+                                <View style={{marginTop: -5}}>
+                                   <Text style={{fontStyle: 'italic',color:'red'}}>{this.state.key=='price'?this.state.notice:null}</Text>
+                               </View>
                                 <View style={styles.controlStyle}>
-                                    <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false })}>
+                                    <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false,key:'' })}>
                                         <Text style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancle</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.apply} onPress={this.applyJob}>
@@ -480,7 +517,7 @@ class Detail extends Component {
                         }}>
                             <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                             <Text>{this.state.notice}</Text>
-                            <TouchableOpacity onPress={() => this.setState({ shownotice: false })} style={{
+                            <TouchableOpacity onPress={() => this.setState({ shownotice: false,show:false })} style={{
                                 width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                                 height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                             }}>

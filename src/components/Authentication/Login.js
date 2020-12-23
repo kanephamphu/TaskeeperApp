@@ -34,13 +34,19 @@ class Login extends Component {
             loginquery: '',
             password: '',
             nof: '',
-            errors: {}
+            errors: {},
+            key:''
         }
 
         this.onSubmit1 = this.onSubmit.bind(this)
         this.socket.on("sv-send-login-res", async function (data) {
             if (data.success == true) {
+                e.setState({
+                  
+                    key:''
+                })
                 var token = data.secret_key
+
                 try {
                     await AsyncStorage.setItem("token", token)
                 } catch (e) {
@@ -50,22 +56,48 @@ class Login extends Component {
             } else if (data.success == false) {
                 var dataserver = data.errors
                 if (data.errors.loginquery) {
-                    e.setState({
-                        nof: dataserver.loginquery.message
-                    });
+                    if(data.errors.loginquery.rule==='required'){
+                        e.setState({
+                            nof:'Please enter your email!',
+                            key:'email'
+                        });
+                    }else{
+                        e.setState({
+                            nof:'The email address is invalid!',
+                            key:'email'
+                        });
+                    }
+                   
                 } else if (data.errors.password) {
-                    e.setState({
-                        nof: dataserver.password.message
-                    });
+                    if(data.errors.password.rule=='required'){
+                        e.setState({
+                            nof:'Please enter your password!',
+                            key:'pass'
+                        });
+                    }else  if(data.errors.password.rule=='wrong-password'){
+                        e.setState({
+                            nof:"Incorrect password!",
+                            key:'pass'
+                        });
+                    }else if(data.errors.password.rule=='minLength'){
+                        e.setState({
+                            nof:"The password can not be less than 8!",
+                            key:'pass'
+                        });
+                    }
+                  
                 } else if (data.errors.result.loginquery) {
                     e.setState({
-                        nof: dataserver.result.loginquery.message
+                        nof:'Can not found the email!',
+                        key:'email'
                     });
                 } else if (data.errors.result.password) {
                     e.setState({
-                        nof: dataserver.result.password.message
+                        nof:"Incorrect password!",
+                        key:'pass'
                     });
                 }
+               
             }
         });
     }
@@ -124,7 +156,18 @@ class Login extends Component {
                 <View>
 
                     <TextInput
-                        style={styles.input}
+                        style={{ width:300,
+                            height:40,
+                            borderRadius:10,
+                            fontSize:16,
+                            paddingLeft:45,
+                            paddingTop:-10,
+                            backgroundColor:'#ffff',
+                            color:'#2d7474',
+                            marginHorizontal:25,
+                            marginTop:10,
+                            borderWidth: 1,
+                            borderColor:this.state.key==='email'?'red':'#2d7474'}}
                         placeholder={'Email'}
                         onChangeText={(loginquery) => this.setState({ loginquery })}
                         value={this.state.loginquery}
@@ -148,7 +191,18 @@ class Login extends Component {
                 <View>
 
                     <TextInput
-                        style={styles.input}
+                        style={{ width:300,
+                            height:40,
+                            borderRadius:10,
+                            fontSize:16,
+                            paddingLeft:45,
+                            paddingTop:-10,
+                            backgroundColor:'#ffff',
+                            color:'#2d7474',
+                            marginHorizontal:25,
+                            marginTop:10,
+                            borderWidth: 1,
+                            borderColor:this.state.key==='pass'?'red':'#2d7474'}}
                         placeholder={'Password'}
                         onChangeText={(password) => this.setState({ password })}
                         value={this.state.password}
@@ -203,7 +257,8 @@ const styles = StyleSheet.create({
 
     },
     textnof: {
-        color: '#FF0000'
+        color: 'red',
+        fontStyle:'italic'
     },
     btnemailfb: {
         flexDirection: 'row',

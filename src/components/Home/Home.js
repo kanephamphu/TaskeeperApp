@@ -122,7 +122,8 @@ class Home extends Component {
                 var dulieu= e.state.datasourcenew;
                 dulieu = dulieu.concat(list)
                 e.setState({datasourcenew:dulieu,isLoading:true,test:false});        
-                //var listdatanewfeed=e.state.datasourcenew.push(JSON.stringify(list))             
+                //var listdatanewfeed=e.state.datasourcenew.push(JSON.stringify(list)) 
+                console.log(data.data)            
             }    
         })
         this.socket.on('sv-get-recommend-task', function (data) {
@@ -245,7 +246,7 @@ class Home extends Component {
             skip:this.state.skip
         }
         this.socket.emit("cl-get-news-feed", gettask)
-       console.log(gettask)
+      
     }
     refreshTop() {
         this.setState({
@@ -262,8 +263,8 @@ class Home extends Component {
     onProfile(first, last, _id) {
         this.props.navigation.navigate("Profilefriend", { first_name: first, last_name: last, _id: _id })
     }
-    onDetail(_id, user_id) {
-        this.props.navigation.navigate("Detail", { _task_id: _id })
+    onDetail(_id,isSaved,isApplied) {
+        this.props.navigation.navigate("Detail", { _task_id: _id,isSaved:isSaved,isApplied:isApplied })
     }
     onMessage() {
         this.props.navigation.navigate("MessageHome");

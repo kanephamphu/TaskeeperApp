@@ -83,8 +83,10 @@ class Notice extends Component {
         this.socket.emit("cl-readed-notification",readclone)
         if(check=="followed"){
             this.props.navigation.navigate("Profilefriendnotice", { first_name:related_user_first_name, last_name:"", _id: related_user_id })
-        }else{
+        }else if(check=="applied"){
             this.props.navigation.navigate("DetailCandidates1",{task_id:task_id})
+        }else{
+            this.props.navigation.navigate("Detailnotice",{_task_id:task_id})
         }
        
         this.ongetNotice()

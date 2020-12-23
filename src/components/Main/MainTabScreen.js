@@ -374,6 +374,11 @@ const NoticeStackScreen = ({ navigation }) => {
         component={DetailCandidates}
         options={{ headerShown: false }}
       />
+       <HomeStack.Screen
+        name="Detailnotice"
+        component={Detail}
+        options={{ headerShown: false }}
+      />
     </HomeStack.Navigator>
   );
 };

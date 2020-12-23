@@ -57,6 +57,8 @@ class Education extends Component {
             from_timeedit: '',
             to_timeedit: '',
             posotionedit: '',
+            keycheck1: '',
+            keycheck:''
 
         };
         this.onEdit = this.onEdit.bind(this);
@@ -72,44 +74,6 @@ class Education extends Component {
                 })
             }
             else if (data.success == false) {
-                if(data.errors.company_name){
-                    e.setState({
-                        shownotice:true,
-                        notice:'Please enter your company name!',
-                        key:"error"
-                    })
-                }else   if(data.errors.description){
-                    e.setState({
-                        shownotice:true,
-                        notice:'Please enter your description!',
-                        key:"error"
-                    })
-                }
-                else   if(data.errors.position){
-                    e.setState({
-                        shownotice:true,
-                        notice:'Please enter your position!',
-                        key:"error"
-                    })
-                }else   if(data.errors.time_type){
-                    e.setState({
-                        shownotice:true,
-                        notice:'Please choose your type time!',
-                        key:"error"
-                    })
-                }else   if(data.errors.from_time){
-                    e.setState({
-                        shownotice:true,
-                        notice:'Please choose your from time!!',
-                        key:"error"
-                    })
-                }else   if(data.errors.to_time){
-                    e.setState({
-                        shownotice:true,
-                        notice:'Please choose your to time!',
-                        key:"error"
-                    })
-                }
             }
         });
         this.socket.on('sv-working-info-detail', function (data) {
@@ -137,40 +101,46 @@ class Education extends Component {
                 console.log(JSON.stringify(data))
                 if(data.errors.company_name){
                     e.setState({
-                        shownotice:true,
                         notice:'Please enter your company name!',
-                        key:"error"
+                        keycheck: 'school_name',
+                        keycheck1:''
+                        
                     })
                 }else   if(data.errors.description){
                     e.setState({
-                        shownotice:true,
+                       
                         notice:'Please enter your description!',
-                        key:"error"
+                        keycheck: 'description',
+                       
                     })
                 }
                 else   if(data.errors.position){
                     e.setState({
-                        shownotice:true,
-                        notice:'Please enter position!',
-                        key:"error"
+                        
+                        notice:'Please enter your position!',
+                        keycheck: 'position',
+                        keycheck1:''
                     })
                 }else   if(data.errors.time_type){
                     e.setState({
-                        shownotice:true,
+                      
                         notice:'Please choose your time type!',
-                        key:"error"
+                        keycheck1: 'time',
+                        keycheck: 'time_type',
                     })
                 }else   if(data.errors.from_time){
                     e.setState({
-                        shownotice:true,
+                       
                         notice:'Please choose your from time!',
-                        key:"error"
+                        keycheck: 'from_time',
+                        keycheck1: 'time',
                     })
                 }else   if(data.errors.to_time){
                     e.setState({
-                        shownotice:true,
+                       
                         notice:'Please choose your to time!',
-                        key:"error"
+                        keycheck: 'to_time',
+                        keycheck1: 'time',
                     })
                 }
             }
@@ -218,18 +188,27 @@ class Education extends Component {
         this.onRefresh()
     }
     onEdit() {
-        const editEducation = {
-            secret_key: this.state.secret_key,
-            work_id: this.state.work_id,
-            company_name: this.state.company_nameedit,
-            description: this.state.descriptionedit,
-            time_type: this.state.time_typeedit,
-            from_time: this.state.from_timeedit,
-            to_time: this.state.to_timeedit,
-            position: this.state.positionedit,
-
+        if(this.state.from_timeedit >= this.state.to_timeedit){
+            e.setState({
+                notice: 'To time must be greater than or equal to from time !',
+                keycheck1: 'time',
+                keycheck: 'time_type',
+            })
+        }else{
+            const editEducation = {
+                secret_key: this.state.secret_key,
+                work_id: this.state.work_id,
+                company_name: this.state.company_nameedit,
+                description: this.state.descriptionedit,
+                time_type: this.state.time_typeedit,
+                from_time: this.state.from_timeedit,
+                to_time: this.state.to_timeedit,
+                position: this.state.positionedit,
+    
+            }
+            this.socket.emit("cl-edit-working", editEducation)
         }
-        this.socket.emit("cl-edit-working", editEducation)
+       
       
         this.onRefresh()
     }
@@ -250,18 +229,115 @@ class Education extends Component {
         })
     }
     onSubmit() {
-        const addEducation = {
-            secret_key: this.state.secret_key,
-            company_name: this.state.company_name,
-            description: this.state.description,
-            time_type: this.state.time_type.value,
-            from_time: this.state.from_time.value,
-            to_time: this.state.to_time.value,
-            position: this.state.position,
+        if (this.state.company_name !== '') {
+           
+            if (this.state.time_type === '') {
+                e.setState({
+                    notice: 'Please choose your time type !',
+                    key: "error",
+                    keycheck: 'time',
+                    keycheck1: 'time_type'
+                })
+            } else if (this.state.time_type.value === 'past') {
+                if (this.state.from_time === '') {
+                    e.setState({
+                        notice: 'Please choose your from time!',
+                        key: "error",
+                        keycheck: 'time',
+                        keycheck1: 'from_time'
+                    })
+                }
+                else if (this.state.to_time === '') {
+                    e.setState({
+                        notice: 'Please choose your to time !',
+                        key: "error",
+                        keycheck: 'time',
+                        keycheck1: 'to_time'
+                    })
+                }
+                else if (this.state.from_time.value >= this.state.to_time.value) {
+                    e.setState({
+
+                        notice: 'To time must be greater than or equal to from time !',
+                        key: "error",
+                        keycheck: 'time',
+                        keycheck1: 'to_time'
+                    })
+                } else if (this.state.description === '') {
+                    e.setState({
+                        notice: 'Please enter your description!',
+                        key: "error",
+                        keycheck: 'description',
+                        keycheck1: ''
+                    })
+                }else if (this.state.position === '') {
+                    e.setState({
+                        notice: 'Please enter your position!',
+                        key: "error",
+                        keycheck: 'position',
+                        keycheck1: ''
+                    })
+                } else {
+                    const addEducation = {
+                        secret_key: this.state.secret_key,
+                        company_name: this.state.company_name,
+                        description: this.state.description,
+                        time_type: this.state.time_type.value,
+                        from_time: this.state.from_time.value,
+                        to_time: this.state.to_time.value,
+                        position: this.state.position,
+                    }
+                    this.socket.emit("cl-new-working", addEducation)
+                  
+                    this.onRefresh()
+                }
+
+            } else if (this.state.from_time === '') {
+                e.setState({
+                    notice: 'Please choose your from time!',
+                    key: "error",
+                    keycheck: 'time',
+                    keycheck1: 'from_time'
+                })
+            } else if (this.state.time_type.value === 'present') {
+                if (this.state.from_time === '') {
+                    e.setState({
+                        notice: 'Please choose your from time!',
+                        key: "error",
+                        keycheck: 'time',
+                        keycheck1: 'from_time'
+                    })
+                } else if (this.state.description === '') {
+                    e.setState({
+                        notice: 'Please enter your description!',
+                        key: "error",
+                        keycheck: 'description',
+                        keycheck1: ''
+                    })
+                } else {
+                    const addEducation = {
+                        secret_key: this.state.secret_key,
+                        company_name: this.state.company_name,
+                        description: this.state.description,
+                        time_type: this.state.time_type.value,
+                        from_time: this.state.from_time.value,
+                        to_time: this.state.to_time.value,
+                        position: this.state.position,
+                    }
+                    this.socket.emit("cl-new-working", addEducation)
+                  
+                    this.onRefresh()
+                }
+            }
         }
-        this.socket.emit("cl-new-working", addEducation)
-      
-        this.onRefresh()
+        else {
+            e.setState({
+                notice: 'Please enter your company name !',
+                key: "error",
+                keycheck: 'school_name',
+                keycheck1: ''
+            })
+        }
     }
     render() {
         return (
@@ -405,7 +481,7 @@ class Education extends Component {
                             animationType='slide'
                         >
                             <ScrollView>
-                                <View style={{ width: "100%", height: "100%", backgroundColor: "#ffff", flexDirection: 'column' }}>
+                                <View style={{ width: "100%", height: height, backgroundColor: "#ffff", flexDirection: 'column' }}>
                                     <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
                                         <View style={{ marginTop: 10 }}>
                                             <Text style={{ fontWeight: 'bold', fontSize: 20 }} >Add Working </Text>
@@ -413,15 +489,18 @@ class Education extends Component {
                                         <View style={{ marginTop: 10 }}>
                                             <Text >Company name:</Text>
                                         </View>
-                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, paddingLeft: 10, marginTop: 10, borderColor: '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
+                                       
+                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, paddingLeft: 10, marginTop: 10, borderColor:this.state.keycheck == "school_name" ? 'red' : '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} placeholder="Company name" onChangeText={(company_name) => this.setState({ company_name })} ></TextInput>
                                         </View>
-                                        <View style={{ marginTop: 10 }}>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "school_name" ? this.state.notice : null}</Text>
+                                        <View style={{ marginTop: 0}}>
                                             <Text >Position:</Text>
                                         </View>
-                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, paddingLeft: 10, marginTop: 10, borderColor: '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
+                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, paddingLeft: 10, marginTop: 10, borderColor:this.state.keycheck == "position" ? 'red' : '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} placeholder="Position " onChangeText={(position) => this.setState({ position })} ></TextInput>
                                         </View>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "position" ? this.state.notice : null}</Text>
                                         <View style={{ marginTop: 10 }}>
                                             <Text>Time:</Text>
                                         </View>
@@ -434,7 +513,13 @@ class Education extends Component {
                                                 defaultNull
                                                 placeholder="Time type"
                                                 onChangeItem={(time_type) => this.setState({ time_type })}
-                                                style={styles.picker3}
+                                                style={{
+                                                    backgroundColor: '#ffff',
+                                                    width: 105,
+                                                    height: height,
+                                                    borderColor: this.state.keycheck1 == "time_type" ? 'red' : '#71B7B7',
+                                                    borderWidth: 1,
+                                                }}
                                             />
                                             <DropDownPicker
                                               items={ [
@@ -473,7 +558,13 @@ class Education extends Component {
                                                 defaultNull
                                                 placeholder="From"
                                                 onChangeItem={(from_time) => this.setState({ from_time })}
-                                                style={styles.picker3}
+                                                style={{
+                                                    backgroundColor: '#ffff',
+                                                    width: 105,
+                                                    height: height,
+                                                    borderColor: this.state.keycheck1 == "from_time" ? 'red' : '#71B7B7',
+                                                    borderWidth: 1,
+                                                }}
                                             />
                                             {
                                                 this.state.time_type.value === "past" ?
@@ -514,16 +605,24 @@ class Education extends Component {
                                                         defaultNull
                                                         placeholder="To"
                                                         onChangeItem={(to_time) => this.setState({ to_time })}
-                                                        style={styles.picker3}
+                                                        style={{
+                                                            backgroundColor: '#ffff',
+                                                            width: 105,
+                                                            height: height,
+                                                            borderColor: this.state.keycheck1 == "to_time" ? 'red' : '#71B7B7',
+                                                            borderWidth: 1,
+                                                        }}
                                                     /> : null
                                             }
                                         </View>
-                                        <View style={{ marginTop: 10 }}>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "time" ? this.state.notice : null}</Text>
+                                        <View style={{ marginTop:0 }}>
                                             <Text>Working description:</Text>
                                         </View>
-                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, height:height*0.4, paddingLeft: 10, marginTop: 10, borderColor: '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
+                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, height:height*0.4, paddingLeft: 10, marginTop: 10, borderColor:this.state.keycheck == "description" ? 'red' : '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} placeholder="Working description" onChangeText={(description) => this.setState({ description })} ></TextInput>
                                         </View>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "description" ? this.state.notice : null}</Text>
                                         <View style={{ flexDirection: 'row', margin: 20, justifyContent: 'space-between' }}>
                                             <TouchableOpacity onPress={() => this.setState({ show: false })} style={{height:40,width:150,backgroundColor:'#ffff',borderWidth:1,borderColor:'#488B8F',marginRight:10,borderRadius:5,justifyContent: 'center', alignItems: 'center'}}>
                                                 <Text style={{  fontWeight: 'bold',color:"#488B8F",fontSize:18 }}>Cancel</Text>
@@ -549,7 +648,10 @@ class Education extends Component {
                                 }}>
                                     <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                                     <Text>{this.state.notice}</Text>
-                                    <TouchableOpacity onPress={() => this.setState({ shownotice: false })} style={{
+                                    <TouchableOpacity onPress={() => this.setState({
+                                        shownotice: false, keycheck: '', company_name: '', time_type: '',
+                                        from_time: '', to_time: '', description: '',position:''
+                                    })} style={{
                                         width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                                     }}>
@@ -571,16 +673,18 @@ class Education extends Component {
                                         <View style={{ marginTop: 10 }}>
                                             <Text >Company name:</Text>
                                         </View>
-                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, paddingLeft: 10, marginTop: 10, borderColor: '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
+                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, paddingLeft: 10, marginTop: 10, borderColor: this.state.keycheck == "school_name" ?'red':'#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} placeholder="Company name" onChangeText={(company_nameedit) => this.setState({ company_nameedit })} value={this.state.company_nameedit} ></TextInput>
                                         </View>
-                                        <View style={{ marginTop: 10 }}>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "school_name" ? this.state.notice : null}</Text>
+                                        <View >
                                             <Text >Position:</Text>
                                         </View>
-                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width: 315, paddingLeft: 10, marginTop: 10, borderColor: '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
+                                        <View style={{ backgroundColor: '#ffff', borderWidth: 1, width: 315, paddingLeft: 10, marginTop: 10, borderColor: this.state.keycheck == "position" ?'red':'#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} placeholder="Position " onChangeText={(positionedit) => this.setState({ positionedit })} value={this.state.positionedit}  ></TextInput>
                                         </View>
-                                        <View style={{ marginTop: 10 }}>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "position" ? this.state.notice : null}</Text>
+                                        <View>
                                             <Text>Time:</Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10, height: 30 }}>
@@ -593,7 +697,13 @@ class Education extends Component {
                                                 placeholder="Time type"
                                                 onChangeItem={(time_typeedit) => this.setState({ time_typeedit: time_typeedit.value })}
                                                 defaultValue={this.state.time_typeedit}
-                                                style={styles.picker3}
+                                                style={{
+                                                    backgroundColor: '#ffff',
+                                                    width: 105,
+                                                    height: height,
+                                                    borderColor: this.state.keycheck == "time_type" ? 'red' : '#71B7B7',
+                                                    borderWidth: 1,
+                                                }}
                                             />
                                             <DropDownPicker
                                                items={ [
@@ -633,7 +743,13 @@ class Education extends Component {
                                                 placeholder="From"
                                                 onChangeItem={(from_timeedit) => this.setState({ from_timeedit: from_timeedit.value })}
                                                 defaultValue={this.state.from_timeedit}
-                                                style={styles.picker3}
+                                                style={{
+                                                    backgroundColor: '#ffff',
+                                                    width: 105,
+                                                    height: height,
+                                                    borderColor: this.state.keycheck == "time_type" ? 'red' : '#71B7B7',
+                                                    borderWidth: 1,
+                                                }}
                                             />
                                             {
                                                 this.state.time_typeedit === "past" ?
@@ -675,17 +791,25 @@ class Education extends Component {
                                                         placeholder="To"
                                                         onChangeItem={(to_timeedit) => this.setState({ to_timeedit: to_timeedit.value })}
                                                         defaultValue={this.state.to_timeedit}
-                                                        style={styles.picker3}
+                                                        style={{
+                                                            backgroundColor: '#ffff',
+                                                            width: 105,
+                                                            height: height,
+                                                            borderColor: this.state.keycheck== "time_type" ? 'red' : '#71B7B7',
+                                                            borderWidth: 1,
+                                                        }}
                                                     /> : null
                                             }
                                         </View>
-                                        <View style={{ marginTop: 10 }}>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck1 == "time" ? this.state.notice : null}</Text>
+                                        <View >
                                             <Text>Working description:</Text>
                                         </View>
                                         <View style={{ backgroundColor: '#ffff', borderWidth: 1, width:315, height:height*0.4, paddingLeft: 10, marginTop: 10, borderColor: '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} value={this.state.descriptionedit} placeholder="Education description" onChangeText={(descriptionedit) => this.setState({ descriptionedit })} ></TextInput>
                                         </View>
-                                        <View style={{flexDirection: 'row',justifyContent: 'center', alignItems: 'center' ,marginTop: 20 }}>
+                                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "description" ? this.state.notice : null}</Text>
+                                        <View style={{flexDirection: 'row',justifyContent: 'center', alignItems: 'center'}}>
                                         <TouchableOpacity onPress={() => this.setState({ showedit: false })} style={{height:40,width:150,backgroundColor:'#ffff',borderWidth:1,borderColor:'#488B8F',marginRight:10,borderRadius:5,justifyContent: 'center', alignItems: 'center'}}>
                                                 <Text style={{  fontWeight: 'bold',color:"#488B8F",fontSize:18 }}>Cancel</Text>
                                             </TouchableOpacity>
