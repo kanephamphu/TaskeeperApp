@@ -395,7 +395,7 @@ export default class Profilefriend extends React.Component {
                                             <AntDesign name="checkcircleo" size={20} color="black" />
                                         }
 
-                                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: this.state.isFollowing == false ? '#ffff' : "black", marginLeft: 5 }}>{this.state.isFollowing == false ? "Follow" : "Followed"}</Text>
+                                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: this.state.isFollowing == false ? '#ffff' : "black", marginLeft: 5 }}>{this.state.isFollowing == false ? "Follow" : "Following"}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{
                                         borderRadius: 5,

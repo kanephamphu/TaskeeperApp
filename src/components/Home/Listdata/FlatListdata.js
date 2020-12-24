@@ -6,6 +6,7 @@ import { Entypo } from '@expo/vector-icons';
 import avatar from '../../../images/avatar11.png'
 import iconsuccess from '../../../images/checked.png';
 import iconerror from '../../../images/close.png';
+import logonew from '../../../images/new.png'
 
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment'
@@ -149,8 +150,8 @@ class FlatListdata extends Component {
         var d = new Date();
         var task_description = this.props.item.task_description;
         var task_title = this.props.item.task_title;
-        if (task_title.length >= 30) {
-            task_title = task_title.slice(0, 30);
+        if (task_title.length >= 50) {
+            task_title = task_title.slice(0, 50)+"...";
         }
         var count = task_description.length;
         if (count >= 30) {
@@ -161,6 +162,7 @@ class FlatListdata extends Component {
             <View style={styles.container}>
                 <View style={styles.body} key={this.props.item._id}>
                     <View style={styles.bodyone}>
+                       
                         <TouchableOpacity style={styles.imageview} onPress={() => this.props.stackProfile(this.props.item.task_owner_first_name, this.props.item.task_owner_last_name, this.props.item.task_owner_id)}>
                             <Image source={this.props.item.task_owner_avatar ? { uri: this.props.item.task_owner_avatar } : avatar} style={{
                                 width: 60, marginTop: -10
@@ -182,19 +184,17 @@ class FlatListdata extends Component {
 
                             </View>
                         </View>
-                    </View>
-                    <View style={styles.bodytwo}>
-                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.stackDetail(this.props.item._id,this.props.item.isSaved,this.props.item.isApplied)}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 23, fontStyle: 'italic', color: '#2d7474' }}>{task_title}</Text>
-                            {task_title.length >= 30 ?
-                                <View style={{ marginTop: 9, flexDirection: 'row' }}>
-                                    <Text>...</Text>
-                                </View> : null}
-                            {new Date(this.props.item.created_time).toLocaleDateString() == d.toLocaleDateString() ?
-                                <View style={{ marginLeft: 5 }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 10, marginTop: 2, color: '#CD5C5C' }}>(MỚI)</Text>
+                      
+                        {new Date(this.props.item.created_time).toLocaleDateString() == d.toLocaleDateString() ?
+                                <View style={{position:'absolute',top:0,right:0}}>
+                                    <Image source={logonew} style={{ height: 50, width: 50 }}></Image>
                                 </View>
                                 : null}
+                    </View>
+                    <View style={styles.bodytwo}>
+                        <TouchableOpacity style={{ flexDirection: 'row'}} onPress={() => this.props.stackDetail(this.props.item._id,this.props.item.isSaved,this.props.item.isApplied)}>
+                            <Text style={{ fontWeight: 'bold', fontSize: 23, fontStyle: 'italic', color: '#2d7474' }}>{task_title}</Text>
+                           
                         </TouchableOpacity>
                         <View style={{ flexDirection: 'column', marginTop: 10 }}>
                             <Text style={{ fontWeight: 'bold', fontSize: 13 }}>TASK DESCRIPTION:</Text>
@@ -284,9 +284,17 @@ class FlatListdata extends Component {
                           <AntDesign name="pluscircle" size={24} color="#ccc" />
                         </View>
                         <View style={{ marginLeft: 5 }}>
-                            <Text style={{color:'#ccc',fontWeight: 'bold' }}>Applied</Text>
+                            <Text style={{color:'#ccc',fontWeight: 'bold' }}>Apply</Text>
                         </View>
                                 </View>:
+                                !this.props.item.isApplied? <TouchableOpacity style={styles.iconBulliten1} onPress={() => this.setState({ show: true })}>
+                                <View>
+                                    <AntDesign name="pluscircle" size={24} color="#71B7B7" />
+                                </View>
+                                <View style={{ marginLeft: 5 }}>
+                                    <Text style={{fontWeight: 'bold'}}>Apply</Text>
+                                </View>
+                            </TouchableOpacity>:
                                 this.props.item.isApplied == false ?
                                 <TouchableOpacity style={styles.iconBulliten1} onPress={() => this.setState({ show: true })}>
                                 <View>
@@ -298,14 +306,21 @@ class FlatListdata extends Component {
                             </TouchableOpacity>:
                             <View style={styles.iconBulliten1} >
                             <View>
-                            <AntDesign name="checkcircle" size={24} color="green" />
+                            <AntDesign name="checkcircle" size={24} color="#007700" />
                             </View>
                             <View style={{ marginLeft: 5 }}>
                                 <Text style={{color:'#ccc',fontWeight: 'bold' }}>Applied</Text>
                             </View>
-                        </View>
+                            </View>
                         }               
-                        {
+                        { !this.props.item.isSaved ?  <TouchableOpacity style={styles.iconBulliten2} onPress={this.save}>
+                                    <View>
+                                        <Entypo name="save" size={24} color="#71B7B7" />
+                                    </View>
+                                    <View style={{ marginLeft: 5 }}>
+                                        <Text style={{fontWeight: 'bold'}}>Save</Text>
+                                    </View>
+                                </TouchableOpacity>:
                             this.props.item.isSaved == false ?
                                 <TouchableOpacity style={styles.iconBulliten2} onPress={this.save}>
                                     <View>
@@ -318,7 +333,7 @@ class FlatListdata extends Component {
                                 :
                                 <View style={styles.iconBulliten2}>
                                     <View>
-                                        <AntDesign name="checkcircle" size={24} color="green" />
+                                        <AntDesign name="checkcircle" size={24} color="#007700" />
                                     </View>
                                     <View style={{ marginLeft: 5 }}>
                                         <Text style={{color:'#ccc',fontWeight: 'bold' }}>Saved</Text>
@@ -433,7 +448,7 @@ const styles = StyleSheet.create({
         paddingVertical: 40,
         paddingHorizontal: 15,
         marginBottom: 16,
-        height: 355,
+       
         shadowOffset: { width: 0, height: 0 },
         shadowColor: 'green',
         shadowOpacity: 0.1,
@@ -447,7 +462,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: "#71B7B7",
         marginTop: -20,
-        paddingBottom: 10
+        paddingBottom: 10,
+       
     },
     bodytwo: {
         flexDirection: 'column',

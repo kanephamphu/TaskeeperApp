@@ -55,6 +55,7 @@ class Login extends Component {
                 e.props.navigation.push('Taskeeper')
             } else if (data.success == false) {
                 var dataserver = data.errors
+                console.log(data.errors)
                 if (data.errors.loginquery) {
                     if(data.errors.loginquery.rule==='required'){
                         e.setState({
@@ -95,6 +96,11 @@ class Login extends Component {
                     e.setState({
                         nof:"Incorrect password!",
                         key:'pass'
+                    });
+                }else if(data.errors.result.status.rule=='unVefiy'){
+                    e.setState({
+                        nof:"Account is not verify!",
+                        key:''
                     });
                 }
                

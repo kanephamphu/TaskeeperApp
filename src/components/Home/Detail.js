@@ -411,9 +411,14 @@ class Detail extends Component {
                                 </View>
                                 <View style={{ marginLeft: 25, marginTop: 10, marginRight: 20, marginBottom: 50 }}>
                                     <FlatList numColumns={2} data={this.state.tags} renderItem={({ item, index }) => {
+                                         let tag = item;
+                                         let count =tag.length;
+                                         if (count >=14) {
+                                            tag = tag.slice(0,14)+'..';
+                                         }
                                         return (
                                             <View style={{ borderWidth: 1, backgroundColor: '#EEEEEE', borderColor: '#D2D2D2', alignItems: 'center', justifyContent: 'center', borderRadius: 5, height: 30, paddingLeft: 20, paddingRight: 20, marginBottom: 10, marginRight: 10 }}>
-                                                <Text style={{ color: '#505050', lineHeight: 20, fontSize: 13 }}>{item}</Text>
+                                                <Text style={{ color: '#505050', lineHeight: 20, fontSize: 13 }}>{tag}</Text>
                                             </View>
                                         )
                                     }}
@@ -422,29 +427,36 @@ class Detail extends Component {
 
                                 </View>
                             </View>
-                            <View>
-                                <Text style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
-                                    RECOMMENDED FOR YOU:
-                            </Text>
-                            </View>
-                            <View style={styles.recommend}>
-                                {this.state.isLoadingrecomend == false ?
-                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                        <ActivityIndicator size='large'></ActivityIndicator>
-                                    </View>
-                                    :
-
-                                    <ScrollView horizontal={false}>
-                                        <View style={{ alignItems: 'center', justifyContent: 'center', paddingRight: 15 }}>
-                                            {!this.state.datarecommend?null:this.state.datarecommend.map((task, index) => <Task key={index} image={task.task_owner_avatar}
-                                                first_name={task.task_owner_first_name} last_name={task.task_owner_last_name} title={task.task_title}
-                                                location={task.location.formatted_address} onStack={this.onDetail} onStack1={this.onDetail1} _id={task._id}
-                                            />)}
-
-                                        </View>
-                                    </ScrollView>
-                                }
-                            </View>
+                            {!this.state.datarecommend?null
+                            :
+                             <>
+                             <View>
+                                 <Text style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
+                                     RECOMMENDED FOR YOU:
+                             </Text>
+                             </View>
+                             <View style={styles.recommend}>
+                                 {this.state.isLoadingrecomend == false ?
+                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                         <ActivityIndicator size='large'></ActivityIndicator>
+                                     </View>
+                                     :
+ 
+                                     <ScrollView horizontal={false}>
+                                         <View style={{ alignItems: 'center', justifyContent: 'center', paddingRight: 15 }}>
+                                             {!this.state.datarecommend?null:this.state.datarecommend.map((task, index) => <Task key={index} image={task.task_owner_avatar}
+                                                 first_name={task.task_owner_first_name} last_name={task.task_owner_last_name} title={task.task_title}
+                                                 location={task.location.formatted_address} onStack={this.onDetail} onStack1={this.onDetail1} _id={task._id}
+                                             />)}
+ 
+                                         </View>
+                                     </ScrollView>
+                                 }
+                             </View>
+                             </>
+                            }
+                           
+                          
                         </View>}
                 </ScrollView>
                 <Modal transparent={true}

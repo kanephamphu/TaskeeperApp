@@ -422,7 +422,7 @@ class Education extends Component {
                             <Text style={{ color: '#71B7B7', fontWeight: 'bold' }}>Add Working</Text>
                         </TouchableOpacity>
                         {this.state.data.length===0?
-                            <View style={{flex:1,justifyContent: 'center', alignItems: 'center' ,marginTop:40}}>
+                            <View style={{flex:1,justifyContent: 'center', alignItems: 'center' ,marginTop:70}}>
                                 <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
                             </View>
                             :null

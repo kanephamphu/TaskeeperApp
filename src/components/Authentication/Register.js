@@ -45,7 +45,7 @@ export default class Register extends Component{
             nof:'',
             errors: {},
             shownotice:false,
-            notice:'',key:''
+            notice:'',key:'', notice1:''
         }
         this.onSubmit1 = this.onSubmit.bind(this)
         this.socket.on("sv-send-register-res",function(data){
@@ -53,7 +53,8 @@ export default class Register extends Component{
                 e.setState({
                     notice:'Registered Successfully!',
                     shownotice:true,
-                    key:'success'
+                    key:'success',
+                    notice1:'Access email to verify your account!',
                 }); 
                 
             }else if(data.success==false){ 
@@ -394,6 +395,7 @@ export default class Register extends Component{
                                 }}>
                                     <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                                     <Text>{this.state.notice}</Text>
+                                    <Text>{this.state.notice1}</Text>
                                     <TouchableOpacity onPress={() => {e.setState({shownotice:false,key:''}),this.props.navigation.navigate('Login')}} style={{
                                         width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'

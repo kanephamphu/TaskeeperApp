@@ -503,11 +503,7 @@ const MoreStackScreen = ({ navigation }) => {
         component={Profilefriend}
         options={{ headerShown: false }}
       />
-      <HomeStack.Screen
-        name="Detail"
-        component={Detail}
-        options={{ headerShown: false }}
-      />
+     
       <HomeStack.Screen
         name="taskpage"
         component={taskpage}

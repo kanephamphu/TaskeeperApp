@@ -7,6 +7,7 @@ import io from 'socket.io-client/dist/socket.io';
 import iconsuccess from '../../images/checked.png';
 import iconerror from '../../images/close.png';
 import iconwarning from '../../images/warning.png';
+import noitem from '../../images/box.png';
 const { height, width } = Dimensions.get('window');
 var e;
 class Notice extends Component {
@@ -33,7 +34,7 @@ class Notice extends Component {
                     dataSource: list,
                     isLoading:true,
                 })     
-                console.log(data.data)       
+                  
             }
         })
         this.readNotice=this.readNotice.bind(this)
@@ -50,6 +51,7 @@ class Notice extends Component {
             } else if (data.success == true) {
                 console.log(JSON.stringify(data))
             }
+            console.log(data)
         })
         this.ongetNotice=this.ongetNotice.bind(this)
     };
@@ -81,6 +83,7 @@ class Notice extends Component {
             notifcation_id:_id
         }
         this.socket.emit("cl-readed-notification",readclone)
+        console.log(readclone)
         if(check=="followed"){
             this.props.navigation.navigate("Profilefriendnotice", { first_name:related_user_first_name, last_name:"", _id: related_user_id })
         }else if(check=="applied"){
@@ -109,6 +112,12 @@ class Notice extends Component {
                 ?
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size='large'></ActivityIndicator>
+              </View>
+                :
+                this.state.dataSource.length===0?
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
+                <Text>No item</Text>
               </View>
                 :
                 <View style={{marginBottom:60}}>

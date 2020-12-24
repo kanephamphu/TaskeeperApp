@@ -14,7 +14,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import avatarimage from '../../images/avatar11.png'
+import avatarimage from '../../images/avatar11.png';
+import noitem from '../../images/box.png';
 import AsyncStorage from '@react-native-community/async-storage';
 const { height, width } = Dimensions.get('window');
 class ListFollower extends Component {
@@ -65,7 +66,8 @@ class ListFollower extends Component {
                 this.state.dataFollower.length === 0
                     ?
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text>Trống</Text>
+                        <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
+                        <Text>No item</Text>
                     </View>
                     :
                     <View style={styles.container1}>

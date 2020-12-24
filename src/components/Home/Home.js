@@ -123,7 +123,7 @@ class Home extends Component {
                 dulieu = dulieu.concat(list)
                 e.setState({datasourcenew:dulieu,isLoading:true,test:false});        
                 //var listdatanewfeed=e.state.datasourcenew.push(JSON.stringify(list)) 
-                console.log(data.data)            
+                      
             }    
         })
         this.socket.on('sv-get-recommend-task', function (data) {
@@ -190,12 +190,13 @@ class Home extends Component {
                             <Image style={styles.image} source={girl} />
                             <Image style={styles.image} source={header} />
                         </Swiper>
+                        
                         <View style={styles.text1}>
-                            <Text style={{ fontStyle: 'italic' }}>The suitable of for you today !!!</Text>
+                            <Text style={{ fontStyle: 'italic',color:'#007700' }}>The suitable of for you today !!!</Text>
                         </View>
                         <View style={styles.text}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Hi </Text>
-                            <Text style={{ fontSize: 20 }}>{this.state.first_name} !</Text>
+                            <Text style={{ fontWeight: 'bold', fontSize: 20}}>Hi </Text>
+                            <Text style={{ fontSize: 20 ,color:'#007700'}}>{this.state.first_name} !</Text>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
@@ -294,13 +295,15 @@ class Home extends Component {
                         <SafeAreaView >
                             <View>
                                 <View style={styles.viewimage}>
-
+                                  
                                     <View style={styles.text1}>
-                                        <Text style={{ fontStyle: 'italic' }}>The suitable of for you today !!!</Text>
+                                        <Text style={{ fontStyle: 'italic',color:'#007700' }}>The suitable of for you today !!!</Text>
                                     </View>
                                     <View style={styles.text}>
-                                        <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Hi </Text>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 20,color:'#007700' }}>Hi </Text>
                                     </View>
+                                   
+                                  
                                 </View>
                                 <View style={{ flexDirection: 'row' }}>
                                     <View style={styles.texttitle}>
@@ -823,15 +826,15 @@ const styles = StyleSheet.create({
     text: {
         position: 'absolute',
         flexDirection: 'row',
-        marginTop: 20,
+        marginTop: 0,
         marginLeft: 20
 
 
     },
     text1: {
         position: 'absolute',
-        marginTop: 40,
-        marginLeft: 10
+        marginTop: 25,
+        marginLeft: 20
     },
     item: {
         marginTop: 10,

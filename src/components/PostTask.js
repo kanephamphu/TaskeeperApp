@@ -23,6 +23,7 @@ import iconerror from '../images/close.png'
 import MultiSelect from 'react-native-multiple-select'
 import MapInput from '../components/MapInput'
 import MyMapView from '../components/MapView'
+import noitem from '../images/box.png';
 import { getLocation, geocodeLocationByName } from '../components/location-service'
 
 const {height,width} =Dimensions.get('window');
@@ -399,7 +400,6 @@ class TaskPage extends Component{
                 dataPost:list.reverse(),
                 isLoading:false,
                 loadingdata:true,
-                task_id:list[0]._id
               })
             }
             console.log(list)
@@ -1696,10 +1696,17 @@ class TaskPage extends Component{
                                 </View>
                             </TouchableOpacity>
                     </View>
-                        {!this.state.loadingdata == true ?
+                        {
+                        !this.state.loadingdata == true ?
                         <View style={{ flex: 1, alignItems: 'center' }}>
                             <ActivityIndicator size='large'></ActivityIndicator>
                         </View>
+                        :
+                         this.state.dataPost === 0 ?
+                         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                           <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
+                           <Text>No item</Text>
+                         </View>
                         :
                         <View style={{alignItems:'center',flex:12}}>
                             <FlatList data={this.state.dataPost}

@@ -34,7 +34,7 @@ class SearchUser extends Component {
                     dataSearch: list,
                     isLoading: true
                 })
-
+                console.log(data)
             }
         })
     }
@@ -121,7 +121,7 @@ class Listdataitem extends Component {
                             </View>
                             <View style={styles.two}>
                                 <View>
-                                    <Fontisto name="persons" size={24} color="#555555" />
+                                    <Fontisto name="persons" size={22} color="#555555" />
                                 </View>
                                 <View style={styles.viewtext}>
                                      <Text style={styles.text}>Follower: <Text style={{fontWeight: 'bold' }}>{this.props.item.follower_number}</Text></Text>
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     body: {
         flexDirection: 'column',
         backgroundColor: '#faf9f9',
-        height: 240,
+       
         shadowColor: 'green',
         shadowOpacity: 0.1,
         elevation: 4,
@@ -187,7 +187,10 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     viewtext: {
-        marginLeft: 15
+        marginLeft: 15,
+       paddingRight:5,
+     
+       width:"90%"
     },
     text: {
         color: '#444444'
