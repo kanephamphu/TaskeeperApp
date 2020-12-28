@@ -13,8 +13,6 @@ import Home from '../Home/Home';
 import searchtask from '../Home/Homesearch/SearchTask'
 import searchuser from '../Home/Homesearch/SearchUser';
 import MesagePerson from '../Message/MesagePerson'
-import HomeManageCandidate from '../New/HomeManageCandidate';
-import DetailCandidates from '../New/DetailCandidates';
 import Map from '../Map/Map';
 import Menu from '../Menu/Menu';
 import HomePayment from '../Menu/mainPayment/HomePayment'
@@ -50,6 +48,13 @@ import Addnewcard from '../Menu/eWallet/Addnewcard';
 import Transfer from '../Menu/eWallet/Transfers'
 import Setamount from '../Menu/eWallet/Setamount';
 import Bankkinglink from '../Menu/eWallet/Bankkinglink'
+import mmm from '../Manage/test'
+import Jobs from '../Manage/Jobs';
+import HomeManageCandidate from '../Manage/HomeManageCandidate';
+import DetailCandidates from '../Manage/DetailCandidates';
+import HomeManageJobs from '../Manage/HomeManageJobs';
+import HistoryJobs from '../Manage/HistoryJobs';
+import RenderItem from '../Manage/RenderItem';
 import io from 'socket.io-client/dist/socket.io'
 import AsyncStorage from '@react-native-community/async-storage';
 const HomeStack = createStackNavigator();
@@ -68,14 +73,16 @@ export default class MainTabScreen extends React.Component{
         e.setState({
           numbernotice:data.data
         })
-        console.log(data)
+        
     })
   }
 
   componentDidMount = async () => {
+    
    this.redNotification()
   
   }
+  
   redNotification= async () =>{
     const token = await AsyncStorage.getItem('token');
     const unread={
@@ -309,6 +316,11 @@ const MapStackScreen = ({ navigation }) => {
         component={Map}
         options={{ headerShown: false }}
       />
+      <HomeStack.Screen
+        name="DetailMap"
+        component={Detail}
+        options={{ headerShown: false }}
+      />
     </HomeStack.Navigator>
   );
 };
@@ -335,6 +347,36 @@ const ManageStackScreen = ({ navigation }) => {
         name="DetailCandidates"
         component={DetailCandidates}
         options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="detailjobs"
+        component={Detail}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="Profilefriendmanage"
+        component={Profilefriend}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+      name="HomeManageJobs"
+      component={HomeManageJobs}
+      options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+      name="HistoryJob"
+      component={HistoryJobs}
+      options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+      name="Jobs"
+      component={Jobs}
+      options={{ headerShown: false }}
+      />
+       <HomeStack.Screen
+      name="RenderItem"
+      component={RenderItem}
+      options={{ headerShown: false }}
       />
     </HomeStack.Navigator>
     

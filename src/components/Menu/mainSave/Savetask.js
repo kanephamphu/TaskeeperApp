@@ -33,7 +33,7 @@ export default class Savetask extends React.Component {
           dataSave: list,
           isLoading: false,
         })
-
+       
       }
     })
     this.refreshFlatlist = this.refreshFlatlist.bind(this);
@@ -161,9 +161,9 @@ class RenderItem extends React.Component {
                   <Text >{new Date(this.props.item.saved_time).toLocaleTimeString()}</Text>
                 </View>
               </View>
-              <View>
+              <TouchableOpacity onPress={() =>this.props.detail(this.props.item.task_id)}>
                 <Text style={styles.company}>{task_title}</Text>
-              </View>
+              </TouchableOpacity>
              
             </View>
           </View>

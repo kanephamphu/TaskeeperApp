@@ -87,15 +87,17 @@ class Listdataitem extends Component {
             <View style={styles.body}>
                 <View >
                     <View style={styles.one}>
-                        <View >
+                        <TouchableOpacity onPress={() => this.props.stack(this.props.item.first_name, this.props.item.last_name,
+                                this.props.item._id)} >
                             <View style={styles.imageview}>
                                 <Image source={this.props.item.avatar ? { uri: this.props.item.avatar } : avatarimage} style={styles.image}></Image>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                         <View style={{ flexDirection: 'column', marginLeft: 15, justifyContent: 'center', width: width - 150 }}>
-                            <View>
+                            <TouchableOpacity  onPress={() => this.props.stack(this.props.item.first_name, this.props.item.last_name,
+                                this.props.item._id)}>
                                 <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{this.props.item.first_name} {this.props.item.last_name}</Text>
-                            </View>
+                            </TouchableOpacity>
                             <View>
                                 <Text style={{ color: '#888888' }}>{this.props.item.email.current_email}</Text>
                             </View>

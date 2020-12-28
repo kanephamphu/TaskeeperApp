@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions, Modal ,ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl,Image, Dimensions, Modal ,ActivityIndicator} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -23,7 +23,8 @@ class Notice extends Component {
             show1: false,
             showarning: false,
             notice: "",
-            key: ''
+            key: '',
+            refreshing: false,
         }
         this.socket.on("sv-read-notification", function (data) {
             var list = data.data
@@ -33,10 +34,12 @@ class Notice extends Component {
                 e.setState({
                     dataSource: list,
                     isLoading:true,
+                    refreshing: false
                 })     
                   
             }
         })
+        this._onRefresh=this._onRefresh.bind(this);
         this.readNotice=this.readNotice.bind(this)
         this.socket.on("sv-readed-all-notification", function (data) {
             if (data.success == false) {
@@ -51,7 +54,7 @@ class Notice extends Component {
             } else if (data.success == true) {
                 console.log(JSON.stringify(data))
             }
-            console.log(data)
+          
         })
         this.ongetNotice=this.ongetNotice.bind(this)
     };
@@ -70,6 +73,16 @@ class Notice extends Component {
         }
         this.socket.emit("cl-get-notification", notice)
     }
+    _onRefresh = () => {
+        this.setState({refreshing: true});
+        const notice = {
+            secret_key: this.state.secret_key,
+            number_notification: 10,
+            skip: 0
+        }
+        this.socket.emit("cl-get-notification", notice)
+       
+      }
     readAllnotice() {
         const readall = {
             secret_key: this.state.secret_key,
@@ -121,7 +134,12 @@ class Notice extends Component {
               </View>
                 :
                 <View style={{marginBottom:60}}>
-                    <ScrollView>
+                    <ScrollView  refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh}
+                        />
+                        } >
                         {this.state.dataSource.map((items) => {
                             return (
                                 <TouchableOpacity onPress={()=>this.readNotice(items._id,items.task_id,items.type,items.related_user_first_name,items.related_user_id)}

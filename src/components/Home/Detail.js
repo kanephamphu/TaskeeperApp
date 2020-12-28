@@ -21,7 +21,7 @@ class Detail extends Component {
         this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         e = this;
         this.state = {
-            languages: '',
+            languages: [],
             task_type: '',
             price_type: "",
             tags: [],
@@ -169,7 +169,6 @@ class Detail extends Component {
                     position: list.position
 
                 })
-               
             } else {
                 
             }
@@ -246,9 +245,10 @@ class Detail extends Component {
     render() {
         var fullname = this.state.task_owner_first_name + " " + this.state.task_owner_last_name;
         var count = fullname.length;
-        if (count >= 18) {
-            fullname = fullname.slice(0, 14) + "....";
+        if (count >= 10) {
+            fullname = fullname.slice(0,10) + "...";
         }
+
         return (
             <View style={styles.container}>
 
@@ -321,7 +321,7 @@ class Detail extends Component {
                                 <View style={{ marginLeft: 25, marginTop: 10, marginRight: 20, flexDirection: 'row', width: width - 38 }}>
 
                                     <Text style={styles.textJobRe}>
-                                        - {this.state.task_description}
+                                        {this.state.task_description}
                                     </Text>
 
                                     {/*<Text style={styles.textJobRe}>
@@ -350,7 +350,7 @@ class Detail extends Component {
                                     - {this.state.tags}
                                 </Text>*/}
                                     <Text style={styles.textJobRe}>
-                                        - {!this.state.task_requirement?null:this.state.task_requirement}
+                                        {!this.state.task_requirement?null:this.state.task_requirement}
                                     </Text>
                                 </View>
                                 <View style={{ marginTop: 30 }}>
@@ -376,30 +376,43 @@ class Detail extends Component {
                                         {this.state.price_type == "dealing" ?
                                             <>
                                                 <Text style={styles.textJobRe}>
-                                                    - Price Type: {this.state.price_type}
+                                                    Price Type: {this.state.price_type}
                                                 </Text>
                                             </>
                                             :
                                             <>
                                                 <Text style={styles.textJobRe}>
-                                                    - Price Type: {this.state.floor_price} - {this.state.ceiling_price}
+                                                    Price Type: {this.state.floor_price} - {this.state.ceiling_price}
                                                 </Text>
                                             </>}
-                                        <Text style={styles.textJobRe}>
-                                            - Languages: {this.state.languages}
-                                        </Text>
+                                            <View style={{flexDirection: 'row'}}>
+                                            <Text style={styles.textJobRe}>
+                                                        Languages: </Text>
+                                            {this.state.languages.map((items) => {
+                                                return (
+                                                <View key={items}>
+                                                    <Text style={styles.textJobRe}>
+                                                       {items}, </Text>
+                                                </View>
+                                                )
+                                            })}
+                                    
+                                            </View>
+                                         
+                                     
                                         {this.state.task_type == 'freelance' ?
                                             null :
                                             <>
                                                 <Text style={styles.textJobRe}>
-                                                    - Industry: {this.state.industry}
+                                                    Industry: {this.state.industry}
                                                 </Text>
                                                 <Text style={styles.textJobRe}>
-                                                    - Skills: {this.state.skills}
+                                                    Skills: {this.state.skills}
                                                 </Text>
                                                 <Text style={styles.textJobRe}>
-                                                    - Position: {this.state.position}
+                                                    Task type: {this.state.task_type}
                                                 </Text>
+                                              
                                             </>
                                         }
                                     </View>
@@ -417,7 +430,7 @@ class Detail extends Component {
                                             tag = tag.slice(0,14)+'..';
                                          }
                                         return (
-                                            <View style={{ borderWidth: 1, backgroundColor: '#EEEEEE', borderColor: '#D2D2D2', alignItems: 'center', justifyContent: 'center', borderRadius: 5, height: 30, paddingLeft: 20, paddingRight: 20, marginBottom: 10, marginRight: 10 }}>
+                                            <View key={item} style={{ borderWidth: 1, backgroundColor: '#EEEEEE', borderColor: '#D2D2D2', alignItems: 'center', justifyContent: 'center', borderRadius: 5, height: 30, paddingLeft: 20, paddingRight: 20, marginBottom: 10, marginRight: 10 }}>
                                                 <Text style={{ color: '#505050', lineHeight: 20, fontSize: 13 }}>{tag}</Text>
                                             </View>
                                         )
@@ -506,7 +519,7 @@ class Detail extends Component {
                                    <Text style={{fontStyle: 'italic',color:'red'}}>{this.state.key=='price'?this.state.notice:null}</Text>
                                </View>
                                 <View style={styles.controlStyle}>
-                                    <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false,key:'' })}>
+                                    <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false,key:'',introduction:'',price:''  })}>
                                         <Text style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancle</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.apply} onPress={this.applyJob}>
@@ -529,7 +542,7 @@ class Detail extends Component {
                         }}>
                             <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                             <Text>{this.state.notice}</Text>
-                            <TouchableOpacity onPress={() => this.setState({ shownotice: false,show:false })} style={{
+                            <TouchableOpacity onPress={() => this.setState({ shownotice: false,show:false,introduction:'',price:''  })} style={{
                                 width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                                 height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                             }}>

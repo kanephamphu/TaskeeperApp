@@ -6,7 +6,7 @@ import { Entypo } from '@expo/vector-icons';
 import avatar from '../../../images/avatar11.png'
 import iconsuccess from '../../../images/checked.png';
 import iconerror from '../../../images/close.png';
-import logonew from '../../../images/new.png'
+import logonew from '../../../images/new3.png'
 
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment'
@@ -26,7 +26,8 @@ class FlatListdata extends Component {
             shownotice: false,
             notice: '',
             key: '', price: '',abc:'',
-            check:false
+            check:false,
+            checksave:false
            
 
         }
@@ -137,6 +138,9 @@ class FlatListdata extends Component {
         this.socket.emit("cl-follow-user",follow)
     }  */
     saveTask = () => {
+        e.setState({
+            checksave: true
+        })
         const save = {
             secret_key: this.state.secret_key,
             task_id: this.state._id
@@ -157,7 +161,14 @@ class FlatListdata extends Component {
         if (count >= 30) {
             task_description = task_description.slice(0, 30);
         }
-        var textnull = "Null"
+        var textnull = "Null";
+        let first =this.props.item.task_owner_first_name;
+        let last= this.props.item.task_owner_last_name;
+        let name=this.props.item.task_owner_first_name+" "+this.props.item.task_owner_last_name
+        let countname=first.length+last.length;
+        if(countname>=18){
+            name=this.props.item.task_owner_last_name;
+        }
         return (
             <View style={styles.container}>
                 <View style={styles.body} key={this.props.item._id}>
@@ -171,8 +182,7 @@ class FlatListdata extends Component {
                         </TouchableOpacity>
                         <View style={{ flexDirection: 'column', marginLeft: 15 }}>
                             <TouchableOpacity onPress={() => this.props.stackProfile(this.props.item.task_owner_first_name, this.props.item.task_owner_last_name, this.props.item.task_owner_id)}>
-                                <Text style={{ fontSize: 18 }}>{this.props.item.task_owner_first_name ? this.props.item.task_owner_first_name : textnull}
-                                    {" "}{this.props.item.task_owner_last_name ? this.props.item.task_owner_last_name : textnull}</Text>
+                                <Text style={{ fontSize: 18 }}>{name?name:null}</Text>
                             </TouchableOpacity>
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ marginRight: 10 }}>
@@ -313,7 +323,7 @@ class FlatListdata extends Component {
                             </View>
                             </View>
                         }               
-                        { !this.props.item.isSaved ?  <TouchableOpacity style={styles.iconBulliten2} onPress={this.save}>
+                        {  !this.props.item.isSaved ?  <TouchableOpacity style={styles.iconBulliten2} onPress={this.save}>
                                     <View>
                                         <Entypo name="save" size={24} color="#71B7B7" />
                                     </View>
@@ -393,7 +403,7 @@ class FlatListdata extends Component {
                                    <Text style={{fontStyle: 'italic',color:'red'}}>{this.state.abc=="price"?this.state.notice:null}</Text>
                                </View>
                                 <View style={styles.controlStyle}>
-                                    <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false,abc:'' })}>
+                                    <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false,abc:'',introduction:'',price:'' })}>
                                         <Text style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancle</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.apply} onPress={this.applyJob}>

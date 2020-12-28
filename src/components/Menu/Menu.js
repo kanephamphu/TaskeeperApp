@@ -158,7 +158,7 @@ class New extends Component {
                 </View>
                 <ScrollView>
                     <View style={styles.header}>
-                        <View style={{ flexDirection: 'row',justifyContent:'space-between' }}>
+                        <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate("ProfileUser",
                                 { first_name: this.state.first_name, last_name: this.state.last_name, _id: this.state._user_id })} style={{
                                     borderColor: '#71B7B7',
@@ -175,7 +175,7 @@ class New extends Component {
                                     style={styles.Image} />
                                     </ShimmerPlaceholder>
                             </TouchableOpacity>
-                            <View style={{ flexDirection: 'column', marginTop: 35, marginRight: 25,marginLeft: 10}}>
+                            <View style={{ flexDirection: 'column', marginTop: 35, marginRight: 25,marginLeft: 20}}>
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate("ProfileUser", {
                                     first_name: this.state.first_name, last_name: this.state.last_name,
                                     _id: this.state._user_id

@@ -80,124 +80,109 @@ export default class ProfileUser extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView>
-          <View style={{ flexDirection: 'column', margin: 10,alignItems: 'center' }}>
-            <View
-              style={{ alignItems: 'center', margin: 10,position:'relative'
-              ,width:130,justifyContent:'center'}}
-            >
-              <Avatar.Image 
-                source={this.state.avatar ? { uri: this.state.avatar } : avatarimage}
-                size={100}
-              />
-              <TouchableOpacity onPress={this.onUpdateimages} style={{position:'absolute',bottom:5,right:10,backgroundColor:"#cccc",
-              borderRadius:100,width:30,height:30,justifyContent: 'center',alignItems: 'center'}}>
-                <Entypo name="camera" size={15} color="black" />
-              </TouchableOpacity>
+          <View
+            style={{ alignItems: 'center',width:width,marginTop:10,marginBottom:10}}
+          >
+            <View >
+            <Avatar.Image 
+              source={this.state.avatar ? { uri: this.state.avatar } : avatarimage}
+              size={100}
+            />
+            <TouchableOpacity onPress={this.onUpdateimages} style={{position:'absolute',right:0,bottom:0,backgroundColor:"#cccc",borderRadius:100,width:30,height:30,justifyContent: 'center',alignItems: 'center'}}>
+              <Entypo name="camera" size={15} color="black" />
+            </TouchableOpacity>
             </View>
-            <View style={{ alignItems: 'center', }}>
+          </View>
+          <View style={{ alignItems: 'center' }}>
             <ShimmerPlaceholder style={{height: 45, borderRadius: 7}} autoRun visible={this.state.isLoading}>
-            <Text style={{ fontSize: 28, fontWeight: 'bold' }}>{this.state.first_name} {this.state.last_name}</Text>
-                  </ShimmerPlaceholder>
-              <Text style={{ fontSize: 20 }}>Business Analyst</Text>
+              <Text style={{ fontSize: 28, fontWeight: 'bold' }}>{this.state.first_name} {this.state.last_name}</Text>
+            </ShimmerPlaceholder>
+            <Text style={{ fontSize: 20 }}>Business Analyst</Text>  
+          </View>
+          <View>
+          <View style={{flexDirection:'row',marginTop:50,marginLeft:30,marginRight:30}}>
+              <Text style={{ fontSize: 19,fontWeight:'bold'}}>Full name:</Text>
+            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:50}}>
+              <ShimmerPlaceholder style={{borderRadius: 7 }} autoRun visible={this.state.isLoading}>
+                <Text style={{ fontSize: 19 }}>{this.state.first_name} {this.state.last_name}</Text>
+              </ShimmerPlaceholder>
             </View>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-
-              <View style={styles.viewinformation}>
-                <View style={styles.title}>
-                  <Text style={styles.texttitle}>Full name:</Text>
-                </View>
-                <View style={styles.content}>
-                  <ShimmerPlaceholder style={{height: 23, marginTop: 2, borderRadius: 7 }} autoRun visible={this.state.isLoading}>
-                    <Text style={{ fontSize: 17 }}>{this.state.first_name} {this.state.last_name}</Text>
-                  </ShimmerPlaceholder>
-                </View>
-              </View>
-              <View style={styles.viewinformation}>
-                <View style={styles.title}>
-                  <Text style={styles.texttitle}>Email:</Text>
-                </View>
-                <View style={styles.content}>
-                  <ShimmerPlaceholder style={{height: 23, marginTop: 2, borderRadius: 7 }} autoRun visible={this.state.isLoading}>
-                    <Text style={{ fontSize: 17 }}>{this.state.email}</Text>
-                  </ShimmerPlaceholder>
-
-
-                </View>
-              </View>
-              <View style={styles.viewinformation}>
-                <View style={styles.title}>
-                  <Text style={styles.texttitle}>Birthday:</Text>
-                </View>
-                <View style={styles.content}>
-                  <ShimmerPlaceholder style={{ height: 20, marginTop: 2, borderRadius: 7 }} autoRun visible={this.state.isLoading}>
-                    <Text style={{ fontSize: 17 }}>{this.state.day_of_birth}/{this.state.month_of_birth}/{this.state.year_of_birth}</Text>
-                  </ShimmerPlaceholder>
-
-                </View>
-              </View>
-              <View style={styles.viewinformation}>
-                <View style={styles.title}>
-                  <Text style={styles.texttitle}>Gender</Text>
-                </View>
-                <View style={styles.content}>
-                  <ShimmerPlaceholder style={{ height: 20, marginTop: 2, borderRadius: 7 }} autoRun visible={this.state.isLoading}>
-                    <Text style={{ fontSize: 17 }}>{this.state.gender}</Text>
-                  </ShimmerPlaceholder>
-
-                </View>
-              </View>
-              <View style={styles.viewinformation}>
-                <View style={styles.title}>
-                  <Text style={styles.texttitle}>Phone number:</Text>
-                </View>
-                <View style={styles.content}>
-                  <ShimmerPlaceholder style={{ height: 20, marginTop: 2, borderRadius: 7 }} autoRun visible={this.state.isLoading}>
-                    <Text style={{ fontSize: 17 }}>{this.state.phone_number}</Text>
-                  </ShimmerPlaceholder>
-                </View>
-
-              </View>
-              <View style={styles.viewinformation}>
-                <View style={styles.title}>
-                  <Text style={styles.texttitle}>Education:</Text>
-                </View>
-                <View style={styles.content}>
-                  {this.state.education.map((item) => {
-                    return (
-                      <View key={item._id} style={{ flexDirection: 'column', marginRight: 5 }} >
-                        <ShimmerPlaceholder style={{height: 23, marginTop: 2, borderRadius: 7 }} autoRun visible={this.state.isLoading}>
-                          <Text style={{ fontSize: 17 }}>+ {item.school_name}</Text>
-                        </ShimmerPlaceholder>
-                      </View>
-                    )
-                  })}
-                </View>
-              </View>
-              <View style={styles.viewinformation}>
-                <View style={styles.title}>
-                  <Text style={styles.texttitle}>Working:</Text>
-                </View>
-                <View style={styles.content}>
-                  {this.state.working_information.map((item) => {
-                    return (
-                      <View key={item._id} style={{ flexDirection: 'column', marginRight: 5 }} >
-                        <ShimmerPlaceholder style={{height: 23, marginTop: 2, borderRadius: 7 }} autoRun visible={this.state.isLoading}>
-                          <Text style={{ fontSize: 17 }}>+ {item.company_name}</Text>
-                        </ShimmerPlaceholder>
-
-                      </View>
-                    )
-                  })}
-                </View>
-              </View>
+          </View>
+          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
+              <Text style={{ fontSize: 19,fontWeight:'bold'}}>Email:</Text>
+              <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:85}}>
+              <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
+                <Text style={{ fontSize: 19 }}>{this.state.email}</Text>
+              </ShimmerPlaceholder>
             </View>
-
-            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-              <TouchableOpacity onPress={this.props.onUp
-              } style={styles.btnLogin}>
+          </View>
+          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
+            <Text style={{ fontSize: 19,fontWeight:'bold'}}>Birthday:</Text>
+            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:60}}>
+              <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
+                {
+                  this.state.day_of_birth==undefined?
+                  <Text style={{ fontSize: 19 }}>undefined</Text>
+                  :
+                <Text style={{ fontSize: 19 }}>{this.state.day_of_birth}/{this.state.month_of_birth}/{this.state.year_of_birth}</Text>
+                }
+              </ShimmerPlaceholder>
+            </View>
+          </View>
+          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
+            <Text style={{ fontSize: 19,fontWeight:'bold'}}>Gender:</Text>
+            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:71}}>
+              <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
+                {
+                  this.state.gender=='undefined'?
+                  <Text style={{ fontSize: 19 }}>undefined</Text>
+                  :
+                <Text style={{ fontSize: 19 }}>{this.state.gender}</Text>
+                }
+              </ShimmerPlaceholder>
+            </View>
+          </View>
+          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
+            <Text style={{ fontSize: 19,fontWeight:'bold'}}>Phone number:</Text>
+            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:8}}>
+              <ShimmerPlaceholder style={{borderRadius: 7 }} autoRun visible={this.state.isLoading}>
+                <Text style={{ fontSize: 19 }}>{this.state.phone_number}</Text>
+              </ShimmerPlaceholder>
+            </View>
+          </View>
+          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
+            <Text style={{ fontSize: 19,fontWeight:'bold'}}>Education:</Text>
+            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:48}}>
+            <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
+                {this.state.education.map((item) => {
+                  return (
+                    <View key={item._id} style={{ flexDirection: 'column', marginRight: 5 }} >                  
+                          <Text style={{ fontSize: 19 }}>{item.school_name}</Text>
+                    </View>
+                  )
+                })}
+            </ShimmerPlaceholder>
+            </View>
+          </View>
+          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
+            <Text style={{ fontSize: 19,fontWeight:'bold'}}>Working:</Text>
+            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:60}}>
+            <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
+                {this.state.working_information.map((item) => {
+                  return (
+                    <View key={item._id} style={{ flexDirection: 'column', marginRight: 5 }} >
+                          <Text style={{ fontSize: 19 }}>{item.company_name}</Text>
+                    </View>
+                  )
+                })}
+            </ShimmerPlaceholder>
+            </View>
+          </View>
+          </View>
+          <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 30 }}>
+              <TouchableOpacity onPress={this.props.onUp} style={styles.btnLogin}>
                 <Text style={{ fontSize: 20, color: '#ffff',fontWeight: 'bold' }}>Update</Text>
               </TouchableOpacity>
-            </View>
           </View>
         </ScrollView>
       </View>
@@ -214,7 +199,6 @@ const styles = StyleSheet.create({
       android: {
         flex: 1,
         backgroundColor: '#faf9f9',
-        justifyContent: 'center',
       },
       default: {
         // other platforms, web for example
@@ -226,12 +210,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginLeft: 10,
     marginRight: 10,
-  },
-  title: {
-    width: 125
-  },
-  texttitle: {
-    fontSize: 17, fontWeight: 'bold'
   },
   content: {
     marginLeft: 10,

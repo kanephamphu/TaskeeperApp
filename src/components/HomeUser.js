@@ -23,6 +23,7 @@ export default class HomeUser extends React.Component {
     this.onUpdate=this.onUpdate.bind(this);
     this.onEducation=this.onEducation.bind(this);
     this.onDetail=this.onDetail.bind(this)
+    this.showProfilefriend=this.showProfilefriend.bind(this);
   }
   onPosttask(){
     this.props.navigation.navigate('Posttask')
@@ -35,6 +36,9 @@ export default class HomeUser extends React.Component {
   }
   onDetail(_id){
     this.props.navigation.navigate('Detailmenu',{_task_id: _id})
+  }
+  showProfilefriend(first, last, _id){
+    this.props.navigation.navigate("Profilefriendmenu", { first_name: first, last_name: last, _id: _id })
   }
   render() {
     const { first_name, last_name, _id } = this.props.route.params;
@@ -63,7 +67,7 @@ export default class HomeUser extends React.Component {
           <Tab tabStyle={{ backgroundColor: '#faf9f9' }} activeTabStyle={{ backgroundColor: '#faf9f9' }}
             textStyle={{ color: '#444444' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }}
             heading="Task Page">
-            <Posttask detail={this.onDetail} />
+            <Posttask detail={this.onDetail} detailuser={this.showProfilefriend} />
           </Tab>
         </Tabs>
       </View>

@@ -101,7 +101,7 @@ export default class Profilefriend extends React.Component {
                     follower_number: list.follower_number,
                     votes: list.votes.vote_count
                 })
-               
+                console.log(data)
             } else {
                 console.log(data.errors)
             }

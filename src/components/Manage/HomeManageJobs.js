@@ -1,5 +1,5 @@
 import  React, { Component } from 'react';
-import { View, Text, StyleSheet,Dimensions,FlatList } from 'react-native';
+import { View, Text, StyleSheet,Button,TouchableOpacity,Modal,TouchableWithoutFeedback,Keyboard,Animated,ScrollView,Dimensions,FlatList } from 'react-native';
 import ScrollableTabView,{DefaultTabBar} from 'react-native-scrollable-tab-view';
 import { Ionicons } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 
@@ -7,40 +7,45 @@ import io from 'socket.io-client/dist/socket.io'
 import {Container,Header,Content,Tab,Tabs,Left} from 'native-base'
 import { Entypo } from '@expo/vector-icons'; 
 import {createStackNavigator} from '@react-navigation/stack';
-import HRM from '../New/HRM';
-import History from '../New/HistoryCandidate'
+import Jobs from '../Manage/Jobs';
+import History from '../Manage/HistoryJobs'
 var e;
 const { width,height } = Dimensions.get("window");
-export default class HomeManageCandidate extends React.Component {
+export default class HomeManageJobs extends React.Component {
   constructor(props){
     super(props);
     e=this;
     this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
+    this.onDetail1 = this.onDetail.bind(this)
     this.state={
       /*secret_key=''*/
     }
-    this.onStack1 = this.onStack.bind(this)
-}
-onStack(a){
-    this.props.navigation.navigate("DetailCandidates",{task_id:a})
-}
+  }
+  onDetail(_id, user_id) {
+    this.props.navigation.navigate("detailjobs", { _task_id: _id })
+  }
   render(){
     return(
       <View style={styles.container}>
          <View style={styles.header0} /*onPress={()=>this.props.navigation.navigate("detailcandidates")}*/> 
-              <Text style={{fontWeight:'bold',fontSize:25,color:'black'}}>Candidates</Text>
-              <Entypo name="dots-three-horizontal" size={24} color="black" />
+              <Text style={{fontWeight:'bold',fontSize:20,color:'black'}}>Careers Management</Text>
+              <TouchableOpacity onPress={()=>{this.props.navigation.navigate("HomeManageCandidate")}} style={{flexDirection:'row',padding:7,borderRadius:5}}>
+                  <FontAwesome5 name="sync-alt" size={24} color="#2d7474" />
+                  <View style={{marginLeft:5,marginTop:2}}>
+                    <Text style={{color:'#2d7474',fontWeight:'bold'}}>Candidate</Text>
+                  </View>
+              </TouchableOpacity>
         </View>
         <Tabs tabBarUnderlineStyle={{backgroundColor:'#2d7474'}} tabContainerStyle={{borderTopWidth:3,borderColor:'#ffff'}} >
                     <Tab tabStyle={{ backgroundColor: '#faf9f9' }} activeTabStyle={{ backgroundColor: '#faf9f9' }}
                         textStyle={{ color: 'black' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }}
-                     heading="HRM" >
-                       <HRM stack={this.onStack1}/>
+                     heading="Jobs" >
+                       <Jobs stackDetail={this.onDetail1}/>
                     </Tab>
                     <Tab tabStyle={{ backgroundColor: '#faf9f9' }} activeTabStyle={{ backgroundColor: '#faf9f9' }}
                         textStyle={{ color: 'black' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }}
                      heading="History" >
-                       <History/>
+                       <History stackDetail={this.onDetail1}/>
                     </Tab>
         </Tabs>
         {/*<ScrollableTabView
@@ -120,8 +125,8 @@ const styles = StyleSheet.create({
       shadowOpacity:0.2,
       padding: 10,
       shadowOpacity: 0.2,
+      alignItems:'center',
       elevation: 1,
-      backgroundColor: '#faf9f9'
      
   },
     header:{

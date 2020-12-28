@@ -1,54 +1,67 @@
 import React from 'react';
 import { View ,Dimensions,TouchableOpacity,Text,StatusBar} from 'react-native';
-import MapInput from '../../components/MapInput'
-import MyMapView from '../../components/MapView'
+import MapInput from '../Map/MapInput'
+import MyMapView from '../Map/MapView';
 import { AntDesign } from '@expo/vector-icons';
+import io from 'socket.io-client/dist/socket.io'
 import { FontAwesome } from '@expo/vector-icons'; 
-import io from 'socket.io-client/dist/socket.io';
-import { getLocation, geocodeLocationByName } from '../../components/location-service'
+import { getLocation, geocodeLocationByName } from '../location-service';
 
 const {height,width} =Dimensions.get('window');
 var e;
 class Map extends React.Component {
-    constructor(props){
-        super(props);
-        e=this;
-        this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
-        this.state={
-            region: {},
-        };
-        this.socket.on("sv-get-skills-list",function(data){
-            var list = data.data;
-            console.log(list);
-          })
-    }
+  constructor(props) {
+    super(props)
+    e = this;
+    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
+    this.state = {
+        region: {},
+        formatted_address:'',
+        latitude:'',
+        longitude:'',
+        getJobsNear:[]
+    };
+    this.onDetailJob = this.onDetailJob.bind(this)
+    this.socket.on("sv-get-near-job", function (data) {
+      var list = data.data
+      if (data.success == true) {
+        e.setState({
+          getJobsNear:list
+        })
+        console.log(list)
+      } else {
+        console.log(JSON.stringify(list))
+      }
+    })
+  }
     componentDidMount() {
-        this.getInitialState();
+      this.getInitialState();
     }
+
     getInitialState() {
         getLocation().then(
             (data) => {
                 console.log(data);
                 this.setState({
                     region: {
-                        latitude: data.latitude,
-                        longitude: data.longitude,
+                        latitude: data.lat,
+                        longitude: data.lng,
                         latitudeDelta: 0.003,
                         longitudeDelta: 0.003
-                    },
+                    }
                 });
-                const getworkinvitation={
-                    lat:data.latitude,
-                    lng:data.longitude,
+                const getjobnear = {
+                  lat:data.lng,
+                  lng:data.lat
                 }
-                this.socket.emit("cl-get-near-job",getworkinvitation)
-                console.log(getworkinvitation)
+                this.socket.emit("cl-get-near-job", getjobnear)
+                //console.log(getjobnear)
             }
         );
     }
 
     getCoordsFromName(loc,name) {
-        //console.log(loc)
+        console.log(loc)
         //console.log(name)
         this.setState({
             region: {
@@ -57,31 +70,40 @@ class Map extends React.Component {
                 latitudeDelta: 0.003,
                 longitudeDelta: 0.003
             },
+            formatted_address:name
         });
-        const getworkinvitation={
-            lat:loc.lat,
-            lng:loc.lng,
+        const getjobnear = {
+          lat:loc.lng,
+          lng:loc.lat
         }
-        this.socket.emit("cl-get-near-job",getworkinvitation)
-        console.log(getworkinvitation)
+        this.socket.emit("cl-get-near-job", getjobnear)
+        //console.log(getjobnear)
     }
 
     onMapRegionChange(region) {
         this.setState({ region });
     }
+    onDetailJob(_id){
+      this.props.navigation.navigate("DetailMap", { _task_id: _id })
+    }
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                <View style={{ flex:1,marginTop:10,zIndex: 1,marginLeft:10,marginRight:10}}>
-                    <MapInput notifyChange={(loc,name) => this.getCoordsFromName(loc,name)}
-                    />
+            <View style={{ flex: 1}}>
+                <StatusBar backgroundColor='blue' animated={true}/>
+                <View style={{ flex: 1,marginTop:10,zIndex: 1000}}>
+                    <MapInput style={{zIndex: 2000}} notifyChange={(loc,name) => this.getCoordsFromName(loc,name)}/>
                 </View>
                 {
                     this.state.region['latitude'] ?
-                        <View style={{ flex: 1}}>
+                        <View style={{ 
+                          width: "100%",
+                          height: "80%",
+                          zIndex: 0 }}>
                             <MyMapView
-                                region={this.state.region}
-                                onRegionChange={(reg) => this.onMapRegionChange(reg)} />
+                                onStackDetail={this.onDetailJob}
+                                getJobsNear={this.state.getJobsNear}
+                                formatted_address={this.state.formatted_address}
+                                region={this.state.region} />
                         </View> : null}
             </View>
         );

@@ -8,7 +8,7 @@ import Swiper from 'react-native-swiper';
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io'
 import girl from '../../images/home4.png';
-import job from '../../images/home2.png';
+import job from '../../images/home5.png';
 import header from '../../images/home3.png';
 import avatar1 from '../../images/avatar11.png';
 import { AntDesign } from '@expo/vector-icons';
@@ -123,7 +123,7 @@ class Home extends Component {
                 dulieu = dulieu.concat(list)
                 e.setState({datasourcenew:dulieu,isLoading:true,test:false});        
                 //var listdatanewfeed=e.state.datasourcenew.push(JSON.stringify(list)) 
-                      
+                   
             }    
         })
         this.socket.on('sv-get-recommend-task', function (data) {
@@ -192,11 +192,11 @@ class Home extends Component {
                         </Swiper>
                         
                         <View style={styles.text1}>
-                            <Text style={{ fontStyle: 'italic',color:'#007700' }}>The suitable of for you today !!!</Text>
+                            <Text style={{ fontStyle: 'italic',color:'black' }}>The suitable of for you today !!!</Text>
                         </View>
                         <View style={styles.text}>
                             <Text style={{ fontWeight: 'bold', fontSize: 20}}>Hi </Text>
-                            <Text style={{ fontSize: 20 ,color:'#007700'}}>{this.state.first_name} !</Text>
+                            <Text style={{ fontSize: 20 ,color:'black'}}>{this.state.first_name} !</Text>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
@@ -297,10 +297,10 @@ class Home extends Component {
                                 <View style={styles.viewimage}>
                                   
                                     <View style={styles.text1}>
-                                        <Text style={{ fontStyle: 'italic',color:'#007700' }}>The suitable of for you today !!!</Text>
+                                        <Text style={{ fontStyle: 'italic',color:'black' }}>The suitable of for you today !!!</Text>
                                     </View>
                                     <View style={styles.text}>
-                                        <Text style={{ fontWeight: 'bold', fontSize: 20,color:'#007700' }}>Hi </Text>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 20,color:'black' }}>Hi </Text>
                                     </View>
                                    
                                   

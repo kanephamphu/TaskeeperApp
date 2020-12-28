@@ -27,7 +27,7 @@ class Updateprofile extends Component {
             last_name: '',
             email: '',
             phone_number: '',
-            gender: '',
+            gender: 'male',
             day_of_birth: '',
             month_of_birth: '',
             year_of_birth: '',
@@ -75,7 +75,7 @@ class Updateprofile extends Component {
                     notice:'Updated successfully!',
                     key:"success"
                 })
-               
+                console.log(data)
             }
             else if (data.success == false) {
                 var dataserver = data.errors

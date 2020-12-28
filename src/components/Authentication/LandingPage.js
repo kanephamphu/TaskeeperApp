@@ -135,7 +135,7 @@ const width_button = width * 0.3;
 var styles = StyleSheet.create({
     silde: {
         flex: 1,
-        backgroundColor: '#faf9f9',
+        backgroundColor: 'white',
     },
     header: {
         flex: 2,

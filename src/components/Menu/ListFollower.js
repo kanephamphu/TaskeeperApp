@@ -34,7 +34,7 @@ class ListFollower extends Component {
                 dataFollower:data.data,
                 isLoading:true
             })
-            console.log(data)
+           
         })  
     }
     componentDidMount = () => {
@@ -47,7 +47,7 @@ class ListFollower extends Component {
             user_id:this.props.route.params._id
         }
         this.socket.emit("cl-get-followers",get)
-        console.log(get)
+       
     }
     render() {
         return (

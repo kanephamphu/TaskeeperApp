@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { View, Text, StyleSheet,Image,TextInput ,TouchableOpacity,FlatList,Switch,ActivityIndicator,ScrollView,ToastAndroid,Dimensions,Modal, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet,Image,TextInput ,TouchableOpacity,FlatList,Switch,ActivityIndicator,ScrollView,ToastAndroid,Dimensions,Modal, Keyboard, KeyboardAvoidingView,TouchableWithoutFeedback } from 'react-native';
 import { AntDesign } from '@expo/vector-icons'; 
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io';
@@ -18,16 +18,16 @@ import Animated from 'react-native-reanimated'
 import { Foundation } from '@expo/vector-icons'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment'
-import iconsuccess from '../images/checked.png'
-import iconerror from '../images/close.png'
+import iconsuccess from '../images/icon1.png'
+import iconerror from '../images/icon2.png'
 import MultiSelect from 'react-native-multiple-select'
 import MapInput from '../components/MapInput'
 import MyMapView from '../components/MapView'
-import noitem from '../images/box.png';
 import { getLocation, geocodeLocationByName } from '../components/location-service'
 
 const {height,width} =Dimensions.get('window');
 var e;
+var daynow = new Date()
 
 class TaskPage extends Component{
     constructor(props){
@@ -60,6 +60,7 @@ class TaskPage extends Component{
           language:'',
           tags:'',
           industry:'',
+          refreshing: false,
           formatted_address:'',
           latitude:null,
           longitude:null,
@@ -327,31 +328,86 @@ class TaskPage extends Component{
         dataindustry:[],
         dataskills:[],
         datatags:[],
-        skill_query:'Lý',
-        tag_query:'Học Tập',
+        skill_query:'Quản lý',
+        tag_query:'Developer',
         start_time:'',
         end_time:'',
         shownotice:false,
+        showmess:'',
+        showaa:false,
+        showmess1:'',
+        showaa1:false,
+        showmess2:'',
+        showaa2:false,
         notice: '',
         key: "",
         keycheck: '',
         task_id:'',
+        showninvite:false,
         dataemployee:[]
         }
+        this.onInvite = this.onInvite.bind(this)
+        this.socket.on('sv-send-work-invitation',function(data){
+          if (data.success == true) {
+            e.setState({
+              showninvite: true,
+            })
+          }
+          else if (data.success == false) {
+            console.log(data)
+          }
+        })
         this.onSubmit = this.onSubmit.bind(this)
+        this.onRecommend = this.onRecommend.bind(this)
+        this.showProfilefriend = this.showProfilefriend.bind(this)
         this.socket.on('sv-new-tasks',function(data){
           if(data.success==true){
+            var list = data.data
             e.setState({
               showposttask:false,
               showrecommendperson:true,
+              task_id:list._id,
               shownotice: true,
               notice: 'Post Success !',
               key: "success",
-              keycheck: 'success'
+              keycheck: 'success',
+              task_title:'full-time',
+              task_requirement:'',
+              task_description:'',
+              show:false,
+              task_type:'',
+              price_type:'',
+              floor_price:'',
+              selectedLanguages: [],
+              selectedTags:[],
+              ceiling_price:'',
+              end_time:'',
+              start_time:'',
+              language:'',
+              industry:'',
+              position:'',
+              region:'',
+              skills:'',
+              disabled:true,
+              disabled1:false,
+              disabled2:false,
+              tags:'',
+              day:'',
+              month:'',
+              year:'',
+              choosenTime:'',
+              choosenTime1:'',
+              choosenTime2:'',
+              formatted_address:'',
+              longitude:'',
+              latitude:'',
+              start_time:'',
+              end_time:''
             })
+            //console.log(list)
           }
           else if(data.success==false){
-            console.log(data)
+            console.log(data.errors)
           }
         })
         this.onDetail=this.onDetail.bind(this)
@@ -402,7 +458,7 @@ class TaskPage extends Component{
                 loadingdata:true,
               })
             }
-            console.log(list)
+            //console.log(list)
         })
 
         this.socket.on("sv-get-recommend-candidate",function(data){
@@ -411,17 +467,13 @@ class TaskPage extends Component{
             dataemployee:list
           })
           console.log(list)
-          //console.log(data)
         })
 
       };
- 	    onDetail(a,b) {
-        this.props.detail(a,b)
-    	}
-      componentDidMount=async()=>{
-        this.onRefresh()
+ 	    onDetail(a) {
+        this.props.detail(a)
       }
-      onRefresh=async()=>{
+      componentDidMount=async()=>{
         const token= await AsyncStorage.getItem('token')
         const decode=jwt_decode(token)
         e.setState({
@@ -451,35 +503,47 @@ class TaskPage extends Component{
           skip:0
         }
         this.socket.emit("cl-get-wall-task",post)
-
       }
-      onSubmit(){
+      onInvite(_id){
+        const inviteuser={
+          secret_key:this.state.secret_key,
+          task_id:this.state.task_id,
+          invitee_id:_id
+        }
+        this.socket.emit("cl-send-work-invitation",inviteuser)
+        console.log(inviteuser)
+      }
+      refreshTop(){
+        this.componentDidMount()
+      }
+      onRecommend(){
+        const getlistrecommend={
+          secret_key:this.state.secret_key,
+          task_id:this.state.task_id
+        }
+        this.socket.emit("cl-get-recommend-candidate",getlistrecommend)
+        console.log(getlistrecommend)
+      }
+      onSubmit=async()=>{
         var d = new Date();
         if(this.state.task_type=='freelance'){
-          if(this.state.task_title==''){
+          if (this.state.task_title=='') {
             e.setState({
-              shownotice: true,
-              notice: 'Enter your task title !',
-              key: "error",
-              keycheck: 'task_type'
-            })
+                showmess: "Enter your task title!",
+                showaa:true
+            });
           }
-          else if(this.state.task_requirement=='')
-          {
+          if(this.state.task_requirement==''){
             e.setState({
-              shownotice: true,
-              notice: 'Enter your task requirement !',
-              key: "error",
-              keycheck: 'task_requirement'
-            })
+              showmess1: "Enter your task requirement!",
+              showaa1:true
+            });
           }
-          else if(this.state.task_description==''){
+          if(this.state.task_description==''){
             e.setState({
-              shownotice: true,
-              notice: 'Enter your task description !',
-              key: "error",
-              keycheck: 'task_description'
-            })
+              showmess2: "Enter your task description!",
+              showaa2:true
+            });
           }
           else if(this.state.choosenTime2==''){
             e.setState({
@@ -594,7 +658,7 @@ class TaskPage extends Component{
               keycheck: 'tags'
             })
           }
-          else {
+          else{
             const tasknew={
               secret_key:this.state.secret_key,
               task_title:this.state.task_title,
@@ -621,43 +685,29 @@ class TaskPage extends Component{
                 start_time:this.state.start_time,
                 end_time:this.state.end_time
               }
-            }
+          }
             this.socket.emit("cl-new-tasks",tasknew)
-            this.onRefresh()
-           
-            const getlistrecommend={
-              secret_key:this.state.secret_key,
-              task_id:this.state.task_id
-            }
-            this.socket.emit("cl-get-recommend-candidate",getlistrecommend)
-            console.log(getlistrecommend)
+            //console.log(tasknew)
           }
         }
         else {
-          if(this.state.task_title==''){
+          if (this.state.task_title=='') {
             e.setState({
-              shownotice: true,
-              notice: 'Enter your task title !',
-              key: "error",
-              keycheck: 'task_type'
-            })
+                showmess: "Enter your task title!",
+                showaa:true
+            });
           }
-          else if(this.state.task_requirement=='')
-          {
+          if(this.state.task_requirement==''){
             e.setState({
-              shownotice: true,
-              notice: 'Enter your task requirement !',
-              key: "error",
-              keycheck: 'task_requirement'
-            })
+              showmess1: "Enter your task requirement!",
+              showaa1:true
+            });
           }
-          else if(this.state.task_description==''){
+          if(this.state.task_description==''){
             e.setState({
-              shownotice: true,
-              notice: 'Enter your task description !',
-              key: "error",
-              keycheck: 'task_description'
-            })
+              showmess2: "Enter your task description!",
+              showaa2:true
+            });
           }
           else if(this.state.choosenTime2==''){
             e.setState({
@@ -796,7 +846,7 @@ class TaskPage extends Component{
               keycheck: 'tags'
             })
           }
-          else {
+          else{
             const tasknew={
               secret_key:this.state.secret_key,
               task_title:this.state.task_title,
@@ -828,17 +878,11 @@ class TaskPage extends Component{
               }
             }
             this.socket.emit("cl-new-tasks",tasknew)
-            this.onRefresh()
-            console.log(tasknew)
-            const getlistrecommend={
-              secret_key:this.state.secret_key,
-              task_id:this.state.task_id
-            }
-            this.socket.emit("cl-get-recommend-candidate",getlistrecommend)
-            console.log(getlistrecommend)
-            }
+            //console.log(tasknew)
+            //console.log(getlistrecommend)
+          }
         }
-        }
+    }
     getInitialState() {
         getLocation().then(
             (data) => {
@@ -940,6 +984,24 @@ class TaskPage extends Component{
         position:item.label
       });
       }
+      changePrice(item){
+        switch (item.value) {
+          case '1':
+          break;
+          case '2':
+          break;
+        }
+        if(item.label=="Unextract"){
+          this.setState({
+            price_type:'unextract'
+          });
+        }
+        else if(item.label=="Dealing"){
+          this.setState({
+            price_type:'dealing'
+          });
+        }
+      }
     changeJob(item,props,onpress) { 
         switch (item.value) {
             case '1':
@@ -949,9 +1011,21 @@ class TaskPage extends Component{
             case '3':
             break;
         }
-        this.setState({
-          task_type:item.label
-        });
+        if(item.label=="Freelance"){
+          this.setState({
+            task_type:'freelance'
+          });
+        }
+        else if(item.label=="Full-time"){
+          this.setState({
+            task_type:'full-time'
+          });
+        }
+        else if(item.label=="Part-time"){
+          this.setState({
+            task_type:'part-time'
+          });
+        }
         if(item.value==1){
           this.setState({
             show:false,
@@ -1004,6 +1078,11 @@ class TaskPage extends Component{
         longitude:c,
         showlocation:false
       })
+    }
+    showProfilefriend(){
+        this.setState({
+          showrecommendperson:false
+        })
     }
     renderInner = () => (
 
@@ -1115,6 +1194,12 @@ class TaskPage extends Component{
                     //items={this.state.items1}
                     items={this.state.dataindustry}
                     IconRenderer={MaterialIcons}
+                    styles={{
+                      button: {
+                        backgroundColor: '#2d7474',
+                      },
+                      color:'#2d7474',
+                    }}
                     uniqueKey="name"
                     subKey="detail"
                     selectText="Choose industry you want..."
@@ -1230,9 +1315,32 @@ class TaskPage extends Component{
                                 <Text style={{fontSize:15,fontWeight:'bold'}}>Job Date</Text>
                             </View>
                         </TouchableOpacity>
-                        <View style={{marginTop:2,marginLeft:10}}>
-                            <Text style={{fontWeight:'bold',fontSize:15}}>{this.state.choosenTime2}</Text>
-                        </View>
+                        {this.state.year<moment(daynow).format('YYYY')
+                        ?
+                        <>
+                        {this.state.choosenTime2==''?null:<View style={{marginTop:2,marginLeft:10}}><Text style={{color:'red',fontStyle:'italic'}}>Job Date isn't in the correct format !</Text></View>}
+                        </>
+                        :
+                        <>
+                        {this.state.month<moment(daynow).format('MM')?
+                        <>
+                        {this.state.choosenTime2==''?null:<View style={{marginTop:2,marginLeft:10}}><Text style={{color:'red',fontStyle:'italic'}}>Job Date isn't in the correct format !</Text></View>}
+                        </>
+                        :
+                        <>
+                        {this.state.day<moment(daynow).format('DD')?
+                        <>
+                        {this.state.choosenTime2==''?null:<View style={{marginTop:2,marginLeft:10}}><Text style={{color:'red',fontStyle:'italic'}}>Job Date isn't in the correct format !</Text></View>}
+                        </>
+                        :
+                            <View style={{marginTop:2,marginLeft:10}}>
+                              <Text style={{fontWeight:'bold',fontSize:15}}>{this.state.choosenTime2}</Text>
+                          </View>
+                        }
+                        </>
+                        }
+                        </>
+                        }
                         <DateTimePicker
                             isVisible={this.state.isVisible2}
                             onConfirm={this.handlePicker2}
@@ -1277,21 +1385,35 @@ class TaskPage extends Component{
                           animationType='slide'
                           style={{ justifyContent: 'center', alignItems: 'center' }}
                         >
+                          <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ backgroundColor: '#000000aa', flex: 1, justifyContent: 'center', alignItems: 'center'}} >
                           <View style={{ backgroundColor: '#000000aa', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                 <View style={{
                                     backgroundColor: '#faf9f9', borderRadius: 20,
-                                    height: "30%", width: "70%", flexDirection:'column',justifyContent: 'center'
+                                    height: 220, width: "70%", flexDirection:'column',justifyContent: 'center'
                                 }}>
-                                      <View style={{flexDirection:'row'}}>
-                                        <TouchableOpacity style={{marginLeft:30}} onPress={()=>this.setState({price_type:"unextract"})} >
-                                            <Text style={{fontWeight:'bold',fontSize:15}}>unextract</Text>
-                                        </TouchableOpacity>
-                                        {this.state.price_type==="unextract"?
+                                      <View style={{alignItems:'center',marginBottom:20}}>
+                                        <Text style={{fontWeight:'bold',fontSize:18}}>Please choose price type!</Text>
+                                      </View> 
+                                      <View style={{alignItems:'center'}}>
+                                        <View style={{flexDirection:'row'}}>
+                                          <DropDownPicker
+                                              items={[
+                                                  {label: 'Unextract', value: '1'},
+                                                  {label: 'Dealing', value: '2'},
+                                              ]}
+                                              defaultNull
+                                              placeholder="Choose Price"
+                                              containerStyle={{height: 30,width:150}}
+                                              onChangeItem={price_type => this.changePrice(price_type)}
+                                              style={{backgroundColor:'white'}}
+                                          />
+                                          {this.state.price_type==="unextract"?
                                           <View style={{marginLeft:10}}>
                                               <Entypo name="check" size={20} color="#71B7B7" />
                                           </View>
-                                        :null
-                                        }
+                                          :null
+                                          }
+                                        </View>
                                       </View>
                                       {this.state.price_type==="unextract"?
                                           <View style={{flexDirection:'row',justifyContent: 'center',alignItems:'center',marginTop:10}}>
@@ -1319,17 +1441,6 @@ class TaskPage extends Component{
                                           </View>
                                           :null
                                           }
-                                      <View style={{flexDirection:'row',marginTop: 10}}>
-                                            <TouchableOpacity style={{marginLeft:30}} onPress={()=>this.setState({price_type:"dealing"})}>
-                                                <Text style={{fontWeight:'bold',fontSize:15}}>dealing</Text>
-                                            </TouchableOpacity>
-                                            {this.state.price_type==="dealing"?
-                                            <View style={{marginLeft:10}}>
-                                                <Entypo name="check" size={20} color="#71B7B7" />
-                                            </View>
-                                            :null
-                                            }
-                                      </View>
                                       <View style={{alignItems: 'center'}}>
                                         <TouchableOpacity onPress={() => this.setState({ showprice: false })} style={{
                                               width: "50%", backgroundColor: 'green',
@@ -1340,6 +1451,7 @@ class TaskPage extends Component{
                                       </View>
                                 </View>
                             </View>
+                            </TouchableWithoutFeedback>
                         </Modal>
                       </KeyboardAvoidingView>
                     <TouchableOpacity onPress={()=>this.setState({showworkingtime:true})} style={{flexDirection:'row',marginTop:20,marginLeft:2}} >
@@ -1369,22 +1481,32 @@ class TaskPage extends Component{
                                     backgroundColor: '#faf9f9', borderRadius: 20,
                                     height: "30%", width: "70%", flexDirection:'column',justifyContent: 'center'
                                 }}>
+                                  <View style={{marginBottom:20,alignItems:'center'}}>
+                                      <Text style={{fontWeight:'bold',fontSize:18}}>Please choose a time period work!</Text>
+                                  </View> 
                                   <View style={{flexDirection:'row'}}>
-                                        <TouchableOpacity onPress={this.showPicker} style={{marginLeft:30}}>
-                                                <Text style={{fontSize:15,fontWeight:'bold'}}>From:</Text>
+                                        <TouchableOpacity onPress={this.showPicker} style={{marginLeft:30,justifyContent: 'center', alignItems: 'center',backgroundColor: 'white',height:35,width:120,borderRadius:5,flexDirection:'row',borderWidth:1,borderColor:'#BDBDBD'}}>
+                                                <Text style={{color:'black',fontSize:15}}>Start Time</Text>
+                                                <View style={{marginLeft:10}}>
+                                                    <Ionicons name="ios-time" size={24} color="black" />
+                                                </View>
                                         </TouchableOpacity>
-                                        <View style={{marginLeft:20}}>
+                                        <View style={{marginLeft:20,marginTop:5}}>
                                             <Text style={{fontWeight:'bold',fontSize:15}}>{this.state.choosenTime}</Text>
                                         </View>
                                     </View>
-                                    <View style={{flexDirection:'row',marginTop:20}}>
-                                        <TouchableOpacity onPress={this.showPicker1} style={{marginLeft:30}}>
-                                                <Text style={{fontSize:15,fontWeight:'bold'}}>To:</Text>
+                                    <View style={{flexDirection:'row',marginTop:10}}>
+                                        <TouchableOpacity onPress={this.showPicker1} style={{marginLeft:30,justifyContent: 'center', alignItems: 'center',backgroundColor: 'white',height:35,width:120,borderRadius:5,flexDirection:'row',borderWidth:1,borderColor:'#BDBDBD'}}>
+                                                <Text style={{color:'black',fontSize:15}}>End Time</Text>
+                                                <View style={{marginLeft:10}}>
+                                                    <Ionicons name="ios-time" size={24} color="black" />
+                                                </View>
                                         </TouchableOpacity>
-                                       <View style={{marginLeft:38}}>
+                                       <View style={{marginLeft:20,marginTop:5}}>
                                             <Text style={{fontWeight:'bold',fontSize:15}}>{this.state.choosenTime1}</Text>
                                         </View>
                                     </View>
+                                    <View style={{height:10,alignItems:'center'}}>{this.state.start_time>=this.state.end_time&&this.state.start_time!=''&&this.state.end_time!=''?<Text style={{color:'red',fontStyle:'italic'}}>End time must be greater than start time !</Text>:null}</View>
                                     <View style={{ alignItems: 'center'}}>
                                         <TouchableOpacity onPress={() => this.setState({ showworkingtime: false })} style={{
                                                 width: "50%", backgroundColor: 'green',
@@ -1445,12 +1567,13 @@ class TaskPage extends Component{
                             <DropDownPicker
                                 items={[
                                     {label: 'Staff', value: '1'},
-                                    {label: 'President', value: '2'},
-                                    {label: 'Manager', value: '3'},
+                                    {label: 'Front-end', value: '2'},
+                                    {label: 'Back-end', value: '3'},
+                                    {label: 'Database Manager', value: '4'},
                                 ]}
                                 defaultNull
                                 placeholder="Position"
-                                containerStyle={{height: 30,width:110}}
+                                containerStyle={{height: 30,width:150}}
                                 onChangeItem={position => this.changePosition(position)}
                                 style={{backgroundColor:'white'}}
                             />
@@ -1488,18 +1611,14 @@ class TaskPage extends Component{
         </View> 
       )
       renderHeader = () => (
-        <TouchableOpacity onPress={()=>{Keyboard.dismiss();this.bs.current.snapTo(0)}} accessible={false} style={styles.header1}>
+        <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();this.bs.current.snapTo(0)}} style={styles.header1}>
+          <View style={styles.header1}>
               <View style={styles.panelHeader}>
                     <View style={styles.panelHandle}>
                     </View>
-                  {/*:
-                    <>
-                        <TouchableOpacity onPress={()=>{Keyboard.dismiss();this.bs.current.snapTo(0)}}>
-                            <Entypo name="dots-three-vertical" size={24} color="black" /> 
-                        </TouchableOpacity>
-                  </>*/}
               </View>
-          </TouchableOpacity>
+              </View>
+          </TouchableWithoutFeedback>
       )                     
       bs = React.createRef()
       fall = new Animated.Value(1);
@@ -1517,7 +1636,7 @@ class TaskPage extends Component{
                     <View style={{ backgroundColor: '#000000aa', flex: 1 }}>
                         <View style={{
                             backgroundColor: '#faf9f9', borderRadius: 20,
-                            marginLeft: 40, marginRight: 40, marginTop: 75,marginBottom: 125,
+                            marginLeft: 20, marginRight: 20, marginTop: 75,marginBottom: 125,
                             borderWidth: 2, borderColor: '#009387', padding: 20,
                             alignContent: 'center',alignItems:'center'
                         }}>
@@ -1525,7 +1644,7 @@ class TaskPage extends Component{
                             <FlatList data={this.state.dataemployee} 
                                 renderItem={({item,index})=>{                              
                                     return(
-                                        <RenderItem  item={item} index={index}></RenderItem>
+                                        <RenderItem stackProfilefriend={this.showProfilefriend} inviteClick={this.onInvite}  item={item} index={index} stackuser={this.props.detailuser}></RenderItem>
                                     )
                                 }}
                                 keyExtractor={(item)=>item._id.toString()}
@@ -1549,7 +1668,28 @@ class TaskPage extends Component{
                                 }}>
                                     <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                                     <Text>{this.state.notice}</Text>
-                                    <TouchableOpacity onPress={() => this.setState({ shownotice: false })} style={{
+                                    <TouchableOpacity onPress={() => {this.setState({ shownotice: false });{this.state.key === "success"?this.onRecommend():{}}}} style={{
+                                        width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
+                                        height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
+                                    }}>
+                                        <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal>
+                        <Modal transparent={true}
+                            visible={this.state.showninvite}
+                            animationType='slide'
+                            style={{ justifyContent: 'center', alignItems: 'center' }}
+                        >
+                            <View style={{ backgroundColor: '#000000aa', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={{
+                                    backgroundColor: '#faf9f9', borderRadius: 20,
+                                    height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
+                                }}>
+                                    <Image source={ iconsuccess } style={{ height: 50, width: 50 }}></Image>
+                                    <Text>Invite Success</Text>
+                                    <TouchableOpacity onPress={() => {this.setState({ showninvite: false })}} style={{
                                         width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                                     }}>
@@ -1578,15 +1718,15 @@ class TaskPage extends Component{
                         <View style={styles.header}>
                             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                             <TouchableOpacity onPress={()=>this.setState({showposttask:false})} style={{flexDirection:'row'}}>
-                                <Ionicons style={{marginTop:1}} name="ios-arrow-back" size={28} color="#71B7B7" />
-                                <Text style={{fontWeight:'bold',fontSize:25,color:'#71B7B7',marginLeft:15,marginTop:-2}}>New Task</Text>
+                                <Ionicons style={{marginTop:1}} name="ios-arrow-back" size={28} color="#2d7474" />
+                                <Text style={{fontWeight: 'bold', fontSize: 25, color: '#2d7474',marginLeft:15,marginTop:-2}}>New Task</Text>
                             </TouchableOpacity>
                             <TouchableOpacity  onPress={this.onSubmit} >
-                                <Text style={{fontWeight:'bold',fontSize:25,color:'#71B7B7',marginLeft:15,marginTop:-2,marginRight:8}}>Post</Text>
+                                <Text style={{fontWeight: 'bold', fontSize: 25, color: '#2d7474',marginRight:15,marginTop:-2}}>Post</Text>
                             </TouchableOpacity>
                             </View>
                         </View>
-                        <View style={{marginBottom:50}}>
+                        <View style={{marginBottom:20}}>
                         <View style={{flexDirection:'row'}}>
                             <Avatar.Image
                                 source={this.state.task_owner_avatar?{uri:this.state.task_owner_avatar}:null}
@@ -1606,9 +1746,9 @@ class TaskPage extends Component{
                                 <View>
                                 <DropDownPicker
                                         items={[
-                                            {label: 'full-time', value: '1',selected: true, disabled:this.state.disabled},
-                                            {label: 'freelance', value: '2',disabled:this.state.disabled1},
-                                            {label: 'part-time', value: '3',disabled:this.state.disabled2}
+                                            {label: 'Full-time', value: '1',selected: true, disabled:this.state.disabled},
+                                            {label: 'Freelance', value: '2',disabled:this.state.disabled1},
+                                            {label: 'Part-time', value: '3',disabled:this.state.disabled2}
                                         ]}
                                         defaultNull
                                         //placeholder="Task Type"
@@ -1627,60 +1767,80 @@ class TaskPage extends Component{
                             </View>
                             </View>
                         </View>
+                          <ScrollView>
                             <View  style={styles.mainpost}>
-                            <View style={{flexDirection:'row',position:'absolute',top:0,width:width-70,marginTop:20,borderBottomWidth:2,borderBottomColor:'#71B7B7'}}>
-                            </View>
                                 <KeyboardAvoidingView behavior="padding" style={styles.container}>
                                 <View style={{flexDirection:'column'}}>
-                                    <View style={{marginLeft:25}}>
-                                        <Text style={{fontWeight:'bold'}}>Title Task:</Text>
+                                  <View >
+                                      <View style={{marginLeft:25}}>
+                                          <Text style={{fontWeight:'bold'}}>Title</Text>
+                                      </View>
+                                      <View>
+                                        <TextInput 
+                                            style={this.state.showaa==true&&this.state.task_title==''?[styles.input,{borderColor:'red'}]:[styles.input,{borderColor:'#D8D8D8'}]}
+                                            onTouchStart={()=>  this.bs.current.snapTo(1)}
+                                            //editable={true}
+                                            placeholder={'Enter Task Title'} 
+                                            onChangeText={(task_title)=> this.setState({task_title})}
+                                            placeholderTextColor={'grey'}
+                                            numberOfLines={2}
+                                            underlineColorAndroid='transparent'
+                                            multiline={true}
+                                            //returnKeyType='next'
+                                        > 
+                                        </TextInput>
+                                        <View style={{height:20}}>
+                                            {this.state.showaa==true&&this.state.task_title==''?<View style={{alignItems:'center'}}><Text style={{color:'red',fontStyle:'italic'}}>{this.state.showmess}</Text></View>:null}
+                                        </View>
+                                      </View>
+                                  </View>
+                              <View >
+                                  <View style={{marginLeft:25}}>
+                                      <Text style={{fontWeight:'bold'}}>Requirement</Text>
+                                  </View>
+                                  <View >
+                                    <TextInput 
+                                        style={this.state.showaa1==true&&this.state.task_requirement==''?[styles.input,{borderColor:'red'}]:[styles.input,{borderColor:'#D8D8D8'}]}
+                                        onTouchStart={()=>  this.bs.current.snapTo(1)}
+                                        placeholder={'Enter Task Requirement'} 
+                                        onChangeText={(task_requirement)=> this.setState({task_requirement})}
+                                        placeholderTextColor={'grey'}
+                                        numberOfLines={5}
+                                        underlineColorAndroid='transparent'
+                                        //returnKeyType='next'
+                                        multiline={true}
+                                    >
+                                    </TextInput>
+                                    <View style={{height:20}}>
+                                        {this.state.showaa==true&&this.state.task_requirement==''?<View style={{alignItems:'center'}}><Text style={{color:'red',fontStyle:'italic'}}>{this.state.showmess1}</Text></View>:null}
                                     </View>
-                                <TextInput 
-                                    style={styles.input}
-                                    onTouchStart={()=>  this.bs.current.snapTo(1)}
-                                    //editable={true}
-                                    placeholder={'Fill Title Task...'} 
-                                    onChangeText={(task_title)=> this.setState({task_title})}
-                                    placeholderTextColor={'grey'}
-                                    underlineColorAndroid='transparent'
-                                    multiline={true}
-                                    //returnKeyType='next'
-                                > 
-                                </TextInput>
                                 </View>
-                            <View style={{marginTop:10,flexDirection:'column'}}>
+                              </View>
+                              <View>
                                 <View style={{marginLeft:25}}>
-                                <Text style={{fontWeight:'bold'}}>Requirement Task:</Text>
+                                      <Text style={{fontWeight:'bold'}}>Description</Text>
+                                  </View>
+                                  <View >
+                                    <TextInput 
+                                        style={this.state.showaa2==true&&this.state.task_description==''?[styles.input,{borderColor:'red'}]:[styles.input,{borderColor:'#D8D8D8'}]}
+                                        onTouchStart={()=>  this.bs.current.snapTo(1)}
+                                        placeholder={'Enter Task Description'} 
+                                        onChangeText={(task_description)=> this.setState({task_description})}
+                                        placeholderTextColor={'grey'}
+                                        numberOfLines={5}
+                                        underlineColorAndroid='transparent'
+                                        multiline={true}
+                                    >
+                                    </TextInput>
+                                    <View style={{height:20}}>
+                                        {this.state.showaa2==true&&this.state.task_description==''?<View style={{alignItems:'center'}}><Text style={{color:'red',fontStyle:'italic'}}>{this.state.showmess2}</Text></View>:null}
+                                    </View>
                                 </View>
-                            <TextInput 
-                                style={styles.input}
-                                onTouchStart={()=>  this.bs.current.snapTo(1)}
-                                placeholder={'Fill Requirement Task...'} 
-                                onChangeText={(task_requirement)=> this.setState({task_requirement})}
-                                placeholderTextColor={'grey'}
-                                underlineColorAndroid='transparent'
-                                //returnKeyType='next'
-                                multiline={true}
-                            >
-                            </TextInput>
+                              </View>
                             </View>
-                            <View style={{marginTop:10,flexDirection:'column'}}>
-                            <View style={{marginLeft:25}}>
-                                    <Text style={{fontWeight:'bold'}}>Description Task:</Text>
-                                </View>
-                            <TextInput 
-                                style={styles.input}
-                                onTouchStart={()=>  this.bs.current.snapTo(1)}
-                                placeholder={'Fill Description Task...'} 
-                                onChangeText={(task_description)=> this.setState({task_description})}
-                                placeholderTextColor={'grey'}
-                                underlineColorAndroid='transparent'
-                                multiline={true}
-                            >
-                            </TextInput>
-                            </View>
-                            </KeyboardAvoidingView>
-                            </View>
+                          </KeyboardAvoidingView>
+                        </View>
+                      </ScrollView>
                     </View>
                 </Modal>          
                         <View 
@@ -1696,26 +1856,26 @@ class TaskPage extends Component{
                                 </View>
                             </TouchableOpacity>
                     </View>
-                        {
-                        !this.state.loadingdata == true ?
+                        {!this.state.loadingdata == true ?
                         <View style={{ flex: 1, alignItems: 'center' }}>
                             <ActivityIndicator size='large'></ActivityIndicator>
+                        </View>:
+                        this.state.dataPost.length==0?
+                        <View style={{ flex: 1, alignItems: 'center' }}>
+                        <Text>No item</Text>
                         </View>
                         :
-                         this.state.dataPost === 0 ?
-                         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                           <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
-                           <Text>No item</Text>
-                         </View>
-                        :
+                        
                         <View style={{alignItems:'center',flex:12}}>
                             <FlatList data={this.state.dataPost}
                                     renderItem={({item,index})=>{
                                     return(
-                                        <Bulletin stackDetail={this.onDetail} item={item} index={index}></Bulletin>
+                                        <Bulletin stackDetail={this.onDetail} item={item} index={index} ></Bulletin>
                                     )
                                 }}
                                 keyExtractor={(item)=>item._id.toString()}
+                                refreshing={this.state.refreshing}
+                                onRefresh={() => { this.refreshTop() }}
                                 >
                             </FlatList>
                             </View>}
@@ -1729,9 +1889,9 @@ class Bulletin  extends React.Component{
         var task_description = this.props.item.task_description
         var task_title = this.props.item.task_title;
         var counttitle = this.props.item.task_title.length;
-        if(counttitle>=30){
-          task_title = task_title.slice(0,31);
-      }
+        if(counttitle>=25){
+          task_title = task_title.slice(0,20)+'...';
+        }
         var count = task_description.length;
         if (count >= 10) {
             task_description = task_description.slice(0, 20);
@@ -1746,7 +1906,6 @@ class Bulletin  extends React.Component{
                         paddingVertical: 20,
                         paddingHorizontal: 15,
                         marginBottom: 16,
-                        height: 250,
                         width:width-30,
                         shadowColor: 'green',
                         shadowOpacity: 0.1,
@@ -1759,7 +1918,6 @@ class Bulletin  extends React.Component{
                                 <View style={{width:width-130,flexDirection:'column'}}>
                                     <TouchableOpacity onPress={()=>this.props.stackDetail(this.props.item._id,this.props.item.task_owner_id)} style={{flexDirection:'row'}}>
                                       <Text style={{fontWeight: 'bold', fontSize: 23, fontStyle: 'italic', color: '#2d7474'}}>{task_title}</Text>
-                                      {counttitle>=30?<View style={{marginTop:8}}><Text>...</Text></View>:null}
                                       {new Date(this.props.item.created_time).toLocaleDateString()==d.toLocaleDateString()?
                                       <>
                                           <Text style={{fontWeight:'bold',fontSize:10,marginTop:2,color:'#CD5C5C',marginLeft:5}}>(MỚI)</Text>
@@ -1805,19 +1963,25 @@ class Bulletin  extends React.Component{
     }
 }
 class RenderItem  extends React.Component{
-    render(){
+  render(){
+    var name = this.props.item.last_name
+    var demcount = this.props.item.first_name.length+this.props.item.last_name.length
+    if(this.props.item.last_name.length>=11){
+      name = name.slice(0,11);
+    }
         return(
             <View style={styles.image_container}>
-                    <View style={{justifyContent:'center',marginLeft:10}}>
+                    <TouchableOpacity onPress={()=>{this.props.stackuser(this.props.item.first_name,this.props.item.last_name,this.props.item._id);this.props.stackProfilefriend}} style={{justifyContent:'center',marginLeft:10}}>
                         <Image source={{uri:this.props.item.avatar}} style={styles.image}/>
-                    </View>
+                    </TouchableOpacity>
                     <View>
                         <View  style={{flexDirection:'column',marginLeft:10,marginTop:10,alignItems:'flex-start',width:170}}>
-                          <View>
-                              <Text style={styles.name}>{this.props.item.first_name} {this.props.item.last_name}</Text>
-                          </View>
+                          <TouchableOpacity  onPress={()=>{this.props.stackuser(this.props.item.first_name,this.props.item.last_name,this.props.item._id);this.props.stackProfilefriend}} >
+                            {demcount>=11?<Text style={{ fontWeight:'bold',fontSize:15}}>{name}</Text>:
+                                  <Text style={{ fontWeight:'bold',fontSize:15}}>{this.props.item.first_name} {this.props.item.last_name}</Text>}
+                          </TouchableOpacity>
                           <View style={{flexDirection:'row'}}>
-                              <Text style={styles.rate}>{this.props.item.votes.vote_point_average}/5</Text> 
+                              <Text style={styles.rate}>{this.props.item.votes.vote_point_average.toFixed(0)}/5</Text> 
                           <Image 
                               source={require('../images/star.png')}
                               style={{width:20,height:20,top:1}}
@@ -1826,7 +1990,7 @@ class RenderItem  extends React.Component{
                           </View>
                         </View>
                     </View>
-                    <TouchableOpacity style={{
+                    <TouchableOpacity onPress={()=>this.props.inviteClick(this.props.item._id)} style={{
                       width:70,
                       height:30,
                       borderRadius:10,
@@ -1843,7 +2007,7 @@ class RenderItem  extends React.Component{
                       right:20,
                       top:30
                     }} >
-                        <Text style={{ fontSize:13,color:'#ffff'}}>Contact</Text>
+                        <Text style={{ fontSize:13,color:'#ffff'}}>Invite</Text>
                     </TouchableOpacity>
             </View>  
           )
@@ -1882,15 +2046,15 @@ const styles = StyleSheet.create({
       elevation: 1,
     },
     image_container:{
-        marginBottom:10,
-        paddingVertical:10,
-        paddingHorizontal:10,
-        flexDirection:'row',
-        borderRadius:10,
-        height:90,
-        width:width-150,
-        backgroundColor:'rgba(200,200,200,0.3)',
-        margin:10,
+      marginBottom:10,
+      paddingVertical:10,
+      paddingHorizontal:10,
+      flexDirection:'row',
+      borderRadius:10,
+      height:90,
+      width:width-100,
+      backgroundColor:'rgba(200,200,200,0.3)',
+      margin:10,
         
       },
       header:{
@@ -1906,18 +2070,18 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center', 
         flexDirection:'column',
+        marginBottom:50
       },
       input:{
         width:width-50,
         borderRadius:5,
         borderWidth:1,
-        borderColor:'#D8D8D8',
         fontSize:15,
         paddingLeft:25,
         paddingTop:-10,
         backgroundColor:'#fff',
         marginHorizontal:25,
-        height:35
+        textAlignVertical: 'top'
       },
       input1:{
         width:width-50,
@@ -1949,7 +2113,7 @@ const styles = StyleSheet.create({
         left:40
       },
       button:{
-        width:300,
+        width:width-300,
         height:40,
         borderRadius:10,
         backgroundColor:'#009387',

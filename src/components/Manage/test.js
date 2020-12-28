@@ -10,18 +10,13 @@ import {
     Dimensions,
     Animated,
 } from 'react-native'
-import background from '../../images/anh1.png'
-import logo from '../../images/logoblack.png'
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Fontisto } from '@expo/vector-icons'; 
+
 import io from 'socket.io-client/dist/socket.io'
 import AsyncStorage from '@react-native-community/async-storage';
 
 const { width: WIDTH } = Dimensions.get('window')
 var e;
-class Login extends Component {
+class test extends Component {
     constructor(props) {
         super(props)
         e = this;
@@ -43,8 +38,7 @@ class Login extends Component {
             if (data.success == true) {
                 e.setState({
                   
-                    key:'' ,loginquery: '',
-                    password: '',
+                    key:''
                 })
                 var token = data.secret_key
 
@@ -116,7 +110,7 @@ class Login extends Component {
             password: this.state.password,
         }
         this.socket.emit("cl-send-login-req", user)
-    
+
     }
     showPass = () => {
         if (this.state.press == false) {
@@ -143,115 +137,12 @@ class Login extends Component {
     render() {
         return (
             <View  style={styles.imagebackground}>
-                <Animated.View style={{
-                    opacity: this.state.logoContainer,
-                    top: this.state.logoContainer.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [80, 0]
-                    })
-                }}>
-                    <Image source={logo} style={styles.logo}></Image>
-
-                </Animated.View>
-                <View>
-                    <Text style={styles.logintext}>WELCOME BACK</Text>
-
-                </View>
-                <View>
-                    <Text style={styles.logintext1}>Please sign in or create your account</Text>
-                </View>
-                <View>
-
-                    <TextInput
-                        style={{ width:300,
-                            height:40,
-                            borderRadius:10,
-                            fontSize:16,
-                            paddingLeft:45,
-                            paddingTop:-10,
-                            backgroundColor:'#ffff',
-                            color:'#2d7474',
-                            marginHorizontal:25,
-                            marginTop:10,
-                            borderWidth: 1,
-                            borderColor:this.state.key==='email'?'red':'#2d7474'}}
-                        placeholder={'Email'}
-                        onChangeText={(loginquery) => this.setState({ loginquery })}
-                        value={this.state.loginquery}
-                        placeholderTextColor={'#2d7474'}
-                        underlineColorAndroid='transparent'
-                       
-
-
-                    >
-                    </TextInput>
-                    <View style={styles.inputIcon}>
-                        <MaterialIcons
-                            name="email"
-                            size={24}
-                            color='#2d7474'
-
-                        ></MaterialIcons>
-                    </View>
-
-                </View>
-                <View>
-
-                    <TextInput
-                        style={{ width:300,
-                            height:40,
-                            borderRadius:10,
-                            fontSize:16,
-                            paddingLeft:45,
-                            paddingTop:-10,
-                            backgroundColor:'#ffff',
-                            color:'#2d7474',
-                            marginHorizontal:25,
-                            marginTop:10,
-                            borderWidth: 1,
-                            borderColor:this.state.key==='pass'?'red':'#2d7474'}}
-                        placeholder={'Password'}
-                        onChangeText={(password) => this.setState({ password })}
-                        value={this.state.password}
-                        placeholderTextColor={'#2d7474'}
-                        underlineColorAndroid='transparent'
-                        secureTextEntry={this.state.showPass}
-                    >
-                    </TextInput>
-                    <View style={styles.inputIcon}>
-                        <FontAwesome5
-                            name="lock"
-                            size={24}
-                            color='#2d7474'
-                        />
-                    </View>
-                    <TouchableOpacity style={styles.btnEye} onPress={this.showPass.bind(this)}>
-                        <AntDesign
-                            name={this.state.press == false ? 'eyeo' : 'eye'}
-                            size={24}
-                            color='#2d7474'
-                            style={styles.eye}
-                        />
-                    </TouchableOpacity>
-                </View>
-                <View>
-                    <Text style={styles.textnof}>{this.state.nof}</Text>
-                </View>
-                <TouchableOpacity style={styles.btnLogin} onPress={this.onSubmit1}>
-                    <Text style={styles.textlogin}>LOGIN</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btnSignup} onPress={() => this.props.navigation.navigate("Register")}>
-                    <Text style={styles.textlogin}>CREATE AN ACCOUNT</Text>
-                </TouchableOpacity>
-                <View>
-                    <Text style={styles.logintext2}>By signing up you agree to our Policy & Terms</Text>
-                </View>
-
+                <Text>mange</Text>
             </View>
         )
     }
 }
-export default Login;
+export default test;
 const styles = StyleSheet.create({
 
     imagebackground: {
