@@ -35,7 +35,7 @@ class FlatListdata extends Component {
         this.applyJob = this.applyJob.bind(this)
         this.socket.on("sv-apply-job", function (data) {
             if (data.success == false) {
-                if (data.errors.introduction) {
+                if(data.errors.introduction) {
                     e.setState({
                         shownotice: true,
                         notice: 'Please enter your introduction!',
@@ -43,7 +43,7 @@ class FlatListdata extends Component {
                         abc:'w'
                     })
 
-                } else {
+                }else {
                     e.setState({
                         shownotice: true,
                         notice: 'Already Exist!',

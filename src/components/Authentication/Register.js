@@ -48,7 +48,9 @@ export default class Register extends Component{
             notice:'',key:'', notice1:''
         }
         this.onSubmit1 = this.onSubmit.bind(this)
-        this.socket.on("sv-send-register-res",function(data){
+      
+       
+       this.socket.on("sv-send-register-res",function(data){
             if(data.success==true){
                 e.setState({
                     notice:'Registered Successfully!',
@@ -59,7 +61,7 @@ export default class Register extends Component{
                 
             }else if(data.success==false){ 
                 var dataserver=data.errors
-                console.log(data)
+             
                 if(data.errors.first_name){
                     if(data.errors.first_name.rule==='regex'){
                         e.setState({
@@ -156,7 +158,9 @@ export default class Register extends Component{
             month: this.state.month,
             year: this.state.year
         }
-        this.socket.emit("cl-send-register-req",newUser)  
+        this.socket.emit("cl-send-register-req",newUser);
+      
+        
     }
     onVerify(){
         const number={
@@ -219,7 +223,7 @@ export default class Register extends Component{
                                 borderWidth: 1,
                                 borderColor:this.state.key==='first'?'red':'#2d7474'}}
                             placeholder={'First Name'}
-                            onChangeText={(first_name)=> this.setState({first_name})}
+                            onChangeText={ first_name=> this.setState({first_name}) }
                             value={this.state.first_name}
                             placeholderTextColor={'#2d7474'}
                            
