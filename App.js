@@ -12,7 +12,7 @@ import Register from './src/components/Authentication/Register';
 import LoadingScrene from "./src/components/Authentication/LoadingScrene";
 import io from 'socket.io-client/dist/socket.io'
 import { View } from 'react-native-animatable';
-import index from './src/index'
+
 var e;
 const Stack = createStackNavigator();
 export default class App extends React.Component{
