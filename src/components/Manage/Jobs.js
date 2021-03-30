@@ -4,8 +4,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 import io from 'socket.io-client/dist/socket.io'
 import RenderItem from '../Manage/RenderItem'
 const { height, width } = Dimensions.get('window');
+import {connect} from 'react-redux';
+import * as actions from '../../actions';
 var e;
-export default class Jobs extends React.Component {
+ class Jobs extends React.Component {
   constructor(props) {
     super(props);
     e = this;
@@ -25,17 +27,8 @@ export default class Jobs extends React.Component {
      
     }
     this.refreshFlatlist=this.refreshFlatlist.bind(this)
-      this.socket.on("sv-get-applied-job", function (data) {
-      var list = data.data
-      if (data.success == false) {
-        console.log(JSON.stringify(data))
-      } else if (data.success == true) {  
-        e.setState({
-          dataApply: list,
-          isLoading: false,
-        })
-      }
-    
+      this.socket.on("sv-get-applied-job", (data)=> {
+        this.props.getAllJob(data.data)
     })
   };
   refreshFlatlist= async () =>  {
@@ -59,13 +52,13 @@ export default class Jobs extends React.Component {
   render() {
    
     return (
-      this.state.isLoading===true
+      this.props.onstatus===true
        ?
        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
        <ActivityIndicator size='large'></ActivityIndicator>
      </View>
        :  
-      this.state.dataApply.length ===0 
+      this.props.jobs.length ===0 
         ?
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "#ffff" }}>
           <Text>Blank task apply list</Text>
@@ -73,7 +66,7 @@ export default class Jobs extends React.Component {
         :
         <View style={styles.container}>
           <View style={styles.flatlist}>
-            <FlatList data={this.state.dataApply}
+            <FlatList data={ this.props.jobs}
               renderItem={({ item, index }) => {
                 return (
                   
@@ -93,6 +86,20 @@ export default class Jobs extends React.Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+     jobs:state.job.data,
+     onstatus:state.job.isLoading
+  }
+}
+const mapDispatchProps=(dispatch,props)=>{
+  return {
+      getAllJob:(data)=>{
+          dispatch(actions.getAllJob(data));
+      },
+  }
+}
+export default connect(mapStateToProps,mapDispatchProps)(Jobs);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

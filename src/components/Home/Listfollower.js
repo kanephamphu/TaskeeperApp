@@ -3,6 +3,7 @@ import { View, StyleSheet, Dimensions, } from 'react-native'
 import io from 'socket.io-client/dist/socket.io'
 import AsyncStorage from '@react-native-community/async-storage';
 const { height, width } = Dimensions.get('window');
+import {connect} from 'react-redux';
 class Listfollower extends Component {
     constructor(props) {
         super(props);
@@ -37,6 +38,7 @@ class Listfollower extends Component {
         this.socket.emit("cl-get-followers", getfollower)
     }
     render() {
+        console.log("this.props.listFl");
         return (
             <View style={styles.container}>
 
@@ -46,7 +48,12 @@ class Listfollower extends Component {
         )
     }
 }
-export default Listfollower;
+const mapStateToProps = (state) => {
+    return {
+        listFl:state.task
+    }
+}
+export default connect(mapStateToProps,null)(Listfollower);
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -8,6 +8,8 @@ import iconsuccess from '../../images/checked.png';
 import iconerror from '../../images/close.png';
 import iconwarning from '../../images/warning.png';
 import noitem from '../../images/box.png';
+import  {connect} from 'react-redux';
+import * as actions from '../../actions';
 const { height, width } = Dimensions.get('window');
 var e;
 class Notice extends Component {
@@ -38,6 +40,10 @@ class Notice extends Component {
                 })     
                   
             }
+        })
+        this.socket.on("sv-read-notification",(data)=>{
+            this.props.getAllNotice(data.data);
+            
         })
         this._onRefresh=this._onRefresh.bind(this);
         this.readNotice=this.readNotice.bind(this)
@@ -121,13 +127,13 @@ class Notice extends Component {
                     </View>
                 </View>
                 <View style={{ height: 1, borderWidth: 2, borderColor: '#71B7B7', backgroundColor: '#71B7B7' }}></View>
-                {this.state.isLoading===false
+                {this.props.onstatus===true
                 ?
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size='large'></ActivityIndicator>
               </View>
                 :
-                this.state.dataSource.length===0?
+                this.props.notice.length===0?
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
                 <Text>No item</Text>
@@ -140,7 +146,7 @@ class Notice extends Component {
                             onRefresh={this._onRefresh}
                         />
                         } >
-                        {this.state.dataSource.map((items) => {
+                        {this.props.notice.map((items) => {
                             return (
                                 <TouchableOpacity onPress={()=>this.readNotice(items._id,items.task_id,items.type,items.related_user_first_name,items.related_user_id)}
                                   key={items._id} style={{ flexDirection: 'row',
@@ -233,7 +239,24 @@ class Notice extends Component {
         );
     }
 }
-export default Notice;
+const mapStateToProps = (state) => {
+    return {
+       notice:state.notice.data,
+       onstatus:state.notice.isLoading,
+       status:state.status,
+    }
+}
+const mapDispatchProps=(dispatch,props)=>{
+    return {
+        getAllNotice:(data)=>{
+            dispatch(actions.getAllNotice(data));
+        },
+        onStatus:()=>{
+            dispatch(actions.onStatus());
+        }
+    }
+}
+export default  connect(mapStateToProps,mapDispatchProps)(Notice);
 const styles = StyleSheet.create({
     container: {
         flex: 1,

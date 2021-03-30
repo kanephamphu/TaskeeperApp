@@ -8,13 +8,8 @@ import Working from './Working';
 const { width, height } = Dimensions.get("window");
 import { Tab, Tabs} from 'native-base'
 export default class Homeupdate extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-     
-    }
-   
-  } 
+  
+ 
   render() {
 
     return (

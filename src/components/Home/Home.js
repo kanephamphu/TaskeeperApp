@@ -20,7 +20,8 @@ import FlatListdata from './Listdata/FlatListdata'
 import AsyncStorage from '@react-native-community/async-storage';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { MaterialIcons } from '@expo/vector-icons';
-
+import {connect} from 'react-redux';
+import * as actions from '../../actions';
 var e;
 const { height, width } = Dimensions.get('window');
 class Home extends Component {
@@ -116,16 +117,21 @@ class Home extends Component {
                 )
             }
         })
-        this.socket.on('sv-get-news-feed', function (data) {
-            if(data.success==true){
+        /*this.socket.on('sv-get-news-feed', function (data) {
+            /*if(data.success==true){
                 var list = data.data;
+               
                 var dulieu= e.state.datasourcenew;
                 dulieu = dulieu.concat(list)
                 e.setState({datasourcenew:dulieu,isLoading:true,test:false});        
                 //var listdatanewfeed=e.state.datasourcenew.push(JSON.stringify(list)) 
                    
-            }    
-        })
+            }   
+        })*/
+        this.socket.on('sv-get-news-feed', (data)=>{
+            this.props.onStatus();
+            this.props.getNewfeed(data.data);
+        }) 
         this.socket.on('sv-get-recommend-task', function (data) {
            e.setState({
                 datarecommend:data.data,
@@ -249,10 +255,8 @@ class Home extends Component {
         this.socket.emit("cl-get-news-feed", gettask)
       
     }
-    refreshTop() {
-        this.setState({
-            datasourcenew:[]
-        })
+    refreshTop(){
+        this.props.onRefresh();
         const gettask = {
             secret_key: this.state.secret_key,
             number_task: this.state.number_task,
@@ -289,7 +293,7 @@ class Home extends Component {
                 <View style={{ marginTop:10}}>
                     <Search stack={this.onStack} message={this.onMessage} />
                 </View>
-                {this.state.isLoading === false
+                {this.props.status === false
                     ?
                     <ScrollView>
                         <SafeAreaView >
@@ -512,7 +516,7 @@ class Home extends Component {
                      </View>*/
                     :
                     <View style={styles.container}>
-                        <FlatList data={this.state.datasourcenew}
+                        <FlatList data={this.props.newfeed}
                            ListHeaderComponent={this.renderHeader}
                             renderItem={({ item, index }) => {
                                 return (
@@ -593,39 +597,30 @@ const Task = ({ onStack,_id,first_name, image,last_name, location,title }) => {
                 </TouchableOpacity>
             </View>
         </View>
-        /*<TouchableOpacity>
-            <View style={{
-                backgroundColor: '#ffff',
-                flexDirection: 'row',
-                marginHorizontal: 10,
-                marginVertical: 10,
-                borderRadius: 8,
-                paddingVertical: 10,
-                paddingHorizontal: 15,
-                marginTop: 20,
-                marginBottom: 20,
-                shadowOffset: { width: 0, height: 0 },
-                shadowColor: 'green',
-                shadowOpacity: 0.1,
-                elevation: 4,
-                height: 200
-            }}>
-
-                <View style={{ flexDirection: 'column', flex: 1, marginLeft: 10, fontWeight: 'bold' }}>
-                    <Image source={image} style={{
-                        width: 100
-                        , height: 100, borderRadius: 10,
-                    }}></Image>
-                    <Text >{name}</Text>
-                    <Text >{location}</Text>
-                </View>
-            </View>
-
-        </TouchableOpacity>*/
+        
 
     )
 }
-export default Home;
+const mapStateToProps = (state) => {
+    return {
+        newfeed:state.newfeed,
+        status:state.status
+    }
+}
+const mapDispatchProps=(dispatch,props)=>{
+    return {
+        getNewfeed:(data)=>{
+            dispatch(actions.getNewfeed(data));
+        },
+        onStatus:()=>{
+            dispatch(actions.onStatus());
+        },
+        onRefresh:()=>{
+            dispatch(actions.onRefresh());
+        }
+    }
+}
+export default connect(mapStateToProps,mapDispatchProps)(Home);
 const styles = StyleSheet.create({
     container: {
         flex: 1,

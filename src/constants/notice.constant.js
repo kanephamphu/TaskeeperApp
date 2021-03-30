@@ -1,0 +1,1 @@
+export const GET_ALLNOTICE = 'GET_ALLNOTICE ';
