@@ -18,7 +18,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons'; 
 import io from 'socket.io-client/dist/socket.io'
 import AsyncStorage from '@react-native-community/async-storage';
-
+import {connect} from 'react-redux';
+import * as actions from '../../actions';
 const { width: WIDTH } = Dimensions.get('window')
 var e;
 class Login extends Component {
@@ -42,7 +43,6 @@ class Login extends Component {
         this.socket.on("sv-send-login-res", async function (data) {
             if (data.success == true) {
                 e.setState({
-                  
                     key:'' ,loginquery: '',
                     password: '',
                 })
@@ -251,7 +251,19 @@ class Login extends Component {
         )
     }
 }
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+        login:state.authentication,
+    }
+  }
+  const mapDispatchProps=(dispatch,props)=>{
+    return {
+        onLogin:()=>{
+            dispatch(actions.onLogin());
+        },
+    }
+  }
+export default connect(mapStateToProps,mapDispatchProps)(Login);
 const styles = StyleSheet.create({
 
     imagebackground: {

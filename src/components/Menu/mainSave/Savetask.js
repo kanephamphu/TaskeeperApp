@@ -9,9 +9,11 @@ import iconsuccess from '../../../images/checked.png';
 import iconerror from '../../../images/close.png';
 import iconwarning from '../../../images/warning.png';
 import noitem from '../../../images/box.png';
+import {connect} from 'react-redux';
+import * as actions from '../../../actions';
 const { width, height } = Dimensions.get("window");
 var e;
-export default class Savetask extends React.Component {
+class Savetask extends React.Component {
   constructor(props) {
     super(props)
     e = this;
@@ -19,23 +21,16 @@ export default class Savetask extends React.Component {
     this.state = {
       secret_key: '',
       deleteRowkey: null,
-      isLoading: true,
+      isLoading: false,
       refeshing: false,
       dataSave: [],
     }
     this.onDetail=this.onDetail.bind(this);
-    this.socket.on("sv-get-saved-task", function (data) {
-      var list = data.data
-      if (data.success == false) {
-        console.log(JSON.stringify(data))
-      } else if (data.success == true) {
-        e.setState({
-          dataSave: list,
-          isLoading: false,
-        })
-       
-      }
-    })
+    this.socket.on("sv-get-saved-task", (data)=> {
+      
+      this.props.getAllSave(data.data);
+     
+  })
     this.refreshFlatlist = this.refreshFlatlist.bind(this);
   };
   refreshFlatlist = async () => {
@@ -65,19 +60,19 @@ export default class Savetask extends React.Component {
             <Text style={{ fontWeight: 'bold', fontSize: 25, color: '#2d7474', marginLeft: 15, marginTop: -2 }}>List Task Save</Text>
           </TouchableOpacity>
         </View>
-        {this.state.isLoading == true ?
+        {this.props.onstatus === true ?
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size='large'></ActivityIndicator>
           </View>
           :
-          this.state.dataSave.length === 0 ?
+          this.props.save.length === 0 ?
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
               <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
               <Text>No item</Text>
             </View>
             :
             <View style={styles.flatlist}>
-              <FlatList data={this.state.dataSave}
+              <FlatList data={ this.props.save}
                 renderItem={({ item, index }) => {
                   return (
                     <View>
@@ -228,7 +223,24 @@ class RenderItem extends React.Component {
     )
   }
 }
-
+const mapStateToProps = (state) => {
+  return {
+      status:state.status,
+      save:state.save.data,
+      onstatus:state.save.isLoading
+  }
+}
+const mapDispatchProps=(dispatch,props)=>{
+  return {
+    getAllSave:(data)=>{
+          dispatch(actions.getAllSave(data));
+      },
+      onStatus:()=>{
+          dispatch(actions.onStatus());
+      }
+  }
+}
+export default connect(mapStateToProps,mapDispatchProps)(Savetask)
 const styles = StyleSheet.create({
   flatlist: {
     flex: 1,

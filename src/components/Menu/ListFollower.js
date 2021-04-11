@@ -17,6 +17,8 @@ import { Ionicons } from '@expo/vector-icons';
 import avatarimage from '../../images/avatar11.png';
 import noitem from '../../images/box.png';
 import AsyncStorage from '@react-native-community/async-storage';
+import {connect} from 'react-redux';
+import * as actions from '../../actions';
 const { height, width } = Dimensions.get('window');
 class ListFollower extends Component {
     constructor(props) {
@@ -29,18 +31,20 @@ class ListFollower extends Component {
             isLoading: false,
             secret_key: '',
         }
-        this.socket.on("sv-get-followers",function(data){
-            e.setState({
-                dataFollower:data.data,
-                isLoading:true
-            })
+        this.socket.on("sv-get-followers", (data)=>{
            
-        })  
+            this.props.getAllFollower(data.data);
+        }) 
     }
-    componentDidMount = () => {
-        this.onFollow()
+    componentDidMount = async() => {
+        let data= {
+            user_id:this.props.route.params._id
+        }
+        this.socket.emit("cl-get-followers",data)             
     }
-  
+    onClick=()=>{
+        this.props.getAllFollower(this.state.dataFollower);
+    }
     onFollow = async () => {
         const token = await AsyncStorage.getItem('token');
         const get={
@@ -50,20 +54,21 @@ class ListFollower extends Component {
        
     }
     render() {
+       
         return (
             <View style={styles.container}>
                  <View style={styles.header0}>
-                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
+                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() =>  this.props.navigation.goBack()}>
                         <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="black" />
                         <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>List Followers</Text>
                     </TouchableOpacity>
                 </View>
-            {this.state.isLoading === false ?
+            { this.props.onstatus === true ?
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <ActivityIndicator size='large'></ActivityIndicator>
                 </View>
                 :
-                this.state.dataFollower.length === 0
+                this.props.follower === 0
                     ?
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                         <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
@@ -71,7 +76,7 @@ class ListFollower extends Component {
                     </View>
                     :
                     <View style={styles.container1}>
-                        <FlatList data={this.state.dataFollower}
+                        <FlatList data={this.props.follower}
                             renderItem={({ item, index }) => {
                                 return (
                                     <View key={item._id} style={styles.body}>
@@ -99,7 +104,24 @@ class ListFollower extends Component {
         )
     }
 }
-export default ListFollower
+const mapStateToProps = (state) => {
+    return {
+        status:state.status,
+        follower:state.follower.data,
+        onstatus:state.follower.isLoading
+    }
+}
+const mapDispatchProps=(dispatch,props)=>{
+    return {
+        getAllFollower:(data)=>{
+            dispatch(actions.getAllFollower(data));
+        },
+        onStatus:()=>{
+            dispatch(actions.onStatus());
+        }
+    }
+}
+export default connect(mapStateToProps,mapDispatchProps)(ListFollower);
 class Listdataitem extends Component {
     render() {
         return (

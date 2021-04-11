@@ -11,6 +11,7 @@ import iconerror from '../../images/close.png';
 import avatarimage from '../../images/avatar.jpg'
 import AsyncStorage from '@react-native-community/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {connect} from 'react-redux';
 var e;
 const { height, width } = Dimensions.get('window');
 class Listrecommend extends Component {
@@ -49,7 +50,7 @@ class Listrecommend extends Component {
        
     }
     render() {
-      
+        console.log(this.props.tasks);
         return (
             <View style={styles.container}>
                 <View style={styles.header0}>

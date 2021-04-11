@@ -13,7 +13,8 @@ import iconerror from '../../images/close.png';
 import iconwarning from '../../images/warning.png';
 import noitem from '../../images/box.png';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import {connect} from 'react-redux';
+import * as actions from '../../actions';
 var e;
 
 class Education extends Component {
@@ -76,18 +77,10 @@ class Education extends Component {
             else if (data.success == false) {
             }
         });
-        this.socket.on('sv-working-info-detail', function (data) {
-            if (data.success == true) {
-                e.setState({
-                    data: data.data.reverse(),
-                    loadingdata: true
-                })
-              
-            }
-            else if (data.success == false) {
-                console.log(JSON.stringify(data))
-            }
-        });
+        this.socket.on("sv-working-info-detail", (data)=>{   
+            this.props.getAllWorking(data.data.reverse());
+        }) 
+
         this.socket.on("sv-edit-working", function (data) {
             if (data.success == true) {
                 e.setState({
@@ -342,13 +335,13 @@ class Education extends Component {
     render() {
         return (
             <View style={styles.container}>
-                {!this.state.loadingdata == true ?
+                {this.props.onstatus === true ?
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size='large'></ActivityIndicator>
                     </View>
                     :
                     <ScrollView  >
-                        {this.state.data.map((item) => {
+                        {this.props.working.map((item) => {
                             return (
                                 <View key={item._id} style={{
                                     flexDirection: 'column', margin: 10
@@ -421,7 +414,7 @@ class Education extends Component {
                             <Ionicons name="ios-add-circle" size={40} color="#71B7B7" />
                             <Text style={{ color: '#71B7B7', fontWeight: 'bold' }}>Add Working</Text>
                         </TouchableOpacity>
-                        {this.state.data.length===0?
+                        {this.props.working.length===0?
                             <View style={{flex:1,justifyContent: 'center', alignItems: 'center' ,marginTop:70}}>
                                 <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
                             </View>
@@ -830,8 +823,21 @@ class Education extends Component {
         );
     }
 }
-
-export default Education;
+const mapStateToProps = (state) => {
+    return {
+       working:state.working.data,
+       onstatus:state.working.isLoading,
+    }
+}
+const mapDispatchProps=(dispatch,props)=>{
+    return {
+        getAllWorking:(data)=>{
+            dispatch(actions.getAllWorking(data));
+        },
+       
+    }
+}
+export default connect(mapStateToProps,mapDispatchProps)(Education);
 const styles = StyleSheet.create({
     container: {
         flex: 1,

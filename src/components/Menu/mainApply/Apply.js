@@ -5,8 +5,10 @@ import io from 'socket.io-client/dist/socket.io'
 import RenderItem from '../mainApply/RenderItem'
 import noitem from '../../../images/box.png';
 const { height, width } = Dimensions.get('window');
+import {connect} from 'react-redux';
+import * as actions from '../../../actions';
 var e;
-export default class Apply extends React.Component {
+ class Apply extends React.Component {
   constructor(props) {
     super(props);
     e = this;
@@ -14,7 +16,7 @@ export default class Apply extends React.Component {
     this.state = {
       secret_key: '',
       deleteRowkey: null,
-      isLoading: true,
+      isLoading: false,
       refeshing: false,
       dataApply: [
       ],
@@ -26,16 +28,8 @@ export default class Apply extends React.Component {
      
     }
     this.refreshFlatlist=this.refreshFlatlist.bind(this)
-      this.socket.on("sv-get-applied-job", function (data) {
-      var list = data.data
-      if (data.success == false) {
-        console.log(JSON.stringify(data))
-      } else if (data.success == true) {
-        e.setState({
-          dataApply: list,
-          isLoading: false,
-        })
-      }
+    this.socket.on("sv-get-applied-job", (data)=> {    
+        this.props.getAllApply(data.data);
     })
   };
   refreshFlatlist= async () =>  {
@@ -51,18 +45,19 @@ export default class Apply extends React.Component {
 
   componentDidMount = async () => {
     this.refreshFlatlist()
+    console.log(this.props.status)
   }
  
   render() {
    
     return (
-      this.state.isLoading===true
+      this.props.onstatus===true
        ?
        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
        <ActivityIndicator size='large'></ActivityIndicator>
      </View>
        :  
-      this.state.dataApply.length ===0 
+      this.props.apply.length ===0 
         ?
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "#ffff" }}>
            <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
@@ -71,7 +66,7 @@ export default class Apply extends React.Component {
         :
         <View style={styles.container}>
           <View style={styles.flatlist}>
-            <FlatList data={this.state.dataApply}
+            <FlatList data={this.props.apply}
               renderItem={({ item, index }) => {
                 return (
                   
@@ -90,6 +85,24 @@ export default class Apply extends React.Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+      status:state.status,
+      apply:state.apply.data,
+      onstatus:state.apply.isLoading
+  }
+}
+const mapDispatchProps=(dispatch,props)=>{
+  return {
+    getAllApply:(data)=>{
+          dispatch(actions.getAllApply(data));
+      },
+      onStatus:()=>{
+          dispatch(actions.onStatus());
+      }
+  }
+}
+export default connect(mapStateToProps,mapDispatchProps)(Apply);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

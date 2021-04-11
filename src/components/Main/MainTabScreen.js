@@ -80,10 +80,10 @@ export default class MainTabScreen extends React.Component{
   componentDidMount = async () => {
     
    this.redNotification()
-  
+ 
   }
-  
-  redNotification= async () =>{
+
+   redNotification= async () =>{
     const token = await AsyncStorage.getItem('token');
     const unread={
       secret_key:token

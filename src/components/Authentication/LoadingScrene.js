@@ -2,19 +2,35 @@ import React,{Component} from 'react'
 import {Text,StyleSheet,Animated,Image,ImageBackground} from 'react-native'
 import Logo from '../../images/logowhite.png';
 import background from '../../images/anh1.png';
-
-
+import AsyncStorage from '@react-native-community/async-storage';
+var e;
 class Loadingscene extends Component{
     
-    state={
-        LogoAnime: new Animated.Value(0),
-        Logotext:new Animated.Value(0),
-        loadingspinner: false,
-        fontloaded:false,
-    };
-    componentDidMount(){
+
+    constructor(props) {
+        super(props)
+        e = this
+      
+        this.state = {
+            secret_key: '',
+            LogoAnime: new Animated.Value(0),
+            Logotext:new Animated.Value(0),
+            loadingspinner: false,
+            fontloaded:false,
+        }
+    }
+    componentDidMount=async()=>{
+        const token = await AsyncStorage.getItem('token')
+        this.setState({ 
+            secret_key:token
+        })
         const switchtoAuth = ()=>{
-            this.props.navigation.navigate('LandingPage')
+            {this.state.secret_key===null?
+                this.props.navigation.navigate('LandingPage')
+                :
+                this.props.navigation.navigate('Taskeeper')
+               }
+           
         }
         const{LogoAnime,Logotext}=this.state;
         Animated.parallel([

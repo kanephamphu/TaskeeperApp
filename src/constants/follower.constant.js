@@ -1,0 +1,1 @@
+export const GET_ALLFOLLOWER = 'GET_ALLFOLLOWER ';

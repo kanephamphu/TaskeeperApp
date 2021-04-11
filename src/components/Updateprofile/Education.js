@@ -14,7 +14,8 @@ import iconerror from '../../images/close.png';
 import iconwarning from '../../images/warning.png';
 import noitem from '../../images/box.png';
 import Swipeout from 'react-native-swipeout'
-
+import {connect} from 'react-redux';
+import * as actions from '../../actions';
 var e;
 const { height, width } = Dimensions.get('window');
 class Education extends Component {
@@ -79,18 +80,11 @@ class Education extends Component {
 
             }
         });
-        this.socket.on('sv-edu-info-detail', function (data) {
-            if (data.success == true) {
-                e.setState({
-                    data: data.data.reverse(),
-                    loadingdata: true
-                })
-
-            }
-            else if (data.success == false) {
-                console.log(JSON.stringify(data))
-            }
-        });
+        
+       
+        this.socket.on("sv-edu-info-detail", (data)=>{   
+            this.props.getAllEducation(data.data.reverse());
+        }) 
         this.socket.on("sv-delete-edu", function (data) {
             if (data.success == true) {
                 e.setState({
@@ -373,13 +367,13 @@ class Education extends Component {
         }
         return (
             <View style={styles.container}>
-                {!this.state.loadingdata == true ?
+                {this.props.onstatus === true ?
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size='large'></ActivityIndicator>
                     </View>
                     :
                     <ScrollView  >
-                        {this.state.data.map((item) => {
+                        {this.props.education.map((item) => {
                             return (
                                 
                                 <View key={item._id} style={{
@@ -448,7 +442,7 @@ class Education extends Component {
                             <Ionicons name="ios-add-circle" size={40} color="#71B7B7" />
                             <Text style={{ color: '#71B7B7', fontWeight: 'bold' }}>Add education</Text>
                         </TouchableOpacity>
-                        {this.state.data.length===0?
+                        {this.props.education.length===0?
                             <View style={{flex:1,justifyContent: 'center', alignItems: 'center' ,marginTop:70}}>
                                 <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
                             </View>
@@ -848,8 +842,21 @@ class Education extends Component {
         );
     }
 }
-
-export default Education;
+const mapStateToProps = (state) => {
+    return {
+       education:state.education.data,
+       onstatus:state.education.isLoading,
+    }
+}
+const mapDispatchProps=(dispatch,props)=>{
+    return {
+        getAllEducation:(data)=>{
+            dispatch(actions.getAllEducation(data));
+        },
+       
+    }
+}
+export default connect(mapStateToProps,mapDispatchProps)(Education);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
