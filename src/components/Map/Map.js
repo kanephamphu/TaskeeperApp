@@ -6,14 +6,13 @@ import { AntDesign } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io'
 import { FontAwesome } from '@expo/vector-icons'; 
 import { getLocation, geocodeLocationByName } from '../location-service';
-
+import {socket} from "../../Socket.io/socket.io";
 const {height,width} =Dimensions.get('window');
 var e;
 class Map extends React.Component {
   constructor(props) {
     super(props)
     e = this;
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
         region: {},
         formatted_address:'',
@@ -22,7 +21,7 @@ class Map extends React.Component {
         getJobsNear:[]
     };
     this.onDetailJob = this.onDetailJob.bind(this)
-    this.socket.on("sv-get-near-job", function (data) {
+   socket.on("sv-get-near-job", function (data) {
       var list = data.data
       if (data.success == true) {
         e.setState({
@@ -54,7 +53,7 @@ class Map extends React.Component {
                   lat:data.lng,
                   lng:data.lat
                 }
-                this.socket.emit("cl-get-near-job", getjobnear)
+                socket.emit("cl-get-near-job", getjobnear)
                 //console.log(getjobnear)
             }
         );
@@ -76,7 +75,7 @@ class Map extends React.Component {
           lat:loc.lng,
           lng:loc.lat
         }
-        this.socket.emit("cl-get-near-job", getjobnear)
+       socket.emit("cl-get-near-job", getjobnear)
         //console.log(getjobnear)
     }
 

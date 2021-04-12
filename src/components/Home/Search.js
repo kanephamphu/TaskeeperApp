@@ -24,6 +24,7 @@ import Animated, { Easing } from 'react-native-reanimated'
 const { Value, timing } = Animated
 import { Ionicons } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io'
+import {socket} from "../../Socket.io/socket.io";
 import AsyncStorage from '@react-native-community/async-storage';
 import { createStackNavigator } from '@react-navigation/stack';
 const SearchStack = createStackNavigator();
@@ -36,7 +37,7 @@ class Search extends React.Component {
 
   constructor(props) {
     super(props)
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
+   
     // state
     e = this;
     this.state = {
@@ -57,7 +58,7 @@ class Search extends React.Component {
     this.searchAuto = this.onSearch.bind(this)
     this.searchtask = this.searchTask.bind(this)
 
-    this.socket.on("sv-search-autocomplete", function (data) {
+   socket.on("sv-search-autocomplete", function (data) {
       var list = data.data
       if (data.success == false) {
         console.log(JSON.stringify(data.errors))
@@ -67,7 +68,7 @@ class Search extends React.Component {
         })
       }
     })
-    this.socket.on("sv-search-task", function (data) {
+    socket.on("sv-search-task", function (data) {
       var list = data.data
       if (data.success == false) {
         console.log(JSON.stringify(data))
@@ -163,7 +164,7 @@ class Search extends React.Component {
       search_string: search_string,
       secret_key:token
     }
-    this.socket.emit("cl-search-autocomplete", search)
+    socket.emit("cl-search-autocomplete", search)
   }
   renderItem = ({ item }) => {
     return (
@@ -181,7 +182,7 @@ class Search extends React.Component {
     const searchTask = {
       search_string: task
     }
-    this.socket.emit("cl-search-task", searchTask)
+    socket.emit("cl-search-task", searchTask)
   }
   render() {
 

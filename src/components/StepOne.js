@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import {socket} from "../Socket.io/socket.io";
 var gender = [
   { label: "male", value: "male" },
   { label: "female", value: "female" }
@@ -18,7 +18,6 @@ class StepOne extends Component {
   constructor(props) {
     super(props);
     e = this;
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
       totalSteps: "",
       currentStep: "",
@@ -67,7 +66,7 @@ class StepOne extends Component {
       itemsyear: [],
     };
     this.onSubmit = this.onSubmit.bind(this)
-    this.socket.on('sv-edit-info', function (data) {
+   socket.on('sv-edit-info', function (data) {
       if (data.success == true) {
         alert('Update success');
       }
@@ -121,7 +120,7 @@ class StepOne extends Component {
       month_of_birth: this.state.month_of_birth.value,
       year_of_birth: this.state.year_of_birth.value
     }
-    this.socket.emit("cl-edit-info", updateprofile)
+    socket.emit("cl-edit-info", updateprofile)
   }
   change_day(item) {
     switch (item.value) {

@@ -27,7 +27,7 @@ class RenderItem extends React.Component {
         key: ''
       }
    
-     socket.on("sv-delete-apply-job",  (data)=> {
+    socket.on("sv-remove-saved-task",  (data)=> {
         if (data.success == false) {
           console.log(JSON.stringify(data))
         } else if (data.success == true) {
@@ -51,9 +51,9 @@ class RenderItem extends React.Component {
     deleteTasksave= () => {
       const deleteSave = {
         secret_key: this.state.secret_key,
-        task_id:this.props.item._id
+        task_saved_id: this.props.item._id,
       }
-      socket.emit("cl-delete-apply-job", deleteSave);
+     socket.emit("cl-remove-saved-task", deleteSave);
     }
     render() {
       var task_title = this.props.item.task_title;
@@ -72,10 +72,12 @@ class RenderItem extends React.Component {
             </View>
             <View>
               <View style={{ flexDirection: 'column', marginLeft: 10, alignItems: 'flex-start', width: width - 200 }}>
-              <View>
-              <Text style={styles.time}>{this.props.item.task_type}</Text>
-            </View>
-           
+                <View style={{ marginTop: 1, flexDirection: 'row' }}>
+                  <Text >{new Date(this.props.item.saved_time).toLocaleDateString()}</Text>
+                  <View style={{ marginLeft: 10 }}>
+                    <Text >{new Date(this.props.item.saved_time).toLocaleTimeString()}</Text>
+                  </View>
+                </View>
                 <TouchableOpacity onPress={() =>this.props.detail(this.props.item.task_id)}>
                   <Text style={styles.company}>{task_title}</Text>
                 </TouchableOpacity>
@@ -151,7 +153,7 @@ class RenderItem extends React.Component {
   const mapDispatchProps=(dispatch,props)=>{
     return {
         onDelete:(id)=>{
-          dispatch(actions.deleteApply(id));
+          dispatch(actions.deleteSave(id));
         }
     }
   }

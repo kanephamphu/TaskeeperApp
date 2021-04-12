@@ -8,12 +8,12 @@ import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import io from 'socket.io-client/dist/socket.io'
 const { height, width } = Dimensions.get('window');
+import {socket} from "../../Socket.io/socket.io";
 var e;
 class Message extends Component {
   constructor(props) {
     super(props);
     e = this;
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
       message: 'asas',
       data: []
@@ -25,14 +25,14 @@ class Message extends Component {
     }
     this.onsend = this.onSend.bind(this);
 
-    this.socket.on("sv-send-message", function (data) {
+   socket.on("sv-send-message", function (data) {
       if (data.success == false) {
         console.log(JSON.stringify(data))
       } else {
         console.log(JSON.stringify(data))
       }
     })
-    this.socket.on("sv-get-private-message", function (data) {
+  socket.on("sv-get-private-message", function (data) {
       if (data.success == true) {
         var list = data.data
         e.setState({
@@ -60,7 +60,7 @@ class Message extends Component {
       receiver_id:'5f2ac6648e857e00041dc2b9',
       skip: 0
     }
-    this.socket.emit("cl-get-private-message", loadMessage)
+    socket.emit("cl-get-private-message", loadMessage)
     console.log(JSON.stringify(loadMessage))
   }
   onSend(data = []) {
@@ -69,7 +69,7 @@ class Message extends Component {
       receiver_id: '5f2ac6648e857e00041dc2b9',
       text: data[0].text
     }
-    this.socket.emit("cl-send-message", newtext)
+    socket.emit("cl-send-message", newtext)
     console.log(JSON.stringify(newtext))
     this.setState((previousState) => {
       return {

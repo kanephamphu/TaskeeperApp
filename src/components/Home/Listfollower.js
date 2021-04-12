@@ -4,10 +4,10 @@ import io from 'socket.io-client/dist/socket.io'
 import AsyncStorage from '@react-native-community/async-storage';
 const { height, width } = Dimensions.get('window');
 import {connect} from 'react-redux';
+import {socket} from "../../Socket.io/socket.io";
 class Listfollower extends Component {
     constructor(props) {
         super(props);
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
 
         this.state = {
             first_name: '',
@@ -19,7 +19,7 @@ class Listfollower extends Component {
             secret_key: '',
             data: []
         }
-        this.socket.on('sv-get-followers', function (data) {
+        socket.on('sv-get-followers', function (data) {
             var listdata = data.data
             if (data.success == true) {
                 e.setState({
@@ -35,7 +35,7 @@ class Listfollower extends Component {
         const getfollower = {
             secret_key: token
         }
-        this.socket.emit("cl-get-followers", getfollower)
+        socket.emit("cl-get-followers", getfollower)
     }
     render() {
         console.log("this.props.listFl");

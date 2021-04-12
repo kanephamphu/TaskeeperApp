@@ -6,6 +6,7 @@ import { Entypo } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import {socket} from "../../../Socket.io/socket.io";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 const { width, height } = Dimensions.get("window");
 var e;
@@ -13,7 +14,7 @@ export default class Detailprofile extends React.Component {
     constructor(props) {
         super(props)
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
+       
         this.state = {
             secret_key: '',
             deleteRowkey: null,
@@ -35,7 +36,7 @@ export default class Detailprofile extends React.Component {
 
         }
 
-        this.socket.on("sv-user-detail", function (data) {
+       socket.on("sv-user-detail", function (data) {
             var list = data.data
             if (data.success == true) {
                 e.setState({
@@ -63,7 +64,7 @@ export default class Detailprofile extends React.Component {
         const detail = {
             _user_id: this.props.route.params._id,
         }
-        this.socket.emit("cl-user-detail", detail)
+        socket.emit("cl-user-detail", detail)
         
     }
    

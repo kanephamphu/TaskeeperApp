@@ -5,20 +5,20 @@ import {
     ActivityIndicator, FlatList,Text
 } from 'react-native'
 var e;
-import io from 'socket.io-client/dist/socket.io'
+import io from 'socket.io-client/dist/socket.io';
+import {socket} from "../../../Socket.io/socket.io";
 import FlatListdata from '../../Home/Listdata/FlatListdata'
 class SearchTask extends Component {
     constructor(props) {
         super(props)
         e = this
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             dataSearch: [],
             search_string: "",
             isLoading: false,
         }
         this.searchTask = this.searchTask.bind(this);
-        this.socket.on("sv-search-task", function (data) {
+        socket.on("sv-search-task", function (data) {
             console.log(data)
             var list = data.data
             if (data.success == false) {
@@ -43,7 +43,7 @@ class SearchTask extends Component {
 			skip : 0
         }
 
-        this.socket.emit("cl-search-task", searchTask)
+       socket.emit("cl-search-task", searchTask)
     }
     render() {
         return (

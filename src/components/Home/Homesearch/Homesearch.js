@@ -5,6 +5,7 @@ import { Container, Tab, Tabs } from 'native-base'
 import SearchUser from '../Homesearch/SearchUser'
 import SearchTask from '../Homesearch/SearchTask'
 import { Ionicons } from '@expo/vector-icons';
+import {socket} from "../../../Socket.io/socket.io";
 var e;
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
@@ -12,7 +13,6 @@ export default class Homesearch extends Component {
     constructor(props) {
         super(props);
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
 
         }

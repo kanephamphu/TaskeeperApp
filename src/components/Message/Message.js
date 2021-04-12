@@ -5,13 +5,13 @@ import profile from '../../images/nha.jpg'
 import io from 'socket.io-client/dist/socket.io'
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
+import {socket} from "../../Socket.io/socket.io";
 const { height, width } = Dimensions.get('window');
 var e;
 class Message extends Component {
     constructor(props) {
         super(props);
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             dataSource: [
                 {
@@ -57,7 +57,7 @@ class Message extends Component {
             dataMessage:[]
         }
         this.ondetail=this.ondetail.bind(this);
-        this.socket.on('sv-get-message-list', function (data) {
+       socket.on('sv-get-message-list', function (data) {
             var listdata = data.data
             if (data.success == true) {
                 e.setState({
@@ -74,7 +74,7 @@ class Message extends Component {
             secret_key:token,
             skip:0,
         }
-        this.socket.emit("cl-get-message-list",message);
+        socket.emit("cl-get-message-list",message);
     }
     renderHeader = () => {
         return (

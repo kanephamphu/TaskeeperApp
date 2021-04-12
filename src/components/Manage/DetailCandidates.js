@@ -8,6 +8,7 @@ import BottomSheet from 'reanimated-bottom-sheet'
 import Animated from 'react-native-reanimated';
 import iconsuccess from '../../images/icon1.png';
 import iconerror from '../../images/icon2.png';
+import {socket} from "../../Socket.io/socket.io";
 import avatarimage from '../../images/avatar11.png';
 import io from 'socket.io-client/dist/socket.io';
 import { toHumanSize } from 'i18n-js';
@@ -20,7 +21,7 @@ export default class DetailCandidates extends React.Component {
   constructor(props){
     super(props);
         e=this;
-        this.socket = io('https://taskeepererver.herokuapp.com',{jsonp:false})
+       
         this.a1 = this.a.bind(this)
         this.onInvite = this.onInvite.bind(this)
         this.onApprove = this.onApprove.bind(this)
@@ -36,7 +37,7 @@ export default class DetailCandidates extends React.Component {
           keycheck:'',
           showrecommendperson:false
         }
-        this.socket.on("sv-get-candidate-apply-job",function(data){
+        socket.on("sv-get-candidate-apply-job",function(data){
           var list=data.data
           if(data.success==false){
             console.log(JSON.stringify(data))
@@ -48,7 +49,7 @@ export default class DetailCandidates extends React.Component {
            
           }
         })
-        this.socket.on('sv-approve-employee-to-work',function(data){
+        socket.on('sv-approve-employee-to-work',function(data){
           if (data.success == true) {
             e.setState({
                 shownotice: true,
@@ -65,7 +66,7 @@ export default class DetailCandidates extends React.Component {
               })
           }
         })
-        this.socket.on('sv-send-work-invitation',function(data){
+        socket.on('sv-send-work-invitation',function(data){
           if (data.success == true) {
             e.setState({
               shownotice: true,
@@ -77,7 +78,7 @@ export default class DetailCandidates extends React.Component {
             console.log(data)
           }
         })
-        this.socket.on("sv-get-recommend-candidate",function(data){
+        socket.on("sv-get-recommend-candidate",function(data){
           var list=data.data
           e.setState({
             dataemployee:list,  
@@ -97,12 +98,12 @@ export default class DetailCandidates extends React.Component {
       task_id : this.props.route.params.task_id,
       secret_key:this.state.secret_key, 
     }
-    this.socket.emit("cl-get-candidate-apply-job",task)
+    socket.emit("cl-get-candidate-apply-job",task)
     const getlistrecommend={
       secret_key:this.state.secret_key,
       task_id:this.props.route.params.task_id
     }
-    this.socket.emit("cl-get-recommend-candidate",getlistrecommend)
+    socket.emit("cl-get-recommend-candidate",getlistrecommend)
     //console.log(getlistrecommend)
   }
   onInvite(_id){
@@ -111,12 +112,12 @@ export default class DetailCandidates extends React.Component {
       task_id:this.state.task_id,
       invitee_id:_id
     }
-    this.socket.emit("cl-send-work-invitation",inviteuser)
+    socket.emit("cl-send-work-invitation",inviteuser)
     const getlistrecommend={
       secret_key:this.state.secret_key,
       task_id:this.props.route.params.task_id
     }
-    this.socket.emit("cl-get-recommend-candidate",getlistrecommend)
+    socket.emit("cl-get-recommend-candidate",getlistrecommend)
    
   }
   renderInner = () => (
@@ -172,7 +173,7 @@ export default class DetailCandidates extends React.Component {
       task_id:this.props.route.params.task_id,
       employee_id:this.state.employee_id
     }
-    this.socket.emit("cl-approve-employee-to-work",approve)
+    socket.emit("cl-approve-employee-to-work",approve)
    
   }
   onProfile(first, last, _id) {

@@ -19,19 +19,20 @@ import noitem from '../../images/box.png';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
+import {socket} from "../../Socket.io/socket.io";
 const { height, width } = Dimensions.get('window');
 class ListFollower extends Component {
     constructor(props) {
         super(props)
         e = this
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
+       
         this.state = {
             dataFollower: [],
             search_string: '',
             isLoading: false,
             secret_key: '',
         }
-        this.socket.on("sv-get-followers", (data)=>{
+       socket.on("sv-get-followers", (data)=>{
            
             this.props.getAllFollower(data.data);
         }) 
@@ -40,7 +41,7 @@ class ListFollower extends Component {
         let data= {
             user_id:this.props.route.params._id
         }
-        this.socket.emit("cl-get-followers",data)             
+        socket.emit("cl-get-followers",data)             
     }
     onClick=()=>{
         this.props.getAllFollower(this.state.dataFollower);
@@ -50,7 +51,7 @@ class ListFollower extends Component {
         const get={
             user_id:this.props.route.params._id
         }
-        this.socket.emit("cl-get-followers",get)
+       socket.emit("cl-get-followers",get)
        
     }
     render() {

@@ -6,12 +6,12 @@ import master from '../../../images/master.png';
 import jcb from '../../../images/jcb.png';
 import visa from '../../../images/visacard.png';
 const { height, width } = Dimensions.get('window');
+import {socket} from "../../../Socket.io/socket.io";
 var e;
 export default class Payment extends React.Component {
   constructor(props) {
     super(props);
     e = this;
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
 
 

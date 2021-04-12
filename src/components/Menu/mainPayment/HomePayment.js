@@ -4,6 +4,7 @@ import HistoryPayment from './HistoryPayment'
 import Payment from './Payment'
 import { Tab, Tabs } from 'native-base'
 import { Ionicons } from '@expo/vector-icons';
+
 const { width, height } = Dimensions.get("window");
 export default class HomePayment extends React.Component {
   render() {

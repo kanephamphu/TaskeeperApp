@@ -10,6 +10,7 @@ import iconsuccess from '../../images/checked.png';
 import iconerror from '../../images/close.png';
 import avatarimage from '../../images/avatar.jpg'
 import AsyncStorage from '@react-native-community/async-storage';
+import {socket} from "../../Socket.io/socket.io";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {connect} from 'react-redux';
 var e;
@@ -32,8 +33,7 @@ class Listrecommend extends Component {
             ],
             isLoading:false
         }
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
-        this.socket.on('sv-get-recommend-task', function (data) {
+        socket.on('sv-get-recommend-task', function (data) {
             e.setState({
                 data1: data.data,
                 isLoading: true
@@ -46,7 +46,7 @@ class Listrecommend extends Component {
         const listrecommend = {
             secret_key: token,
         }
-        this.socket.emit('cl-get-recommend-task', listrecommend)
+        socket.emit('cl-get-recommend-task', listrecommend)
        
     }
     render() {

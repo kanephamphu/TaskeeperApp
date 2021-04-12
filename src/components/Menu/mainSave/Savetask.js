@@ -8,8 +8,10 @@ import { AntDesign } from '@expo/vector-icons';
 import iconsuccess from '../../../images/checked.png';
 import iconerror from '../../../images/close.png';
 import iconwarning from '../../../images/warning.png';
+import {socket} from "../../../Socket.io/socket.io";
 import noitem from '../../../images/box.png';
 import {connect} from 'react-redux';
+import RenderItem  from './RenderItem';
 import * as actions from '../../../actions';
 const { width, height } = Dimensions.get("window");
 var e;
@@ -17,7 +19,6 @@ class Savetask extends React.Component {
   constructor(props) {
     super(props)
     e = this;
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
       secret_key: '',
       deleteRowkey: null,
@@ -26,7 +27,7 @@ class Savetask extends React.Component {
       dataSave: [],
     }
     this.onDetail=this.onDetail.bind(this);
-    this.socket.on("sv-get-saved-task", (data)=> {
+   socket.on("sv-get-saved-task", (data)=> {
       
       this.props.getAllSave(data.data);
      
@@ -43,7 +44,7 @@ class Savetask extends React.Component {
       number_task: 10,
       skip: 1
     }
-    this.socket.emit("cl-get-saved-task", apply);
+    socket.emit("cl-get-saved-task", apply);
   }
   componentDidMount = async () => {
     this.refreshFlatlist()
@@ -76,7 +77,7 @@ class Savetask extends React.Component {
                 renderItem={({ item, index }) => {
                   return (
                     <View>
-                      <RenderItem item={item} index={index} parenFlastlist={this.refreshFlatlist} detail={this.onDetail} ></RenderItem>
+                      <RenderItem item={item} index={index} parenFlastlist={this.refreshFlatlist} detail={this.onDetail} onDelete1={this.props.onDelete}></RenderItem>
                     </View>
                   )
                 }}
@@ -92,137 +93,7 @@ class Savetask extends React.Component {
     )
   }
 }
-class RenderItem extends React.Component {
-  constructor(props) {
-    super(props)
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
-    this.state = {
-      show: false,
-      secret_key: '',
-      _id: '',
-      showarning: false,
-      show1: false,
-      notice: '',
-      key: ''
-    }
-    this.socket.on("sv-remove-saved-task", function (data) {
-      if (data.success == false) {
-        console.log(JSON.stringify(data))
-      } else if (data.success == true) {
-        e.setState({
-          show1: true,
-          notice: 'Deleted successfully!',
-          key: "success",
-        })
-        console.log('xoa thanh cong')
-      }
-    })
 
-  }
-  componentDidMount = async () => {
-    const token = await AsyncStorage.getItem('token')
-    this.setState({
-      secret_key: token,
-    })
-  }
-  deleteTasksave() {
-    const deleteSave = {
-      secret_key: this.state.secret_key,
-      task_saved_id: this.props.item._id,
-    }
-    this.socket.emit("cl-remove-saved-task", deleteSave);
-    this.props.parenFlastlist();
-  }
-  render() {
-    var task_title = this.props.item.task_title;
-   
-    var count = task_title.length;
-   
-    if (count >= 25) {
-        task_title = task_title.slice(0, 20)+"...";
-    }
-    return (
-
-      <View style={styles.image_container}>
-        <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ justifyContent: 'center', marginLeft: 20 }}>
-            <AntDesign name="clockcircleo" size={35} color="#009387" />
-          </View>
-          <View>
-            <View style={{ flexDirection: 'column', marginLeft: 10, alignItems: 'flex-start', width: width - 200 }}>
-              <View style={{ marginTop: 1, flexDirection: 'row' }}>
-                <Text >{new Date(this.props.item.saved_time).toLocaleDateString()}</Text>
-                <View style={{ marginLeft: 10 }}>
-                  <Text >{new Date(this.props.item.saved_time).toLocaleTimeString()}</Text>
-                </View>
-              </View>
-              <TouchableOpacity onPress={() =>this.props.detail(this.props.item.task_id)}>
-                <Text style={styles.company}>{task_title}</Text>
-              </TouchableOpacity>
-             
-            </View>
-          </View>
-          <TouchableOpacity onPress={() => this.setState({ showarning: true })}>
-            <Entypo name="dots-three-vertical" size={24} color="#009387" />
-          </TouchableOpacity>
-        </View>
-
-
-        <Modal transparent={true}
-          visible={this.state.showarning}
-          animationType='slide'
-          style={{ justifyContent: 'center', alignItems: 'center' }}
-        >
-          <View style={{ backgroundColor: '#000000aa', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            {this.state.show1 === false
-              ?
-              <View style={{
-                backgroundColor: '#faf9f9', borderRadius: 20,
-                height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
-              }}>
-                <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
-                <Text>Do you want to cancel this jobs ?</Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
-
-                  <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
-                    width: "50%", backgroundColor: '#ffff',
-                    borderWidth: 1, borderColor: '#488B8F',
-                    height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
-                  }}>
-                    <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => this.deleteTasksave()} style={{
-                    width: "50%", backgroundColor: '#488B8F',
-                    height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 5
-                  }}>
-                    <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              :
-              <View style={{
-                backgroundColor: '#faf9f9', borderRadius: 20,
-                height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
-              }}>
-                <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
-                <Text>{this.state.notice}</Text>
-                <TouchableOpacity onPress={() => this.setState({ showarning: false, show1: false })} style={{
-                  width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
-                  height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
-                }}>
-                  <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
-                </TouchableOpacity>
-              </View>
-            }
-
-          </View>
-        </Modal>
-      </View>
-
-
-    )
-  }
-}
 const mapStateToProps = (state) => {
   return {
       status:state.status,
@@ -237,6 +108,9 @@ const mapDispatchProps=(dispatch,props)=>{
       },
       onStatus:()=>{
           dispatch(actions.onStatus());
+      },
+      onDelete:(id)=>{
+        dispatch(actions.deleteSave(id));
       }
   }
 }

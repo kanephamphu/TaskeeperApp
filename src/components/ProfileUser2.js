@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Entypo } from '@expo/vector-icons'; 
 import avatarimage from '../images/avatar.jpg';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-
+import {socket} from "../Socket.io/socket.io";
 
 const { height, width } = Dimensions.get('window');
 var e;
@@ -15,7 +15,6 @@ export default class ProfileUser extends React.Component {
   constructor(props) {
     super(props)
     e = this;
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
       _user_id: '',
       first_name: '',
@@ -36,7 +35,7 @@ export default class ProfileUser extends React.Component {
     this.onUpdate = this.onUpdate.bind(this);
     this.onAdd = this.onAdd.bind(this);
     this.onUpdateimages=this.onUpdateimages.bind(this);
-    this.socket.on("sv-user-detail", function (data) {
+   socket.on("sv-user-detail", function (data) {
       var list = data.data
       if (data.success == true) {
         e.setState({
@@ -65,7 +64,7 @@ export default class ProfileUser extends React.Component {
     const detail = {
       _user_id: this.props._id,
     }
-    this.socket.emit("cl-user-detail", detail)
+    socket.emit("cl-user-detail", detail)
   }
   onAdd() {
     alert('ok them');

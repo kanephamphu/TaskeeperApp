@@ -4,13 +4,13 @@ import { Entypo } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io'
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
+import {socket} from "../../../Socket.io/socket.io";
 const { height, width } = Dimensions.get('window');
 var e;
 export default class Appprove extends React.Component {
   constructor(props) {
     super(props);
     e = this;
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
       dataApprove:[],
       isLoading:false,
@@ -59,7 +59,7 @@ export default class Appprove extends React.Component {
         job: 'Business Analyst',
       },
     }
-    this.socket.on("sv-get-approved-job", function (data) {
+   socket.on("sv-get-approved-job", function (data) {
       var list = data.data
       if (data.success == false) {
         console.log(JSON.stringify(data))
@@ -80,7 +80,7 @@ export default class Appprove extends React.Component {
     const apply = {
       secret_key: this.state.secret_key
     }
-    this.socket.emit("cl-get-approved-job", apply)
+    socket.emit("cl-get-approved-job", apply)
   }
 
   render() {

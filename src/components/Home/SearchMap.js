@@ -18,6 +18,7 @@ import {
 // from "https://github.com/oblador/react-native-vector-icons"
 
 import { AntDesign } from '@expo/vector-icons';
+import {socket} from "../../Socket.io/socket.io";
 // Import react-native-reanimated
 // from "https://github.com/software-mansion/react-native-reanimated"
 import Animated, { Easing } from 'react-native-reanimated'

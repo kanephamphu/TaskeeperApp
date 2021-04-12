@@ -4,12 +4,12 @@ import jwt_decode from 'jwt-decode'
 import AsyncStorage from '@react-native-community/async-storage';
 import io from 'socket.io-client/dist/socket.io'
 const { height, width } = Dimensions.get('window');
+import {socket} from "../../Socket.io/socket.io";
 var e;
 export default class HistoryJob extends React.Component {
   constructor(props) {
     super(props);
     e = this;
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
       isLoading: false,
       refreshing: false,
@@ -59,7 +59,7 @@ export default class HistoryJob extends React.Component {
       },
     }
 
-    this.socket.on("sv-job-history", function (data) {
+    socket.on("sv-job-history", function (data) {
       var list = data.data
       if (data.success == true) {
         console.log(JSON.stringify(list))
@@ -79,7 +79,7 @@ export default class HistoryJob extends React.Component {
       _user_id: decode._id,
       skip: 1
     }
-    this.socket.emit("cl-job-history", historyjob)
+   socket.emit("cl-job-history", historyjob)
   }
 
   render() {

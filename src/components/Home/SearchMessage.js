@@ -13,7 +13,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-
+import {socket} from "../../Socket.io/socket.io";
 // Import react-native-vector-icons
 // from "https://github.com/oblador/react-native-vector-icons"
 

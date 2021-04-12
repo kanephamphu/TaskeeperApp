@@ -3,13 +3,13 @@ import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { Foundation } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io'
 import AsyncStorage from '@react-native-community/async-storage';
+import {socket} from "../../../Socket.io/socket.io";
 const { height, width } = Dimensions.get('window');
 var e;
 export default class HistoryPayment extends React.Component {
     constructor(props) {
         super(props);
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
 
             data: [
@@ -47,7 +47,7 @@ export default class HistoryPayment extends React.Component {
                 job: 'Business Analyst',
             },
         }
-        this.socket.on("sv-get-money-transaction-history",function(data){
+       socket.on("sv-get-money-transaction-history",function(data){
             if(data.success=true){
                
             }else{
@@ -61,7 +61,7 @@ export default class HistoryPayment extends React.Component {
             secret_key :token,
 			skip :0
         }
-        this.socket.emit("cl-get-money-transaction-history",historypayment);
+        socket.emit("cl-get-money-transaction-history",historypayment);
     }
 
     render() {

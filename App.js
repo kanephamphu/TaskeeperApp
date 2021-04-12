@@ -22,7 +22,6 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     e = this;
-    this.socket = io("https://taskeepererver.herokuapp.com", { jsonp: false });
   }
   render() {
     return (

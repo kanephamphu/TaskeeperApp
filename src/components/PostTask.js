@@ -24,7 +24,7 @@ import MultiSelect from 'react-native-multiple-select'
 import MapInput from '../components/MapInput'
 import MyMapView from '../components/MapView'
 import { getLocation, geocodeLocationByName } from '../components/location-service'
-
+import {socket} from "../Socket.io/socket.io";
 const {height,width} =Dimensions.get('window');
 var e;
 var daynow = new Date()
@@ -33,7 +33,6 @@ class TaskPage extends Component{
     constructor(props){
         super(props);
         e=this;
-        this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
         this.state={
           user_id:'',
           number_task:'',
@@ -360,7 +359,7 @@ class TaskPage extends Component{
         this.onSubmit = this.onSubmit.bind(this)
         this.onRecommend = this.onRecommend.bind(this)
         this.showProfilefriend = this.showProfilefriend.bind(this)
-        this.socket.on('sv-new-tasks',function(data){
+        socket.on('sv-new-tasks',function(data){
           if(data.success==true){
             var list = data.data
             e.setState({
@@ -411,7 +410,7 @@ class TaskPage extends Component{
           }
         })
         this.onDetail=this.onDetail.bind(this)
-        this.socket.on("sv-get-industry-list",function(data){
+        socket.on("sv-get-industry-list",function(data){
           var list=data.data
           if(data.success==false){
             console.log(JSON.stringify(data))
@@ -422,7 +421,7 @@ class TaskPage extends Component{
             })
           }
         })
-        this.socket.on("sv-get-skills-list",function(data){
+        socket.on("sv-get-skills-list",function(data){
           var list=data.data
           //console.log(JSON.stringify(list))
           if(data.success==false){
@@ -434,7 +433,7 @@ class TaskPage extends Component{
               //console.log(JSON.stringify(list))
           }
         })
-        this.socket.on("sv-get-tags-list",function(data){
+        socket.on("sv-get-tags-list",function(data){
           var list=data.data
           if(data.success==false){
             //console.log(JSON.stringify(data))
@@ -446,7 +445,7 @@ class TaskPage extends Component{
           //console.log(data)
         })
 
-        this.socket.on("sv-get-wall-task",function(data){
+        socket.on("sv-get-wall-task",function(data){
             var list=data.data
             if(data.success==false){
               console.log(JSON.stringify(data))
@@ -461,7 +460,7 @@ class TaskPage extends Component{
             //console.log(list)
         })
 
-        this.socket.on("sv-get-recommend-candidate",function(data){
+      socket.on("sv-get-recommend-candidate",function(data){
           var list=data.data
           e.setState({
             dataemployee:list
@@ -486,23 +485,23 @@ class TaskPage extends Component{
         const getindustry={
           language:'en'
         }
-        this.socket.emit("cl-get-industry-list",getindustry)
+        socket.emit("cl-get-industry-list",getindustry)
 
         const getskills={
           skill_query:this.state.skill_query
         }
-        this.socket.emit("cl-get-skills-list",getskills)
+        socket.emit("cl-get-skills-list",getskills)
 
         const gettags={
           tag_query:this.state.tag_query
         }
-        this.socket.emit("cl-get-tags-list",gettags)
+       socket.emit("cl-get-tags-list",gettags)
         const post ={
           user_id : decode._id,
           number_task:20,
           skip:0
         }
-        this.socket.emit("cl-get-wall-task",post)
+        socket.emit("cl-get-wall-task",post)
       }
       onInvite(_id){
         const inviteuser={
@@ -510,7 +509,7 @@ class TaskPage extends Component{
           task_id:this.state.task_id,
           invitee_id:_id
         }
-        this.socket.emit("cl-send-work-invitation",inviteuser)
+        socket.emit("cl-send-work-invitation",inviteuser)
         console.log(inviteuser)
       }
       refreshTop(){
@@ -521,7 +520,7 @@ class TaskPage extends Component{
           secret_key:this.state.secret_key,
           task_id:this.state.task_id
         }
-        this.socket.emit("cl-get-recommend-candidate",getlistrecommend)
+       socket.emit("cl-get-recommend-candidate",getlistrecommend)
         console.log(getlistrecommend)
       }
       onSubmit=async()=>{
@@ -686,7 +685,7 @@ class TaskPage extends Component{
                 end_time:this.state.end_time
               }
           }
-            this.socket.emit("cl-new-tasks",tasknew)
+           socket.emit("cl-new-tasks",tasknew)
             //console.log(tasknew)
           }
         }
@@ -877,7 +876,7 @@ class TaskPage extends Component{
                 end_time:this.state.end_time
               }
             }
-            this.socket.emit("cl-new-tasks",tasknew)
+            socket.emit("cl-new-tasks",tasknew)
             //console.log(tasknew)
             //console.log(getlistrecommend)
           }
@@ -916,14 +915,14 @@ class TaskPage extends Component{
         const gettags={
           tag_query:this.state.tag_query
         }
-        this.socket.emit("cl-get-tags-list",gettags)
+        socket.emit("cl-get-tags-list",gettags)
       }
       onChangeValueInput(skill_query){
         this.setState({skill_query})
         const getskills={
           skill_query:this.state.skill_query
         }
-        this.socket.emit("cl-get-skills-list",getskills)
+       socket.emit("cl-get-skills-list",getskills)
       }
       onMapRegionChange(region) {
           this.setState({ region });

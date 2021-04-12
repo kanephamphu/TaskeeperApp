@@ -10,12 +10,12 @@ import Profile from './ProfileUser2'
 import { createStackNavigator } from '@react-navigation/stack';
 import io from 'socket.io-client/dist/socket.io'
 const { width, height } = Dimensions.get("window");
+import {socket} from "../Socket.io/socket.io";
 import { Tab, Tabs, } from 'native-base'
 const ProfileStack = createStackNavigator();
 export default class HomeUser extends React.Component {
   constructor(props) {
     super(props)
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
      
     }

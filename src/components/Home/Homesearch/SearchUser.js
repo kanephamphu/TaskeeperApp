@@ -14,18 +14,19 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import avatarimage from '../../../images/avatar11.png'
+import {socket} from "../../../Socket.io/socket.io";
 const { height, width } = Dimensions.get('window');
 class SearchUser extends Component {
     constructor(props) {
         super(props)
         e = this
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
+       
         this.state = {
             dataSearch: [],
             search_string: '',
             isLoading: false
         }
-        this.socket.on("sv-search-user", function (data) {
+        socket.on("sv-search-user", function (data) {
             if (data.success == false) {
                 console.log(JSON.stringify(data))
             } else if (data.success == true) {
@@ -45,7 +46,7 @@ class SearchUser extends Component {
         const searchtask = {
             search_string: this.props.search_key
         }
-        this.socket.emit("cl-search-user", searchtask)
+        socket.emit("cl-search-user", searchtask)
     }
     render() {
         return (

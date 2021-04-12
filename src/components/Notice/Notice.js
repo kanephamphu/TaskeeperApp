@@ -10,13 +10,13 @@ import iconwarning from '../../images/warning.png';
 import noitem from '../../images/box.png';
 import  {connect} from 'react-redux';
 import * as actions from '../../actions';
+import {socket} from "../../Socket.io/socket.io";
 const { height, width } = Dimensions.get('window');
 var e;
 class Notice extends Component {
     constructor(props) {
         super(props);
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             dataSource: [],
             isLoading: false,
@@ -28,7 +28,7 @@ class Notice extends Component {
             key: '',
             refreshing: false,
         }
-        this.socket.on("sv-read-notification", function (data) {
+        socket.on("sv-read-notification", function (data) {
             var list = data.data
             if (data.success == false) {
                 console.log(JSON.stringify(data))
@@ -41,20 +41,20 @@ class Notice extends Component {
                   
             }
         })
-        this.socket.on("sv-read-notification",(data)=>{
+       socket.on("sv-read-notification",(data)=>{
             this.props.getAllNotice(data.data);
             
         })
         this._onRefresh=this._onRefresh.bind(this);
         this.readNotice=this.readNotice.bind(this)
-        this.socket.on("sv-readed-all-notification", function (data) {
+       socket.on("sv-readed-all-notification", function (data) {
             if (data.success == false) {
                 console.log(JSON.stringify(data))
             } else if (data.success == true) {
                 e.setState({ show1: true, notice: "Have read all", key: "success" })
             }
         })
-        this.socket.on("sv-readed-notification", function (data) {
+        socket.on("sv-readed-notification", function (data) {
             if (data.success == false) {
                 console.log(JSON.stringify(data))
             } else if (data.success == true) {
@@ -77,7 +77,7 @@ class Notice extends Component {
             number_notification: 10,
             skip: 0
         }
-        this.socket.emit("cl-get-notification", notice)
+        socket.emit("cl-get-notification", notice)
     }
     _onRefresh = () => {
         this.setState({refreshing: true});
@@ -86,14 +86,14 @@ class Notice extends Component {
             number_notification: 10,
             skip: 0
         }
-        this.socket.emit("cl-get-notification", notice)
+        socket.emit("cl-get-notification", notice)
        
       }
     readAllnotice() {
         const readall = {
             secret_key: this.state.secret_key,
         }
-        this.socket.emit("cl-readed-all-notification", readall)
+       socket.emit("cl-readed-all-notification", readall)
         this.ongetNotice()
     }
     readNotice(_id,task_id,check,related_user_first_name,related_user_id){
@@ -101,7 +101,7 @@ class Notice extends Component {
             secret_key: this.state.secret_key,
             notifcation_id:_id
         }
-        this.socket.emit("cl-readed-notification",readclone)
+        socket.emit("cl-readed-notification",readclone)
         console.log(readclone)
         if(check=="followed"){
             this.props.navigation.navigate("Profilefriendnotice", { first_name:related_user_first_name, last_name:"", _id: related_user_id })
