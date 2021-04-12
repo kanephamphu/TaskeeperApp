@@ -204,7 +204,7 @@ export default class Register extends Component{
                 <View><Text style={styles.logintext}>REGISTRATION</Text></View>
                 <View style={styles.textcontainer}>
                     <Text style={styles.logintext1}>Already have an account ?  </Text>
-                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("Login")}>
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("Taskeeper")}>
                         <Text style={styles.logintext2} >Log in</Text>
                     </TouchableOpacity>               
                 </View>

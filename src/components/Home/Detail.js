@@ -13,6 +13,7 @@ import iconerror from '../../images/close.png';
 import AsyncStorage from '@react-native-community/async-storage';
 import avatar1 from '../../images/avatar11.png';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import anhbiadetail from './../../images/anhbiadetail.jpg';
 var e;
 const { height, width } = Dimensions.get('window');
 class Detail extends Component {
@@ -251,22 +252,15 @@ class Detail extends Component {
 
         return (
             <View style={styles.container}>
-
                 <View style={styles.header0}>
-                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
+                    <TouchableOpacity style={{zIndex:2,width:'7%'}}  onPress={() => this.props.navigation.goBack()}>
                         <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
-                        <Text style={{ fontWeight: 'bold', fontSize: 25, color: '#2d7474', marginLeft: 15, marginTop: -2 }}>Detail job</Text>
                     </TouchableOpacity>
-
+                    <View style={{flex:1,width:'120%',height:200,position:'absolute',}}>
+                                <Image source={anhbiadetail} style={{width:'100%',height:'100%'}}/>
+                     </View>
                 </View>
-                <ScrollView>
-                    {this.state.task_owner_first_name == '' ?
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <ActivityIndicator size='large'></ActivityIndicator>
-                        </View>
-                        :
-                        <View style={styles.body}>
-
+                <View style={{backgroundColor:'rgba(113, 183, 183, 0.8)',marginLeft:10, marginRight:10, borderRadius:10}}>
                             <View style={styles.bodyone}>
                                 {this.state.task_owner_id != this.props.route.params.task_owner_id ? <><View style={{ flexDirection: 'row' }}>
                                     <TouchableOpacity onPress={() => this.props.navigation.navigate("Profilefriend", {
@@ -296,7 +290,7 @@ class Detail extends Component {
                                     <View style={{ flexDirection: 'row', marginRight: 20 }}>
                                       
                                           <TouchableOpacity onPress={() => this.setState({ show: true })} style={styles.iconview1}>
-                                          <AntDesign name="pluscircle" size={24} color="black" />
+                                          <AntDesign name="pluscircle" size={24} color="Black" />
                                          </TouchableOpacity>
                                       
                                        
@@ -307,11 +301,24 @@ class Detail extends Component {
                                        
                                     </View></> : null}
                             </View>
+                            <View style={{borderWidth:1, justifyContent:'center',borderColor:'white', marginTop:20,marginLeft:30,marginRight:30}}>
+
+                            </View>
                             <View style={styles.bodytwo}>
                                 <View style={{ padding: 15 }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 23, fontStyle: 'italic', color: '#2d7474' }}>{this.state.task_title}</Text>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 23, fontStyle: 'normal', color: '#000000'  }}>{this.state.task_title}</Text>
                                 </View>
                             </View>
+                            </View>
+                <ScrollView>
+                    {this.state.task_owner_first_name == '' ?
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <ActivityIndicator size='large'></ActivityIndicator>
+                        </View>
+                        :
+                        
+                        
+                        <View style={styles.body}>
                             <View style={styles.bodyThree}>
                                 <View style={{ marginTop: 30 }}>
                                     <Text style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
@@ -325,7 +332,7 @@ class Detail extends Component {
                                     </Text>
 
                                     {/*<Text style={styles.textJobRe}>
-                                    - Kiểu công việc: {this.state.task_type}
+                                    - Ki?u công vi?c: {this.state.task_type}
                                 </Text>
                                 <Text style={styles.textJobRe}>
                                     - Giá sàn: {this.state.floor_price}
@@ -334,7 +341,7 @@ class Detail extends Component {
                                     - Giá trên: {this.state.ceiling_price}
                                 </Text>
                                 <Text style={styles.textJobRe}>
-                                    - Địa chỉ: {this.state.location}
+                                    - Ð?a ch?: {this.state.location}
                                 </Text>*/}
                                 </View>
                                 <View style={{ marginTop: 30 }}>
@@ -672,10 +679,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#faf9f9',
     },
     header0: {
-        height: height * 0.08,
-        shadowOffset: { width: 0, height: 3 },
+        height: height * 0.17,
         paddingLeft: 10,
-        paddingTop: 15,
         backgroundColor: '#faf9f9'
     },
     body: {
@@ -685,8 +690,7 @@ const styles = StyleSheet.create({
     bodyone: {
         flexDirection: 'row',
         marginTop: 10,
-        justifyContent: 'space-between',
-
+        justifyContent: 'space-between',   
     },
     ImageOverlay: {
         width: width - 20, height: height * 0.18, borderBottomEndRadius: 10, borderBottomLeftRadius: 10,
@@ -731,11 +735,13 @@ const styles = StyleSheet.create({
     iconview1: {
         height: 40,
         width: 40,
-        backgroundColor: '#add2c9',
+        backgroundColor: '#ffff',
         marginTop: 15,
-        marginRight: 10, justifyContent: 'center',
+        marginRight: 10,
+        justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 4
+        borderRadius: 4,  
+        borderColor: '#add2c9',
     },
     iconview2: {
         height: 40,
@@ -744,7 +750,6 @@ const styles = StyleSheet.create({
         marginTop: 15,
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 1,
         borderColor: '#add2c9',
         borderRadius: 4
     },
