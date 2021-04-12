@@ -25,6 +25,7 @@ const { Value, timing } = Animated
 import { Ionicons } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io'
 import { createStackNavigator } from '@react-navigation/stack';
+import {socket} from "../../../Socket.io/socket.io";
 const SearchStack = createStackNavigator();
 // Calculate window size
 const width = Dimensions.get('window').width
@@ -35,7 +36,6 @@ class Searchmenu extends React.Component {
 
   constructor(props) {
     super(props)
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     // state
     e = this;
     this.state = {
@@ -54,7 +54,7 @@ class Searchmenu extends React.Component {
     this._content_opacity = new Value(0)
     this.searchAuto = this.onSearch.bind(this)
     this.searchtask = this.searchTask.bind(this)
-    this.socket.on("sv-search-autocomplete", function (data) {
+    socket.on("sv-search-autocomplete", function (data) {
       var list = data.data
       if (data.success == false) {
         console.log(JSON.stringify(data.errors))
@@ -64,7 +64,7 @@ class Searchmenu extends React.Component {
         })
       }
     })
-    this.socket.on("sv-search-task", function (data) {
+    socket.on("sv-search-task", function (data) {
       var list = data.data
       if (data.success == false) {
         console.log(JSON.stringify(data))
@@ -158,7 +158,7 @@ class Searchmenu extends React.Component {
     const search = {
       search_string: search_string
     }
-    this.socket.emit("cl-search-autocomplete", search)
+    socket.emit("cl-search-autocomplete", search)
   }
   renderItem = ({ item }) => {
     return (
@@ -175,7 +175,7 @@ class Searchmenu extends React.Component {
     const searchTask = {
       search_string: task
     }
-    this.socket.emit("cl-search-task", searchTask)
+    socket.emit("cl-search-task", searchTask)
   }
   render() {
 

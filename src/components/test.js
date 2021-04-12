@@ -3,11 +3,10 @@ import {View,Text,StyleSheet,TouchableOpacity,Animated, Dimensions} from 'react-
 import io from 'socket.io-client/dist/socket.io'
 import Collapsible from 'react-native-collapsible';
 const {height,width} =Dimensions.get('window');
+import {socket} from "../Socket.io/socket.io";
 class test extends Component{
     constructor(props){
-        super(props);
-        this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
-      
+        super(props);     
         this.state={
             collapsed:true,
         }

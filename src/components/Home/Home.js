@@ -18,6 +18,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Search from './Search';
 import FlatListdata from './Listdata/FlatListdata'
 import AsyncStorage from '@react-native-community/async-storage';
+import {socket} from "../../Socket.io/socket.io";
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { MaterialIcons } from '@expo/vector-icons';
 import {connect} from 'react-redux';
@@ -28,7 +29,6 @@ class Home extends Component {
     constructor(props) {
         super(props);
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             first_name: '',
             last_name: '',
@@ -58,65 +58,6 @@ class Home extends Component {
         this.onDetail = this.onDetail.bind(this);
         this.onMessage = this.onMessage.bind(this);
         this.onHistory = this.onHistory.bind(this);
-        /* this.apply=this.applyJob.bind(this)*/
-        this.socket.on("sv-apply-job", function (data) {
-            if (data.success == false) {
-                if (data.errors.introduction) {
-                    Alert.alert(
-                        'Notice',
-                        'Introduction blank', [
-                        { text: 'Ok' }
-                    ], { cancelable: true }
-                    )
-                } else {
-                    Alert.alert(
-                        'Notice',
-                        'Đa Apply', [
-                        { text: 'Ok' }
-                    ], { cancelable: true }
-                    )
-                }
-                console.log(JSON.stringify(data))
-            } else if (data.success == true) {
-                Alert.alert(
-                    'Notice',
-                    'Apply Success', [
-                    { text: 'Ok' }
-                ], { cancelable: true }
-                )
-            }
-        })
-        /*this.follow=this.followTask.bind(this)
-        this.socket.on("sv-follow-user",function(data){
-            if(data.success==false){
-                console.log(JSON.stringify(data))
-                alert('Đã follow ')
-            }else if(data.success==true){
-                alert('follow success')
-            }
-        })*/
-
-        this.socket.on("sv-save-task", function (data) {
-            if (data.success == false) {
-                console.log(JSON.stringify(data))
-                if (data.errors.message) {
-                    Alert.alert(
-                        'Notice',
-                        'Already Exist!', [
-                        { text: 'Ok' }
-                    ], { cancelable: true }
-                    )
-                }
-            } else if (data.success == true) {
-                console.log("lua thanh cong")
-                Alert.alert(
-                    'Notice',
-                    'Saved Successfully!', [
-                    { text: 'Ok' }
-                ], { cancelable: true }
-                )
-            }
-        })
         /*this.socket.on('sv-get-news-feed', function (data) {
             /*if(data.success==true){
                 var list = data.data;
@@ -128,11 +69,11 @@ class Home extends Component {
                    
             }   
         })*/
-        this.socket.on('sv-get-news-feed', (data)=>{
+        socket.on('sv-get-news-feed', (data)=>{
             this.props.onStatus();
             this.props.getNewfeed(data.data);
         }) 
-        this.socket.on('sv-get-recommend-task', function (data) {
+        socket.on('sv-get-recommend-task', function (data) {
            e.setState({
                 datarecommend:data.data,
                 isLoadingrecomend:true
@@ -154,26 +95,12 @@ class Home extends Component {
             number_task: this.state.number_task,
             skip: 0
         }
-        this.socket.emit("cl-get-news-feed", getnewtask)
+        socket.emit("cl-get-news-feed", getnewtask)
         const listrecommend ={
             secret_key: this.state.secret_key,
         }
-        this.socket.emit('cl-get-recommend-task',listrecommend)
+        socket.emit('cl-get-recommend-task',listrecommend)
       
-    }
-    applyJob = async (task_id, floor_price, ceiling_price) => {
-        this.setState({
-            show: false
-        })
-        const apply = {
-            secret_key: this.state.secret_key,
-            task_id: task_id,
-            introduction: this.state.introduction,
-            floor_price: floor_price,
-            ceiling_price: ceiling_price
-        }
-        this.socket.emit("cl-apply-job", apply)
-
     }
     /*followTask=async()=>{
         const follow={
@@ -252,7 +179,7 @@ class Home extends Component {
             number_task: 10,
             skip:this.state.skip
         }
-        this.socket.emit("cl-get-news-feed", gettask)
+        socket.emit("cl-get-news-feed", gettask)
       
     }
     refreshTop(){
@@ -262,7 +189,7 @@ class Home extends Component {
             number_task: this.state.number_task,
             skip:0
         }
-        this.socket.emit("cl-get-news-feed", gettask)
+        socket.emit("cl-get-news-feed", gettask)
        
     }
     onProfile(first, last, _id) {

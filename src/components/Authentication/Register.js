@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import io from 'socket.io-client/dist/socket.io';
 import { FontAwesome5 } from '@expo/vector-icons'; 
+import {socket} from "../../Socket.io/socket.io";
 const {width:WIDTH}=Dimensions.get('window')
 var e;
 
@@ -28,7 +29,6 @@ export default class Register extends Component{
     constructor(props){
         super(props)
         e=this;
-        this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
         this.state={
             showPass:true,
             press:false,
@@ -50,7 +50,7 @@ export default class Register extends Component{
         this.onSubmit1 = this.onSubmit.bind(this)
       
        
-       this.socket.on("sv-send-register-res",function(data){
+      socket.on("sv-send-register-res",function(data){
             if(data.success==true){
                 e.setState({
                     notice:'Registered Successfully!',
@@ -158,7 +158,7 @@ export default class Register extends Component{
             month: this.state.month,
             year: this.state.year
         }
-        this.socket.emit("cl-send-register-req",newUser);
+        socket.emit("cl-send-register-req",newUser);
       
         
     }

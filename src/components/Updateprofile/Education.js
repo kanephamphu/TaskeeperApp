@@ -16,14 +16,13 @@ import noitem from '../../images/box.png';
 import Swipeout from 'react-native-swipeout'
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
+import {socket} from "../../Socket.io/socket.io";
 var e;
 const { height, width } = Dimensions.get('window');
 class Education extends Component {
     constructor(props) {
         super(props);
         e = this;
-
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             totalSteps: "",
             currentStep: "",
@@ -66,7 +65,7 @@ class Education extends Component {
         this.onEdit = this.onEdit.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onSubmit = this.onSubmit.bind(this)
-        this.socket.on('sv-new-edu', function (data) {
+        socket.on('sv-new-edu', function (data) {
             if (data.success == true) {
                 e.setState({
                     show: false,
@@ -82,10 +81,10 @@ class Education extends Component {
         });
         
        
-        this.socket.on("sv-edu-info-detail", (data)=>{   
+        socket.on("sv-edu-info-detail", (data)=>{   
             this.props.getAllEducation(data.data.reverse());
         }) 
-        this.socket.on("sv-delete-edu", function (data) {
+        socket.on("sv-delete-edu", function (data) {
             if (data.success == true) {
                 e.setState({
                     show1: true,
@@ -97,7 +96,7 @@ class Education extends Component {
                 console.log(JSON.stringify(data))
             }
         })
-        this.socket.on("sv-edit-edu", function (data) {
+       socket.on("sv-edit-edu", function (data) {
             if (data.success == true) {
                 e.setState({
                     showedit: false,
@@ -129,7 +128,7 @@ class Education extends Component {
         const inforeducation = {
             _user_id: this.state._user_id
         }
-        this.socket.emit("cl-edu-info-detail", inforeducation)
+        socket.emit("cl-edu-info-detail", inforeducation)
 
     }
     onSubmit() {
@@ -182,7 +181,7 @@ class Education extends Component {
                         from_time: this.state.from_time.value,
                         to_time: this.state.to_time.value,
                     }
-                    this.socket.emit("cl-new-edu", addEducation)
+                    socket.emit("cl-new-edu", addEducation)
 
                     this.onRefresh()
                 }
@@ -218,7 +217,7 @@ class Education extends Component {
                         from_time: this.state.from_time.value,
                         to_time: this.state.to_time.value,
                     }
-                    this.socket.emit("cl-new-edu", addEducation)
+                    socket.emit("cl-new-edu", addEducation)
 
                     this.onRefresh()
                 }
@@ -242,7 +241,7 @@ class Education extends Component {
             secret_key: this.state.secret_key,
             education_id: _id
         }
-        this.socket.emit("cl-delete-edu", deleteedu)
+        socket.emit("cl-delete-edu", deleteedu)
 
         this.onRefresh()
     }
@@ -264,7 +263,7 @@ class Education extends Component {
                                         to_time: this.state.to_timeedit,
 
                                     }
-                                    this.socket.emit("cl-edit-edu", editEducation)
+                                    socket.emit("cl-edit-edu", editEducation)
                                     this.onRefresh()
                                 } else {
                                     e.setState({
@@ -310,7 +309,7 @@ class Education extends Component {
                                     to_time:'',
         
                                 }
-                                this.socket.emit("cl-edit-edu", editEducation)
+                               socket.emit("cl-edit-edu", editEducation)
                                 console.log(editEducation)
                                 this.onRefresh()
                             } else {

@@ -6,13 +6,13 @@ import RenderItem from '../mainApply/RenderItem'
 import noitem from '../../../images/box.png';
 const { height, width } = Dimensions.get('window');
 import {connect} from 'react-redux';
+import {socket} from "../../../Socket.io/socket.io";
 import * as actions from '../../../actions';
 var e;
  class Apply extends React.Component {
   constructor(props) {
     super(props);
     e = this;
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
       secret_key: '',
       deleteRowkey: null,
@@ -28,7 +28,7 @@ var e;
      
     }
     this.refreshFlatlist=this.refreshFlatlist.bind(this)
-    this.socket.on("sv-get-applied-job", (data)=> {    
+   socket.on("sv-get-applied-job", (data)=> {    
         this.props.getAllApply(data.data);
     })
   };
@@ -40,12 +40,12 @@ var e;
     const apply = {
       secret_key: this.state.secret_key
     }
-    this.socket.emit("cl-get-applied-job", apply)
+    socket.emit("cl-get-applied-job", apply)
   }
 
   componentDidMount = async () => {
     this.refreshFlatlist()
-    console.log(this.props.status)
+    
   }
  
   render() {

@@ -7,18 +7,18 @@ import {
 } from 'react-native'
 import io from 'socket.io-client/dist/socket.io'
 import AsyncStorage from '@react-native-community/async-storage';
+import {socket} from "../../Socket.io/socket.io";
 import { AntDesign } from '@expo/vector-icons';
 var e;
 class SearchTrending extends Component {
     constructor(props) {
         super(props)
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             dataSource: [],
             dataHistory:[],
         }
-        this.socket.on("sv-get-search-trend", function (data) {
+      socket.on("sv-get-search-trend", function (data) {
             var list = data.data
             if (data.success == false) {
                 console.log(JSON.stringify(data))
@@ -28,7 +28,7 @@ class SearchTrending extends Component {
                 })
             }
         })
-        this.socket.on("sv-get-search-history", function (data) {
+       socket.on("sv-get-search-history", function (data) {
             var list = data.data
             if (data.success == false) {
                 console.log(JSON.stringify(data))
@@ -41,9 +41,9 @@ class SearchTrending extends Component {
 
     }
     componentDidMount = () => {
-        this.socket.emit("cl-get-search-trend", "a")
+       socket.emit("cl-get-search-trend", "a")
         const token = AsyncStorage.getItem("token")
-        this.socket.emit("cl-get-search-history", token)
+        socket.emit("cl-get-search-history", token)
     }
     render() {
         return (

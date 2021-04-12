@@ -57,6 +57,7 @@ import HistoryJobs from '../Manage/HistoryJobs';
 import RenderItem from '../Manage/RenderItem';
 import io from 'socket.io-client/dist/socket.io'
 import AsyncStorage from '@react-native-community/async-storage';
+import {socket} from "../../Socket.io/socket.io";
 const HomeStack = createStackNavigator();
 var e;
 const Tab = createMaterialBottomTabNavigator();
@@ -68,8 +69,7 @@ export default class MainTabScreen extends React.Component{
       numbernotice:''
     }
     this.redNotification=this.redNotification.bind(this)
-    this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
-    this.socket.on("sv-get-total-unread-notification",function(data){
+    socket.on("sv-get-total-unread-notification",function(data){
         e.setState({
           numbernotice:data.data
         })
@@ -88,7 +88,7 @@ export default class MainTabScreen extends React.Component{
     const unread={
       secret_key:token
     }
-    this.socket.emit("cl-get-total-unread-notification",unread);
+    socket.emit("cl-get-total-unread-notification",unread);
     console.log(unread)
   }
   render(){

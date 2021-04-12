@@ -1,7 +1,7 @@
-import {GET_APPLY} from '../constants';
+import {GET_APPLY,DELETE_APPLY} from '../constants';
 let initialState={
+    data:[],
     isLoading:true,
-    data:[]
 };
 let myReducer=(state=initialState,action)=>{
     switch(action.type) {
@@ -11,6 +11,12 @@ let myReducer=(state=initialState,action)=>{
                 data:action.payload,
                 isLoading:false,
             };
+        case DELETE_APPLY :
+            const filteredData = state.data.filter(data => data._id != action.id);
+            return {
+                ...state,
+                data:filteredData
+            }
         default: return state;
     }
 }

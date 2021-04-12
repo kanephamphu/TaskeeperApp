@@ -18,6 +18,7 @@ import nha from '../../../images/avatar11.png';
 import bia from '../../../images/bai1.png';
 import sao from '../../../images/star.png';
 import iconsuccess from '../../../images/icon1.png';
+import {socket} from "../../../Socket.io/socket.io";
 import iconerror from '../../../images/icon2.png';
 import iconwarning from '../../../images/icon3.png';
 const { height, width } = Dimensions.get('window');
@@ -26,7 +27,6 @@ export default class Profilefriend extends React.Component {
     constructor(props) {
         super(props)
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             data: [
                 {
@@ -83,7 +83,7 @@ export default class Profilefriend extends React.Component {
             checkloading: false,
         }
 
-        this.socket.on("sv-user-detail", function (data) {
+    socket.on("sv-user-detail", function (data) {
             var list = data.data
             if (data.success == true) {
                 e.setState({
@@ -106,14 +106,14 @@ export default class Profilefriend extends React.Component {
                 console.log(data.errors)
             }
         })
-        this.socket.on("sv-follow-user", function (data) {
+        socket.on("sv-follow-user", function (data) {
             if (data.success == true) {
                 console.log(data)
             } else {
                 console.log(data)
             }
         })
-        this.socket.on("sv-unfollow-user", function (data) {
+        socket.on("sv-unfollow-user", function (data) {
             if (data.success == true) {
                 console.log(data)
             } else {
@@ -121,7 +121,7 @@ export default class Profilefriend extends React.Component {
             }
         })
         this.onVote = this.onVote.bind(this)
-        this.socket.on("sv-send-vote", function (data) {
+        socket.on("sv-send-vote", function (data) {
             if (data.success == true) {
                 e.setState({
                     showvote: false
@@ -131,7 +131,7 @@ export default class Profilefriend extends React.Component {
             }
         })
         this.onGetwall = this.onGetwall.bind(this);
-        this.socket.on("sv-get-wall-task", function (data) {
+        socket.on("sv-get-wall-task", function (data) {
             if (data.success == true) {
                 e.setState({
                     datawall: data.data
@@ -141,7 +141,7 @@ export default class Profilefriend extends React.Component {
                 console.log(JSON.stringify(data));
             }
         })
-        this.socket.on("sv-check-followed", function (data) {
+        socket.on("sv-check-followed", function (data) {
             var list = data.data;
             if (data.success == true) {
                 e.setState({
@@ -166,13 +166,13 @@ export default class Profilefriend extends React.Component {
             secret_key: token,
             user_id: this.props.route.params._id
         }
-        this.socket.emit("cl-check-followed", check)
+        socket.emit("cl-check-followed", check)
     }
     onDetail = async () => {
         const detail = {
             _user_id: this.props.route.params._id,
         }
-        this.socket.emit("cl-user-detail", detail)
+       socket.emit("cl-user-detail", detail)
     }
     onGetwall = async () => {
         const get = {
@@ -180,7 +180,7 @@ export default class Profilefriend extends React.Component {
             number_task: 10,
             skip: 0
         }
-        this.socket.emit("cl-get-wall-task", get)
+        socket.emit("cl-get-wall-task", get)
     }
     _rating(item) {
         let rating = [];
@@ -205,7 +205,7 @@ export default class Profilefriend extends React.Component {
             secret_key: token,
             user_id: _id
         }
-        this.socket.emit("cl-follow-user", follow);
+        socket.emit("cl-follow-user", follow);
 
         console.log(follow)
 
@@ -219,7 +219,7 @@ export default class Profilefriend extends React.Component {
             secret_key: token,
             user_id: _id
         }
-        this.socket.emit("cl-unfollow-user", follow);
+        socket.emit("cl-unfollow-user", follow);
 
         console.log(follow)
     }
@@ -231,7 +231,7 @@ export default class Profilefriend extends React.Component {
             vote_point: this.state.vote,
             vote_comment: this.state.comment
         }
-        this.socket.emit("cl-send-vote", vote)
+        socket.emit("cl-send-vote", vote)
         if (this.state.comment == "") {
             e.setState({
                 notice: "Please enter your comment!"

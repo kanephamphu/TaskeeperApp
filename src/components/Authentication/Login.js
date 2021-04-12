@@ -20,13 +20,13 @@ import io from 'socket.io-client/dist/socket.io'
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
+import {socket} from "../../Socket.io/socket.io";
 const { width: WIDTH } = Dimensions.get('window')
 var e;
 class Login extends Component {
     constructor(props) {
         super(props)
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             showPass: true,
             press: false,
@@ -40,7 +40,7 @@ class Login extends Component {
         }
 
         this.onSubmit1 = this.onSubmit.bind(this)
-        this.socket.on("sv-send-login-res", async function (data) {
+        socket.on("sv-send-login-res", async function (data) {
             if (data.success == true) {
                 e.setState({
                     key:'' ,loginquery: '',
@@ -115,7 +115,7 @@ class Login extends Component {
             loginquery: this.state.loginquery,
             password: this.state.password,
         }
-        this.socket.emit("cl-send-login-req", user)
+       socket.emit("cl-send-login-req", user)
     
     }
     showPass = () => {

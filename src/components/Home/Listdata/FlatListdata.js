@@ -7,9 +7,12 @@ import avatar from '../../../images/avatar11.png'
 import iconsuccess from '../../../images/checked.png';
 import iconerror from '../../../images/close.png';
 import logonew from '../../../images/new3.png'
-
 import AsyncStorage from '@react-native-community/async-storage';
-import moment from 'moment'
+import moment from 'moment';
+import anhbiadetail from '../../../images/anhbiadetail.jpg';
+import {socket} from "../../../Socket.io/socket.io";
+import {connect} from 'react-redux';
+import * as actions from '../../../actions';
 var e;
 const { height, width } = Dimensions.get('window');
 class FlatListdata extends Component {
@@ -25,25 +28,24 @@ class FlatListdata extends Component {
             show: false,
             shownotice: false,
             notice: '',
-            key: '', price: '',abc:'',
-            check:false,
-            checksave:false
-           
+            key: '', price: '', abc: '',
+            check: false,
+            checksave: false
+
 
         }
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.applyJob = this.applyJob.bind(this)
-        this.socket.on("sv-apply-job", function (data) {
+        socket.on("sv-apply-job", function (data) {
             if (data.success == false) {
-                if(data.errors.introduction) {
+                if (data.errors.introduction) {
                     e.setState({
                         shownotice: true,
                         notice: 'Please enter your introduction!',
                         key: "error",
-                        abc:'w'
+                        abc: 'w'
                     })
 
-                }else {
+                } else {
                     e.setState({
                         shownotice: true,
                         notice: 'Already Exist!',
@@ -54,17 +56,17 @@ class FlatListdata extends Component {
             } else if (data.success == true) {
                 e.setState({
                     show: false,
-                    check:true,
+                    check: true,
                     shownotice: true,
                     notice: 'Applied Successfully!',
                     key: "success",
-                   
+
                 })
             }
         })
 
         this.save = this.saveTask.bind(this);
-        this.socket.on("sv-save-task", function (data) {
+        socket.on("sv-save-task", function (data) {
             if (data.success == false) {
                 console.log(JSON.stringify(data))
                 if (data.errors.message) {
@@ -79,7 +81,7 @@ class FlatListdata extends Component {
                     shownotice: true,
                     notice: 'Saved Successfully!',
                     key: "success",
-                   
+
                 })
             }
         })
@@ -89,49 +91,49 @@ class FlatListdata extends Component {
         this.setState({
             secret_key: token,
             _id: this.props.item._id,
-            isSaved:this.props.item.isSaved,
-            isApplied:this.props.item.isApplied
+            isSaved: this.props.item.isSaved,
+            isApplied: this.props.item.isApplied
 
         })
     }
     applyJob() {
-        let a=this.state.price;
-        let b=parseInt(a)
-        if(this.state.introduction==''){
+        let a = this.state.price;
+        let b = parseInt(a)
+        if (this.state.introduction == '') {
             this.setState({
                 notice: 'Please enter your introduction!',
-                abc:"intro"
+                abc: "intro"
             })
         }
-        else if(this.state.price==''){
+        else if (this.state.price == '') {
             this.setState({
                 notice: 'Please enter your price!',
-                abc:"price"
+                abc: "price"
             })
-        }else if(b!==b){
+        } else if (b !== b) {
             this.setState({
                 notice: 'The price is invalid!',
                 abc: "price"
             })
-        }else{
-            this.setState({show: false})
+        } else {
+            this.setState({ show: false })
             const apply = {
                 secret_key: this.state.secret_key,
                 task_id: this.state._id,
                 introduction: this.state.introduction,
                 price: this.state.price,
             }
-            this.socket.emit("cl-apply-job", apply)
+            socket.emit("cl-apply-job", apply)
         }
 
-      
+
 
     }
     /*followTask=async()=>{
         const follow={
             secret_key:this.state.secret_key,
             task_id:this.state._id,
-            introduction:'Tôi muốn theo dõi bạn',
+            introduction:'Tôi mu?n theo dõi b?n',
             floor_price:this.state.floor_price,
             ceiling_price:this.state.ceiling_price
         }
@@ -145,7 +147,7 @@ class FlatListdata extends Component {
             secret_key: this.state.secret_key,
             task_id: this.state._id
         }
-        this.socket.emit("cl-save-task", save)
+        socket.emit("cl-save-task", save)
     }
     onsss() {
         this.props.stack;
@@ -155,25 +157,25 @@ class FlatListdata extends Component {
         var task_description = this.props.item.task_description;
         var task_title = this.props.item.task_title;
         if (task_title.length >= 50) {
-            task_title = task_title.slice(0, 50)+"...";
+            task_title = task_title.slice(0, 50) + "...";
         }
         var count = task_description.length;
         if (count >= 30) {
             task_description = task_description.slice(0, 30);
         }
         var textnull = "Null";
-        let first =this.props.item.task_owner_first_name;
-        let last= this.props.item.task_owner_last_name;
-        let name=this.props.item.task_owner_first_name+" "+this.props.item.task_owner_last_name
-        let countname=first.length+last.length;
-        if(countname>=18){
-            name=this.props.item.task_owner_last_name;
+        let first = this.props.item.task_owner_first_name;
+        let last = this.props.item.task_owner_last_name;
+        let name = this.props.item.task_owner_first_name + " " + this.props.item.task_owner_last_name
+        let countname = first.length + last.length;
+        if (countname >= 18) {
+            name = this.props.item.task_owner_last_name;
         }
         return (
             <View style={styles.container}>
                 <View style={styles.body} key={this.props.item._id}>
                     <View style={styles.bodyone}>
-                       
+
                         <TouchableOpacity style={styles.imageview} onPress={() => this.props.stackProfile(this.props.item.task_owner_first_name, this.props.item.task_owner_last_name, this.props.item.task_owner_id)}>
                             <Image source={this.props.item.task_owner_avatar ? { uri: this.props.item.task_owner_avatar } : avatar} style={{
                                 width: 60, marginTop: -10
@@ -182,7 +184,7 @@ class FlatListdata extends Component {
                         </TouchableOpacity>
                         <View style={{ flexDirection: 'column', marginLeft: 15 }}>
                             <TouchableOpacity onPress={() => this.props.stackProfile(this.props.item.task_owner_first_name, this.props.item.task_owner_last_name, this.props.item.task_owner_id)}>
-                                <Text style={{ fontSize: 18 }}>{name?name:null}</Text>
+                                <Text style={{ fontSize: 18,fontStyle:'normal' }}>{name ? name : null}</Text>
                             </TouchableOpacity>
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ marginRight: 10 }}>
@@ -194,26 +196,37 @@ class FlatListdata extends Component {
 
                             </View>
                         </View>
-                      
-                        {new Date(this.props.item.created_time).toLocaleDateString() == d.toLocaleDateString() ?
+
+                        {/*  {new Date(this.props.item.created_time).toLocaleDateString() == d.toLocaleDateString() ?
                                 <View style={{position:'absolute',top:0,right:0}}>
-                                    <Image source={logonew} style={{ height: 50, width: 50 }}></Image>
+                                    <Image source={logonew} style={{ height: -50, width: 50 }}></Image>
                                 </View>
-                                : null}
+                      : null}*/}
                     </View>
                     <View style={styles.bodytwo}>
-                        <TouchableOpacity style={{ flexDirection: 'row'}} onPress={() => this.props.stackDetail(this.props.item._id,this.props.item.isSaved,this.props.item.isApplied)}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 23, fontStyle: 'italic', color: '#2d7474' }}>{task_title}</Text>
-                           
-                        </TouchableOpacity>
+                        <View style={{ flex: 1, width:'100%', height: 200, borderRadius: 5, alignItems: 'center', marginRight: 10, shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 5, shadowRadius: 3, elevation: 20 }}>
+                            <Image source={anhbiadetail} style={{ width: '100%', height: '100%', borderRadius: 10 }} />
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap', marginTop: 10 }}>
+                            <TouchableOpacity style={{ alignSelf: 'flex-start' }} onPress={() => this.props.stackDetail(this.props.item._id, this.props.item.isSaved, this.props.item.isApplied)}>
+                                <View><Text style={{ fontWeight: 'bold', fontSize: 20, fontStyle: 'normal', color: '#000000' }}>{task_title}</Text></View>
+                            </TouchableOpacity>
+                            {new Date(this.props.item.created_time).toLocaleDateString() != d.toLocaleDateString() ?
+                                <TouchableOpacity style={{ alignSelf: 'center', borderWidth: 1, borderColor: '#F7B32D', width: '15%', borderRadius: 8, marginTop: 2 }}>
+                                    <View style={{ alignItems: 'center' }}>
+                                        <Text style={{ color: '#F7B32D',fontStyle:'normal' }} >NEW</Text>
+                                    </View>
+
+                                </TouchableOpacity>
+                                : null}
+                        </View>
                         <View style={{ flexDirection: 'column', marginTop: 10 }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 13 }}>TASK DESCRIPTION:</Text>
                             <View style={{ marginTop: 10, flexDirection: 'row' }}>
-                                <Text style={{ marginLeft: 20, color: '#0E0E0E', fontSize: 13 }}>{task_description}</Text>
+                                <Text style={{ marginLeft: 10, color: '#0E0E0E', fontSize: 13, fontStyle:'normal' }}>{task_description}</Text>
                                 {count >= 40 ?
                                     <>
                                         <Text>...</Text>
-                                        <TouchableOpacity onPress={() => this.props.stackDetail(this.props.item._id,this.props.item.isSaved,this.props.item.isApplied)}>
+                                        <TouchableOpacity onPress={() => this.props.stackDetail(this.props.item._id, this.props.item.isSaved, this.props.item.isApplied)}>
                                             <Text style={{ color: "#b30000", fontSize: 13 }}> see detail</Text>
                                         </TouchableOpacity>
                                     </> : null}
@@ -221,13 +234,7 @@ class FlatListdata extends Component {
                         </View>
                     </View>
                     <View style={styles.bodynext} >
-                        <View style={{ flexDirection: 'row', marginTop: -10, alignItems: 'center' }}>
-                            <Entypo name="location-pin" size={20} color="red" />
-                            <View style={{ marginLeft: 10 }}>
-                                <Text style={{ color: '#0E0E0E', fontSize: 13 }}>{this.props.item.location.formatted_address}</Text>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                        {/*<View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <Text style={{ color: '#0E0E0E', fontSize: 13 }}>Updated:</Text>
                             <View style={{ marginLeft: 5 }}>
                                 {this.props.item.end_year < moment(d).format('YYYY') ?
@@ -266,87 +273,110 @@ class FlatListdata extends Component {
                                     </>
                                 }
                             </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                            <Text style={{ color: '#0E0E0E', fontSize: 13 }}>Working Time:</Text>
-                            <View style={{ marginLeft: 5 }}>
-                                <Text style={{ color: '#0E0E0E', fontSize: 13, fontWeight: 'bold' }}>{this.props.item.working_time != null ? this.props.item.working_time.start_time : null} - {this.props.item.working_time != null ? this.props.item.working_time.end_time : null}</Text>
+                            </View>*/}
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ color: '#0E0E0E', fontSize: 13 }}>Price:</Text>
+                                {this.props.item.price.price_type === 'dealing' ?
+                                    <View style={{ marginLeft: 5 }}>
+                                        <Text style={{ color: '#0E0E0E', fontSize: 13, fontWeight: 'bold' }}>{this.props.item.price.price_type != null ? this.props.item.price.price_type : null}</Text>
+                                    </View>
+                                    :
+                                    <View style={{ marginLeft: 5 }}>
+                                        <Text style={{ color: '#0E0E0E', fontSize: 13, fontWeight: 'bold' }}>{this.props.item.price.ceiling_price != null ? this.props.item.price.ceiling_price : null} - {this.props.item.price.floor_price != null ? this.props.item.price.floor_price : null}</Text>
+                                    </View>}
+                            </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ color: '#0E0E0E', fontSize: 13 }}>Working Time:</Text>
+                                <View style={{ marginLeft: 5 }}>
+                                    <Text style={{ color: '#0E0E0E', fontSize: 13, fontWeight: 'bold' }}>{this.props.item.working_time != null ? this.props.item.working_time.start_time : null} - {this.props.item.working_time != null ? this.props.item.working_time.end_time : null}</Text>
+                                </View>
                             </View>
                         </View>
-                        <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                            <Text style={{ color: '#0E0E0E', fontSize: 13 }}>Price:</Text>
-                            {this.props.item.price.price_type==='dealing'?
-                             <View style={{ marginLeft: 5 }}>
-                             <Text style={{ color: '#0E0E0E', fontSize: 13, fontWeight: 'bold' }}>{this.props.item.price.price_type != null ? this.props.item.price.price_type : null}</Text>
-                          </View>
-                            :
-                            <View style={{ marginLeft: 5 }}>
-                            <Text style={{ color: '#0E0E0E', fontSize: 13, fontWeight: 'bold' }}>{this.props.item.price.ceiling_price != null ? this.props.item.price.ceiling_price : null} - {this.props.item.price.floor_price != null ? this.props.item.price.floor_price: null}</Text>
-                        </View>}
-                           
+                        <View style={{ flexDirection: 'row', margin: 5 }}>
+                            <View style={{ alignItems: 'flex-start', marginLeft: -10 }}>
+                                <Entypo name="location-pin" size={20} color="red" />
+                            </View>
+                            <View style={{ marginLeft: 7 }}>
+                                <Text style={{ color: '#0E0E0E', fontSize: 13 }}>{this.props.item.location.formatted_address}</Text>
+                            </View>
                         </View>
                     </View>
                     <View style={styles.bodythree}>
-                        {this.props.item.end_day - moment(d).format('DD')==0
-                        ?
-                        <View style={styles.iconBulliten1} >
-                        <View>
-                          <AntDesign name="pluscircle" size={24} color="#ccc" />
-                        </View>
-                        <View style={{ marginLeft: 5 }}>
-                            <Text style={{color:'#ccc',fontWeight: 'bold' }}>Apply</Text>
-                        </View>
-                                </View>:
-                                !this.props.item.isApplied? <TouchableOpacity style={styles.iconBulliten1} onPress={() => this.setState({ show: true })}>
-                                <View>
-                                    <AntDesign name="pluscircle" size={24} color="#71B7B7" />
-                                </View>
-                                <View style={{ marginLeft: 5 }}>
-                                    <Text style={{fontWeight: 'bold'}}>Apply</Text>
-                                </View>
-                            </TouchableOpacity>:
-                                this.props.item.isApplied == false ?
-                                <TouchableOpacity style={styles.iconBulliten1} onPress={() => this.setState({ show: true })}>
-                                <View>
-                                    <AntDesign name="pluscircle" size={24} color="#71B7B7" />
-                                </View>
-                                <View style={{ marginLeft: 5 }}>
-                                    <Text style={{fontWeight: 'bold'}}>Apply</Text>
-                                </View>
-                            </TouchableOpacity>:
+                        {this.props.item.end_day - moment(d).format('DD') == 0
+                            ?
                             <View style={styles.iconBulliten1} >
-                            <View>
-                            <AntDesign name="checkcircle" size={24} color="#007700" />
-                            </View>
-                            <View style={{ marginLeft: 5 }}>
-                                <Text style={{color:'#ccc',fontWeight: 'bold' }}>Applied</Text>
-                            </View>
-                            </View>
-                        }               
-                        {  !this.props.item.isSaved ?  <TouchableOpacity style={styles.iconBulliten2} onPress={this.save}>
-                                    <View>
-                                        <Entypo name="save" size={24} color="#71B7B7" />
+                                    <View style={{ flexDirection: 'row', margin: 5, borderWidth: 1, borderColor: '#71B7B7', width: 100, height: 27, alignItems: 'center', borderRadius: 15 }}>
+                                        <View style={{ marginLeft: 10 }}>
+                                            <AntDesign name="pluscircle" size={17} color="#ccc" />
+                                        </View>
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Text style={{ color: '#ccc', fontWeight: 'bold' }}>Apply</Text>
+                                        </View>
                                     </View>
-                                    <View style={{ marginLeft: 5 }}>
-                                        <Text style={{fontWeight: 'bold'}}>Save</Text>
+                            </View> :
+                            !this.props.item.isApplied ? <TouchableOpacity style={styles.iconBulliten1} onPress={() => this.setState({ show: true })}>
+                                <View style={{ flexDirection: 'row', margin: 5, borderWidth: 1, borderColor: '#71B7B7', width: 100, height: 27, alignItems: 'center', borderRadius: 15 }}>
+                                        <View style={{ marginLeft: 10 }}>
+                                            <AntDesign name="pluscircle" size={17} color="#71B7B7" />
+                                        </View>
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Text style={{ fontWeight: 'bold' }}>Apply</Text>
+                                        </View>
                                     </View>
-                                </TouchableOpacity>:
+                            </TouchableOpacity> :
+                                this.props.item.isApplied == false ?
+                                    <TouchableOpacity style={styles.iconBulliten1} onPress={() => this.setState({ show: true })}>
+                                          <View style={{ flexDirection: 'row', margin: 5, borderWidth: 1, borderColor: '#71B7B7', width: 100, height: 27, alignItems: 'center', borderRadius: 15 }}>
+                                            <View style={{ marginLeft: 10 }}>
+                                                <AntDesign name="pluscircle" size={17} color="#71B7B7" />
+                                            </View>
+                                            <View style={{ marginLeft: 10 }}>
+                                                <Text style={{ fontWeight: 'bold' }}>Apply</Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity> :
+                                    <View style={styles.iconBulliten1} >
+                                        <View style={{ flexDirection: 'row', margin: 5, borderWidth: 1, borderColor: '#71B7B7', width: 100, height: 27, alignItems: 'center', borderRadius: 15 }}>
+                                            <View style={{ marginLeft: 10 }}>
+                                                <AntDesign name="checkcircle" size={17} color="#007700" />
+                                            </View>
+                                            <View style={{ marginLeft: 10 }}>
+                                                <Text style={{ color: '#ccc', fontWeight: 'bold' }}>Applied</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                        }
+                        {!this.props.item.isSaved ? <TouchableOpacity style={styles.iconBulliten2} onPress={this.save}>
+                        <View style={{ flexDirection: 'row', margin: 5, borderWidth: 1, borderColor: '#71B7B7', width: 100, height: 27, alignItems: 'center', borderRadius: 15 }}>
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Entypo name="save" size={17} color="#71B7B7" />
+                                        </View>
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Text style={{ fontWeight: 'bold' }}>Save</Text>
+                                        </View>
+                                    </View>
+                        </TouchableOpacity> :
                             this.props.item.isSaved == false ?
                                 <TouchableOpacity style={styles.iconBulliten2} onPress={this.save}>
-                                    <View>
-                                        <Entypo name="save" size={24} color="#71B7B7" />
-                                    </View>
-                                    <View style={{ marginLeft: 5 }}>
-                                        <Text style={{fontWeight: 'bold'}}>Save</Text>
+                                    <View style={{ flexDirection: 'row', margin: 5, borderWidth: 1, borderColor: '#71B7B7', width: 100, height: 27, alignItems: 'center', borderRadius: 15 }}>
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Entypo name="save" size={17} color="#71B7B7" />
+                                        </View>
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Text style={{ fontWeight: 'bold' }}>Save</Text>
+                                        </View>
                                     </View>
                                 </TouchableOpacity>
                                 :
                                 <View style={styles.iconBulliten2}>
-                                    <View>
-                                        <AntDesign name="checkcircle" size={24} color="#007700" />
-                                    </View>
-                                    <View style={{ marginLeft: 5 }}>
-                                        <Text style={{color:'#ccc',fontWeight: 'bold' }}>Saved</Text>
+                                    <View style={{ flexDirection: 'row', margin: 5, borderWidth: 1, borderColor: '#71B7B7', width: 100, height: 27, alignItems: 'center', borderRadius: 15 }}>
+                                        <View style={{ marginLeft: 10 }}>
+                                            <AntDesign name="checkcircle" size={17} color="#007700" />
+                                        </View>
+                                        <View style={{ marginLeft: 10 }}>
+                                            <Text style={{ color: '#ccc', fontWeight: 'bold' }}>Saved</Text>
+                                        </View>
                                     </View>
                                 </View>
                         }
@@ -372,7 +402,7 @@ class FlatListdata extends Component {
                                     <TextInput multiline={true}
                                         onChangeText={(introduction) => this.setState({ introduction })}
                                         value={this.state.introduction}
-                                        placeholderTextColor={this.state.abc=="intro"?'red':'#2d7474'}
+                                        placeholderTextColor={this.state.abc == "intro" ? 'red' : '#2d7474'}
                                         underlineColorAndroid='transparent'
                                         placeholder='introduction...'
                                     >
@@ -382,9 +412,9 @@ class FlatListdata extends Component {
                                         <Text></Text>
                                     </View>
                                 </View>
-                                
-                                   <Text style={{fontStyle: 'italic',color:'red'}}>{this.state.abc=="intro"?this.state.notice:null}</Text>
-                             
+
+                                <Text style={{ fontStyle: 'italic', color: 'red' }}>{this.state.abc == "intro" ? this.state.notice : null}</Text>
+
                                 <View style={{ alignContent: 'center' }}>
                                     <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Price:</Text>
                                 </View>
@@ -392,18 +422,18 @@ class FlatListdata extends Component {
                                     <TextInput
                                         onChangeText={(price) => this.setState({ price })}
                                         value={this.state.price}
-                                        placeholderTextColor={this.state.abc=="price"?'red':'#2d7474'}
+                                        placeholderTextColor={this.state.abc == "price" ? 'red' : '#2d7474'}
                                         underlineColorAndroid='transparent'
                                         placeholder='price...'
                                     >
 
                                     </TextInput>
                                 </View>
-                                <View style={{marginTop: -5}}>
-                                   <Text style={{fontStyle: 'italic',color:'red'}}>{this.state.abc=="price"?this.state.notice:null}</Text>
-                               </View>
+                                <View style={{ marginTop: -5 }}>
+                                    <Text style={{ fontStyle: 'italic', color: 'red' }}>{this.state.abc == "price" ? this.state.notice : null}</Text>
+                                </View>
                                 <View style={styles.controlStyle}>
-                                    <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false,abc:'',introduction:'',price:'' })}>
+                                    <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false, abc: '', introduction: '', price: '' })}>
                                         <Text style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancle</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.apply} onPress={this.applyJob}>
@@ -426,7 +456,7 @@ class FlatListdata extends Component {
                         }}>
                             <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                             <Text>{this.state.notice}</Text>
-                            <TouchableOpacity onPress={() => this.setState({ shownotice: false ,check:true})} style={{
+                            <TouchableOpacity onPress={() => this.setState({ shownotice: false, check: true })} style={{
                                 width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                                 height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                             }}>
@@ -443,8 +473,19 @@ class FlatListdata extends Component {
 
 
 }
-
-export default FlatListdata;
+const mapStateToProps = (state) => {
+    return {
+     
+    }
+}
+const mapDispatchProps=(dispatch,props)=>{
+    return {
+        onApply:(id)=>{
+            dispatch(actions.applyTask(id));
+        }
+    }
+}
+export default connect(mapStateToProps,mapDispatchProps)(FlatListdata);
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#faf9f9',
@@ -458,7 +499,7 @@ const styles = StyleSheet.create({
         paddingVertical: 40,
         paddingHorizontal: 15,
         marginBottom: 16,
-       
+
         shadowOffset: { width: 0, height: 0 },
         shadowColor: 'green',
         shadowOpacity: 0.1,
@@ -469,15 +510,15 @@ const styles = StyleSheet.create({
     },
     bodyone: {
         flexDirection: 'row',
-        borderBottomWidth: 1,
+        //borderBottomWidth: 1,
         borderColor: "#71B7B7",
         marginTop: -20,
         paddingBottom: 10,
-       
+
     },
     bodytwo: {
         flexDirection: 'column',
-        margin: 10
+        marginTop: 10
     },
     bodynext: {
         flexDirection: 'column',
@@ -492,7 +533,7 @@ const styles = StyleSheet.create({
         borderColor: '#71B7B7',
         left: 0,
         bottom: 0,
-        position: 'absolute'
+        position: 'absolute',
     },
     imageview: {
         shadowOffset: { width: 0, height: 3 },
@@ -504,18 +545,19 @@ const styles = StyleSheet.create({
 
     },
     iconBulliten1: {
-        borderRightWidth: 0.5,
         width: '50%',
-        justifyContent: 'center', alignItems: 'center',
+        justifyContent: 'flex-end', alignItems: 'center',
         borderColor: '#71B7B7',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginLeft: 30,
+        marginRight: -20
     },
     iconBulliten2: {
-        borderLeftWidth: 0.5,
         width: '50%',
         justifyContent: 'center', alignItems: 'center',
         borderColor: '#71B7B7',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginLeft: 10
     },
     iconBulliten3: {
         borderLeftWidth: 0.5,

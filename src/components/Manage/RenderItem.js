@@ -8,6 +8,7 @@ import Swipeout from 'react-native-swipeout'
 import iconsuccess from '../../images/icon1.png';
 import iconerror from '../../images/icon2.png';
 import iconwarning from '../../images/icon3.png';
+import {socket} from "../../Socket.io/socket.io";
 import avatarimage from '../../images/avatar11.png';
 const { height, width } = Dimensions.get('window');
 var e;
@@ -15,7 +16,6 @@ export default class RenderItem extends React.Component {
   constructor(props) {
     super(props)
     e=this;
-    this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
     this.state = {
       show: false,
       secret_key: '',
@@ -26,7 +26,7 @@ export default class RenderItem extends React.Component {
       key: ''
     }
     this.deleteApplyjob=this.deleteApplyjob.bind(this)
-    this.socket.on("sv-delete-apply-job", function (data) {
+ socket.on("sv-delete-apply-job", function (data) {
       if (data.success == false) {
         console.log(JSON.stringify(data))
       } else if (data.success == true) {
@@ -51,7 +51,7 @@ export default class RenderItem extends React.Component {
       secret_key:this.state.secret_key,
       task_id:this.props.item._id
     }
-    this.socket.emit("cl-delete-apply-job", deleteApply)
+    socket.emit("cl-delete-apply-job", deleteApply)
     this.props.parenFlastlist();
   }
   render() {

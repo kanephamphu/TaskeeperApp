@@ -14,6 +14,7 @@ import iconwarning from '../../images/warning.png';
 import noitem from '../../images/box.png';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
+import {socket} from "../../Socket.io/socket.io";
 import * as actions from '../../actions';
 var e;
 
@@ -21,7 +22,6 @@ class Education extends Component {
     constructor(props) {
         super(props);
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             totalSteps: "",
             currentStep: "",
@@ -65,7 +65,7 @@ class Education extends Component {
         this.onEdit = this.onEdit.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onSubmit = this.onSubmit.bind(this)
-        this.socket.on('sv-new-working', function (data) {
+        socket.on('sv-new-working', function (data) {
             if (data.success == true) {
                 e.setState({
                     show: false,
@@ -77,11 +77,11 @@ class Education extends Component {
             else if (data.success == false) {
             }
         });
-        this.socket.on("sv-working-info-detail", (data)=>{   
+       socket.on("sv-working-info-detail", (data)=>{   
             this.props.getAllWorking(data.data.reverse());
         }) 
 
-        this.socket.on("sv-edit-working", function (data) {
+       socket.on("sv-edit-working", function (data) {
             if (data.success == true) {
                 e.setState({
                     showedit: false,
@@ -138,7 +138,7 @@ class Education extends Component {
                 }
             }
         })
-        this.socket.on("sv-delete-working", function (data) {
+       socket.on("sv-delete-working", function (data) {
             if (data.success == true) {
                 e.setState({
                     show1: true,
@@ -168,7 +168,7 @@ class Education extends Component {
         const infoeducation = {
             _user_id: decode._id
         }
-        this.socket.emit("cl-working-info-detail", infoeducation)
+       socket.emit("cl-working-info-detail", infoeducation)
 
     }
     onDelete(_id) {
@@ -176,7 +176,7 @@ class Education extends Component {
             secret_key: this.state.secret_key,
             work_id: _id
         }
-        this.socket.emit("cl-delete-working", deleteedu)
+       socket.emit("cl-delete-working", deleteedu)
 
         this.onRefresh()
     }
@@ -199,7 +199,7 @@ class Education extends Component {
                 position: this.state.positionedit,
     
             }
-            this.socket.emit("cl-edit-working", editEducation)
+           socket.emit("cl-edit-working", editEducation)
         }
        
       
@@ -280,7 +280,7 @@ class Education extends Component {
                         to_time: this.state.to_time.value,
                         position: this.state.position,
                     }
-                    this.socket.emit("cl-new-working", addEducation)
+                   socket.emit("cl-new-working", addEducation)
                   
                     this.onRefresh()
                 }
@@ -317,7 +317,7 @@ class Education extends Component {
                         to_time: this.state.to_time.value,
                         position: this.state.position,
                     }
-                    this.socket.emit("cl-new-working", addEducation)
+                  socket.emit("cl-new-working", addEducation)
                   
                     this.onRefresh()
                 }

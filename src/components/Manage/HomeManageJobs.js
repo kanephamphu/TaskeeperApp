@@ -9,13 +9,13 @@ import { Entypo } from '@expo/vector-icons';
 import {createStackNavigator} from '@react-navigation/stack';
 import Jobs from '../Manage/Jobs';
 import History from '../Manage/HistoryJobs'
+import {socket} from "../../Socket.io/socket.io";
 var e;
 const { width,height } = Dimensions.get("window");
 export default class HomeManageJobs extends React.Component {
   constructor(props){
     super(props);
     e=this;
-    this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
     this.onDetail1 = this.onDetail.bind(this)
     this.state={
       /*secret_key=''*/

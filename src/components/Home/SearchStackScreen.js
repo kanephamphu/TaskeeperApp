@@ -4,6 +4,7 @@ import SearchTask from './Homesearch/SearchTask';
 import SearchUser from './Homesearch/SearchUser';
 import Search from '../Home/Search'
 import { View } from 'react-native';
+import {socket} from "../../Socket.io/socket.io";
 const SearchStack = createStackNavigator();
 const SearchStackScreen = ({ navigation }) => {
 

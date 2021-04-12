@@ -10,12 +10,12 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import Collapsible from 'react-native-collapsible';
 import avatar1 from '../../images/avatar11.png'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import {socket} from "../../Socket.io/socket.io";
 const { height, width } = Dimensions.get('window');
 var e;
 class New extends Component {
     constructor(props) {
         super(props);
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         e = this;
         this.state = {
             first_name: '',
@@ -48,7 +48,7 @@ class New extends Component {
 
         }
         this.onSubmitPassword = this.onSubmitChangePassword.bind(this)
-        this.socket.on("sv-change-password", function (data) {
+      socket.on("sv-change-password", function (data) {
             if (data.success == false) {
                 var dataserver = data.errors
                 console.log(JSON.stringify(dataserver))
@@ -71,7 +71,7 @@ class New extends Component {
                 })
             }
         })
-        this.socket.on("sv-user-detail", function (data) {
+       socket.on("sv-user-detail", function (data) {
             var list = data.data
             if (data.success == true) {
                 e.setState({
@@ -123,11 +123,11 @@ class New extends Component {
         const detail = {
             _user_id: this.state._user_id
         }
-        this.socket.emit("cl-user-detail", detail)
+       socket.emit("cl-user-detail", detail)
     }
     logout = async () => {
         var token = await AsyncStorage.getItem('token')
-        this.socket.emit("client-send-logout-request", token)
+        socket.emit("client-send-logout-request", token)
         try {
             await AsyncStorage.removeItem('token');
         } catch (e) {
@@ -147,7 +147,7 @@ class New extends Component {
                 new_password: this.state.new_password,
                 confirm_password: this.state.confirm_password
             }
-            this.socket.emit("cl-change-password", newpassword)
+            socket.emit("cl-change-password", newpassword)
         }
     }
     render() {

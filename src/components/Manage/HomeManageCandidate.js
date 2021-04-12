@@ -9,6 +9,7 @@ import { Entypo } from '@expo/vector-icons';
 import {createStackNavigator} from '@react-navigation/stack';
 import AsyncStorage from '@react-native-community/async-storage';
 import HRM from '../Manage/HRM';
+import {socket} from "../../Socket.io/socket.io";
 import History from '../Manage/HistoryCandidate'
 var e;
 const { width,height } = Dimensions.get("window");
@@ -16,7 +17,6 @@ export default class HomeManageCandidate extends React.Component {
   constructor(props){
     super(props);
     e=this;
-    this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
     this.state={
       /*secret_key=''*/
     }

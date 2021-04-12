@@ -7,6 +7,7 @@ import io from 'socket.io-client/dist/socket.io';
 import StepOne from '../components/StepOne';
 import StepTwo from '../components/StepTwo';
 import StepThree from '../components/StepThree';
+import {socket} from "../Socket.io/socket.io";
 const allSteps = [
   {name:'step 1',component: StepOne},
   {name:'step 2',component: StepTwo},
@@ -17,7 +18,6 @@ class ChangeProfileUser extends Component {
   constructor(props){
     super(props);
     e=this;
-    this.socket=io('https://taskeepererver.herokuapp.com',{jsonp:false})
     this.state={};
   }
   onNext = () => {

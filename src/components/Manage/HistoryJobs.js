@@ -7,7 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import avatarimage from '../../images/avatar11.png';
 import jwt_decode from 'jwt-decode'
-
+import {socket} from "../../Socket.io/socket.io";
 const {height,width} =Dimensions.get('window');
 var e;
 
@@ -15,7 +15,6 @@ export default class HistoryJob extends React.Component {
   constructor(props){
     super(props);
     e=this;
-    this.socket = io('https://taskeepererver.herokuapp.com',{jsonp:false})
     this.state = {
       secret_key: '',
       deleteRowkey: null,
@@ -24,7 +23,7 @@ export default class HistoryJob extends React.Component {
       dataJob: [
       ],
     }
-    this.socket.on("sv-get-approved-job",function(data){
+    socket.on("sv-get-approved-job",function(data){
       var list=data.data
       if(data.success==false){
         console.log(JSON.stringify(data))
@@ -43,7 +42,7 @@ export default class HistoryJob extends React.Component {
     const historyjob ={
       secret_key:token, 
     }
-    this.socket.emit("cl-get-approved-job",historyjob)
+    socket.emit("cl-get-approved-job",historyjob)
   }
   refreshTop() {
     this.componentDidMount()

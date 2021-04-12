@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import jwt_decode from "jwt-decode";
 import avatarimage from "../../images/avatar11.png";
 import { connect } from "react-redux";
+import {socket} from "../../Socket.io/socket.io";
 import * as actions from "../../actions";
 const { height, width } = Dimensions.get("window");
 var e;
@@ -23,7 +24,6 @@ class HRM extends React.Component {
   constructor(props) {
     super(props);
     e = this;
-    this.socket = io("https://taskeepererver.herokuapp.com", { jsonp: false });
     this.state = {
       secret_key: "",
       number_task: 10,
@@ -33,7 +33,7 @@ class HRM extends React.Component {
       dataTask: [],
       test: "",
     };
-    this.socket.on("sv-get-task-manage", (data)=> {
+    socket.on("sv-get-task-manage", (data)=> {
       this.props.getAllHRM(data.data)
   })
   }
@@ -48,7 +48,7 @@ class HRM extends React.Component {
       number_task: this.state.number_task,
       skip: 0,
     };
-    this.socket.emit("cl-get-task-manage", task);
+    socket.emit("cl-get-task-manage", task);
   };
   refreshTop() {
     this.componentDidMount();

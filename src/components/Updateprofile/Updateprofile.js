@@ -6,6 +6,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import io from 'socket.io-client/dist/socket.io';
 import iconsuccess from '../../images/checked.png';
 import iconerror from '../../images/close.png';
+import {socket} from "../../Socket.io/socket.io";
 import AsyncStorage from '@react-native-community/async-storage';
 
 var gender = [
@@ -18,7 +19,6 @@ class Updateprofile extends Component {
     constructor(props) {
         super(props);
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
             totalSteps: "",
             currentStep: "",
@@ -67,7 +67,7 @@ class Updateprofile extends Component {
             shownotice:false
         };
         this.onSubmit = this.onSubmit.bind(this)
-        this.socket.on('sv-edit-info', function (data) {
+      socket.on('sv-edit-info', function (data) {
             if (data.success == true) {
                 e.setState({
                     showedit:false,
@@ -158,7 +158,7 @@ class Updateprofile extends Component {
             month_of_birth: this.state.month_of_birth.value,
             year_of_birth: this.state.year_of_birth.value
         }
-        this.socket.emit("cl-edit-info", updateprofile)
+        socket.emit("cl-edit-info", updateprofile)
        
         this.onRefresh()
     }

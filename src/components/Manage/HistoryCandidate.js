@@ -8,7 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
 import avatarimage from '../../images/avatar11.png';
-
+import {socket} from "../../Socket.io/socket.io";
 const {height,width} =Dimensions.get('window');
 var e;
 
@@ -16,7 +16,6 @@ export default class HistoryCandidate extends React.Component {
   constructor(props){
     super(props);
     e=this;
-    this.socket = io('https://taskeepererver.herokuapp.com',{jsonp:false})
     this.state={
       loadingdata: false,
       secret_key:'',
@@ -29,7 +28,7 @@ export default class HistoryCandidate extends React.Component {
       user_id:'',
       comment:'',
     }
-    this.socket.on("sv-get-work-employee-job",function(data){
+      socket.on("sv-get-work-employee-job",function(data){
       var list=data.data
       if(data.success==false){
         console.log(JSON.stringify(data))
@@ -43,7 +42,7 @@ export default class HistoryCandidate extends React.Component {
     })
     this._showVote = this._showVote.bind(this),
     this.onVote = this.onVote.bind(this)
-    this.socket.on("sv-send-vote", function (data) {
+    socket.on("sv-send-vote", function (data) {
       if (data.success == true) {
         e.setState({
           showvote: false,
@@ -62,7 +61,7 @@ export default class HistoryCandidate extends React.Component {
     const getemployee ={
       secret_key:token, 
     }
-    this.socket.emit("cl-get-work-employee-job",getemployee)
+    socket.emit("cl-get-work-employee-job",getemployee)
   }
   refreshTop() {
     this.componentDidMount()
@@ -89,7 +88,7 @@ onVote= async () =>  {
       vote_point: this.state.vote,
       vote_comment: this.state.comment
   }
-  this.socket.emit("cl-send-vote", vote)
+  socket.emit("cl-send-vote", vote)
   if(this.state.comment==""){
       e.setState({ 
           notice:"Please enter a comment"
