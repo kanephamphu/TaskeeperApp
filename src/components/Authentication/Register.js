@@ -22,6 +22,7 @@ import { AntDesign } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io';
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import {socket} from "../../Socket.io/socket.io";
+import { Entypo } from '@expo/vector-icons';
 const {width:WIDTH}=Dimensions.get('window')
 var e;
 
@@ -37,6 +38,7 @@ export default class Register extends Component{
             first_name: '',
             last_name: '',
             email: '',
+            address:'',
             phone_number:'',
             password: '',
             day:'23',
@@ -125,6 +127,18 @@ export default class Register extends Component{
                         nof:"Email already exists!",
                         key:'email'
                     });
+                }else  if(data.errors.address){
+                    if(data.errors.address.rule==='address'){
+                        e.setState({
+                            nof:"The address format is invalid!",
+                            key:'address'
+                        }); 
+                    }else{
+                        e.setState({
+                            nof:'Please enter your address !',
+                            key:'address'
+                        });  
+                    }
                 }
                 else  if(data.errors.password){
                     if(data.errors.password.rule=='required'){
@@ -153,6 +167,7 @@ export default class Register extends Component{
             last_name: this.state.last_name,
             email: this.state.email,
             phone_number: this.state.phone_number,
+            address: this.state.address,
             password: this.state.password,
             day: this.state.day,
             month: this.state.month,
@@ -235,7 +250,6 @@ export default class Register extends Component{
                             name="md-person"
                             size={28} 
                             color='#2d7474'
-                            
                             ></ Ionicons>
                         </View>
                 </View>
@@ -318,7 +332,6 @@ export default class Register extends Component{
                                 onChangeText={(email)=> this.setState({email})}
                                 value={this.state.email}                      
                                 placeholderTextColor={'#2d7474'}
-                                
                                 keyboardType='email-address'
 
                             >
@@ -331,7 +344,33 @@ export default class Register extends Component{
                                 ></MaterialIcons>
                             </View>
                         </View>
-              
+                        <View>
+                            <TextInput 
+                                style={{ width:300,
+                                    height:40,
+                                    borderRadius:10,
+                                    fontSize:16,
+                                    paddingLeft:45,
+                                    paddingTop:-10,
+                                    backgroundColor:'#ffff',
+                                    color:'#2d7474',
+                                    marginHorizontal:25,
+                                    marginTop:10,
+                                    borderWidth: 1,
+                                    borderColor:this.state.key==='address'?'red':'#2d7474'}}
+                                     placeholder={'Address'} 
+                                    onChangeText={(address)=> this.setState({address})}
+                                    value={this.state.address}                      
+                                    placeholderTextColor={'#2d7474'}
+                            >
+                            </TextInput>
+                            <View style={styles.inputIcon}>
+                                <Entypo name="location"
+                                size={24} 
+                                color='#2d7474'
+                                />   
+                            </View>
+                        </View>
                
                         <View>
                             <TextInput 
@@ -377,10 +416,10 @@ export default class Register extends Component{
                     <Text style={styles.textnof}>{this.state.nof}</Text>
                 </View>
                 <View style={styles.textcontainer}>
-                    <View>
+                    <View style={{marginRight:10, marginBottom:'5%'}}>
                         <CheckBox></CheckBox>
                     </View>
-                    <View>
+                    <View style={{marginTop:5}}>
                         <Text>Yes,I agree to your  Terms</Text>
                     </View>
                 </View>
@@ -430,7 +469,7 @@ const styles = StyleSheet.create({
     },
     textcontainer:{
         flexDirection:'row',
-        marginTop:10
+       
     },
     
     inputIcon:{

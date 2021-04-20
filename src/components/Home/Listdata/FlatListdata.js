@@ -172,10 +172,10 @@ class FlatListdata extends Component {
             name = this.props.item.task_owner_last_name;
         }
         return (
+
             <View style={styles.container}>
                 <View style={styles.body} key={this.props.item._id}>
                     <View style={styles.bodyone}>
-
                         <TouchableOpacity style={styles.imageview} onPress={() => this.props.stackProfile(this.props.item.task_owner_first_name, this.props.item.task_owner_last_name, this.props.item.task_owner_id)}>
                             <Image source={this.props.item.task_owner_avatar ? { uri: this.props.item.task_owner_avatar } : avatar} style={{
                                 width: 60, marginTop: -10
@@ -426,7 +426,6 @@ class FlatListdata extends Component {
                                         underlineColorAndroid='transparent'
                                         placeholder='price...'
                                     >
-
                                     </TextInput>
                                 </View>
                                 <View style={{ marginTop: -5 }}>
@@ -467,6 +466,7 @@ class FlatListdata extends Component {
 
                 </Modal>
             </View>
+            
         )
 
     }
