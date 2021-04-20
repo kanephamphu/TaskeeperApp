@@ -12,6 +12,7 @@ import noitem from '../../../images/box.png';
 import {connect} from 'react-redux';
 import {socket} from "../../../Socket.io/socket.io";
 import * as actions from '../../../actions';
+import { FontAwesome5 } from '@expo/vector-icons';
 const { width, height } = Dimensions.get("window");
 var e;
 class RenderItem extends React.Component {
@@ -64,27 +65,26 @@ class RenderItem extends React.Component {
           task_title = task_title.slice(0, 20)+"...";
       }
       return (
-  
+        <View style={{marginLeft:15}}>
+          <Text style={{fontSize:16, fontWeight:'bold'}} >{new Date(this.props.item.saved_time).toLocaleDateString()}</Text>
         <View style={styles.image_container}>
           <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
             <View style={{ justifyContent: 'center', marginLeft: 20 }}>
-              <AntDesign name="clockcircleo" size={35} color="#009387" />
+              <FontAwesome5 name="history"  size={35} color="#009387" />
             </View>
             <View>
               <View style={{ flexDirection: 'column', marginLeft: 10, alignItems: 'flex-start', width: width - 200 }}>
-                <View style={{ marginTop: 1, flexDirection: 'row' }}>
-                  <Text >{new Date(this.props.item.saved_time).toLocaleDateString()}</Text>
-                  <View style={{ marginLeft: 10 }}>
-                    <Text >{new Date(this.props.item.saved_time).toLocaleTimeString()}</Text>
-                  </View>
-                </View>
                 <TouchableOpacity onPress={() =>this.props.detail(this.props.item.task_id)}>
                   <Text style={styles.company}>{task_title}</Text>
                 </TouchableOpacity>
-               
+                <View style={{ marginTop: 1, flexDirection: 'row' }}>
+                  <View style={{  }}>
+                    <Text >{new Date(this.props.item.saved_time).toLocaleTimeString()}</Text>
+                  </View>
+                </View>
               </View>
             </View>
-            <TouchableOpacity onPress={() => this.setState({ showarning: true })}>
+            <TouchableOpacity style={{marginLeft:'10%'}} onPress={() => this.setState({ showarning: true })}>
               <Entypo name="dots-three-vertical" size={24} color="#009387" />
             </TouchableOpacity>
           </View>
@@ -140,7 +140,7 @@ class RenderItem extends React.Component {
             </View>
           </Modal>
         </View>
-  
+        </View>
   
       )
     }
@@ -169,9 +169,10 @@ const styles = StyleSheet.create({
     },
     image_container: {
       flexDirection: 'row',
-      marginTop: 10, height: 80, width: width - 80, justifyContent: 'space-between',
+      marginTop: 5, height: 80, width: width * 0.92, justifyContent: 'space-between',
       backgroundColor: 'rgba(200,200,200,0.3)',
-      borderRadius: 10
+      borderRadius: 10,
+      
     },
     time: {
       fontWeight: 'bold',
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
       })
     },
     header0: {
-      height: height * 0.1,
+      height: height * 0.15,
       shadowOffset: { width: 0, height: 3 },
       paddingLeft: 10,
       paddingTop: 15,

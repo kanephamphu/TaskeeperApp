@@ -92,7 +92,9 @@ export default class MainTabScreen extends React.Component{
     console.log(unread)
   }
   render(){
-    return (    
+    
+    return (   
+       
       <Tab.Navigator
       initialRouteName="Home"
       activeColor="#2d7474"
@@ -170,6 +172,7 @@ export default class MainTabScreen extends React.Component{
           ),
         }}
       />
+      
       <Tab.Screen
         name="Menu"
         component={MoreStackScreen}
@@ -225,16 +228,13 @@ const HomeStackScreen = ({ navigation }) => {
         name="Home"
         component={Home}
         options={{ headerShown: false }}
-
-
       />
       <HomeStack.Screen
         name="HomeSearch"
         component={HomeSearch}
         options={{ headerShown: false }}
-
-
       />
+     
         <HomeStack.Screen
         name="Detailprofile"
         component={Detailprofile}
@@ -255,6 +255,11 @@ const HomeStackScreen = ({ navigation }) => {
        <HomeStack.Screen
         name="Profilefriend"
         component={Profilefriend}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="posttaskforhomepage"
+        component={Posttask}
         options={{ headerShown: false }}
       />
        <HomeStack.Screen

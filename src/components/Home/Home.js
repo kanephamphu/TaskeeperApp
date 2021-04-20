@@ -42,6 +42,7 @@ class Home extends Component {
             isLoading: false,
             secret_key: '',
             refreshing: false,
+            posttaskshow:'1',
             show: false,
             number_task:10,
             skip: 10,
@@ -160,10 +161,10 @@ class Home extends Component {
                         
                     </View>
                     <View style={{ marginLeft: 10, marginTop: 10, width: 130, marginBottom: 10, borderBottomWidth: 2, borderBottomColor: '#71B7B7' }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }}>Bulletin Board</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }}>Bulletin Board</Text>
                     </View>
-                </View>
-            </SafeAreaView>
+                </View>   
+            </SafeAreaView>   
         )
     }
     onStack(search_string) {
@@ -220,10 +221,16 @@ class Home extends Component {
                 <View style={{ marginTop:10}}>
                     <Search stack={this.onStack} message={this.onMessage} />
                 </View>
+                <View style={{ zIndex:2,top:'84%', left:'86%', borderRadius:19, width:'9%', height:'5%',backgroundColor:'#2D7474'}}>
+                    <TouchableOpacity onPress={()=>{this.props.navigation.navigate('posttaskforhomepage');sendshowposttask=this.state.posttaskshow}} style={{alignItems:'center', margin:5}} >
+                        <Entypo name="new-message" size={18} color="white" />
+                    </TouchableOpacity>
+                </View>     
                 {this.props.status === false
                     ?
-                    <ScrollView>
-                        <SafeAreaView >
+                        <SafeAreaView >  
+                             
+                            <ScrollView>
                             <View>
                                 <View style={styles.viewimage}>
                                   
@@ -436,8 +443,10 @@ class Home extends Component {
                                     </View>
                                 </View>
                             </View>
+                            </ScrollView>
                         </SafeAreaView>
-                    </ScrollView>
+                    
+                    
                     /* <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
                          <ActivityIndicator size='large'  animating />
                      </View>*/
@@ -552,6 +561,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#faf9f9',
+        zIndex:1
     },
     imageview: {
         shadowOffset: { width: 0, height: 3 },
@@ -722,7 +732,8 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         elevation: 3,
         borderTopColor: '#71B7B7',
-        backgroundColor: '#EEEEEE'
+        backgroundColor: '#EEEEEE', 
+        zIndex:1
     },
     searching: {
         backgroundColor: 'white',
@@ -731,6 +742,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         elevation: 4,
         paddingLeft: 15,
+        zIndex:1,
         ...Platform.select({
             ios: {
                 width: 310,
@@ -749,14 +761,16 @@ const styles = StyleSheet.create({
         position: 'absolute',
         flexDirection: 'row',
         marginTop: 0,
-        marginLeft: 20
+        marginLeft: 20,
+        zIndex:1
 
 
     },
     text1: {
         position: 'absolute',
         marginTop: 25,
-        marginLeft: 20
+        marginLeft: 20,
+        zIndex:1
     },
     item: {
         marginTop: 10,
@@ -764,6 +778,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,
+        zIndex:1
     },
     recommend: {
         height: height * 0.51,
@@ -777,24 +792,24 @@ const styles = StyleSheet.create({
         elevation: 2,
         borderColor: '#71B7B7',
         borderWidth: 1,
-        justifyContent: 'flex-end', alignItems: 'center'
+        justifyContent: 'flex-end', alignItems: 'center', zIndex:1
     },
     ImageOverlay: {
         width: 250, height: height*0.16, borderBottomEndRadius: 10,borderBottomLeftRadius:10,
-        backgroundColor: '#ffff',paddingLeft:10,paddingRight:10
+        backgroundColor: '#ffff',paddingLeft:10,paddingRight:10, zIndex:1
     },
     iconBulliten1: {
         borderRightWidth: 0.5,
         width: '50%',
         justifyContent: 'center', alignItems: 'center',
         borderColor: '#71B7B7',
-        flexDirection: 'row'
+        flexDirection: 'row', zIndex:1
     },
     iconBulliten2: {
         borderLeftWidth: 0.5,
         width: '50%',
         justifyContent: 'center', alignItems: 'center',
         borderColor: '#71B7B7',
-        flexDirection: 'row'
+        flexDirection: 'row', zIndex:1
     },
 })

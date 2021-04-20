@@ -346,7 +346,7 @@ class TaskPage extends Component{
         dataemployee:[]
         }
         this.onInvite = this.onInvite.bind(this)
-        this.socket.on('sv-send-work-invitation',function(data){
+        socket.on('sv-send-work-invitation',function(data){
           if (data.success == true) {
             e.setState({
               showninvite: true,
@@ -475,6 +475,11 @@ class TaskPage extends Component{
       componentDidMount=async()=>{
         const token= await AsyncStorage.getItem('token')
         const decode=jwt_decode(token)
+        if(this.props.sendshowposttask==undefined){
+          this.setState({
+            showposttask:true
+          })
+        }
         e.setState({
           user_id:decode._id,
           secret_key:token,
@@ -1625,6 +1630,7 @@ class TaskPage extends Component{
       enableCont = false;
     render(){
       var size=this.state.position.length;
+      console.log(this.props.sendshowposttask);
       //var d = new Date();
         return (
             <View style={styles.container}>
@@ -1716,10 +1722,15 @@ class TaskPage extends Component{
                             />
                         <View style={styles.header}>
                             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                            {this.props.sendshowposttask==undefined?
+                                <TouchableOpacity onPress={()=>{this.setState({showposttask:false});this.props.navigation.navigate("Home")}} style={{flexDirection:'row'}}>
+                                <Ionicons style={{marginTop:1}} name="ios-arrow-back" size={28} color="#2d7474" />
+                                <Text style={{fontWeight: 'bold', fontSize: 25, color: '#2d7474',marginLeft:15,marginTop:-2}}>Home Page</Text>
+                            </TouchableOpacity>:
                             <TouchableOpacity onPress={()=>this.setState({showposttask:false})} style={{flexDirection:'row'}}>
                                 <Ionicons style={{marginTop:1}} name="ios-arrow-back" size={28} color="#2d7474" />
                                 <Text style={{fontWeight: 'bold', fontSize: 25, color: '#2d7474',marginLeft:15,marginTop:-2}}>New Task</Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity>}
                             <TouchableOpacity  onPress={this.onSubmit} >
                                 <Text style={{fontWeight: 'bold', fontSize: 25, color: '#2d7474',marginRight:15,marginTop:-2}}>Post</Text>
                             </TouchableOpacity>

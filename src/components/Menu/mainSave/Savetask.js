@@ -56,10 +56,11 @@ class Savetask extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.header0}>
-          <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.navigate("Menu")}>
-            <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
-            <Text style={{ fontWeight: 'bold', fontSize: 25, color: '#2d7474', marginLeft: 15, marginTop: -2 }}>List Task Save</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={{ width:'7%' }} onPress={() => this.props.navigation.navigate("Menu")}>
+              <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={25} color="#ffff" />
+            </TouchableOpacity>
+            <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'white', marginLeft: '20%', marginTop: -2 }}>List Task Save</Text>
+           
         </View>
         {this.props.onstatus === true ?
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -118,7 +119,7 @@ export default connect(mapStateToProps,mapDispatchProps)(Savetask)
 const styles = StyleSheet.create({
   flatlist: {
     flex: 1,
-    alignItems: 'center'
+    
   },
   container: {
     flex: 1,
@@ -165,11 +166,15 @@ const styles = StyleSheet.create({
     })
   },
   header0: {
-    height: height * 0.1,
+    height: height * 0.07,
     shadowOffset: { width: 0, height: 3 },
-    paddingLeft: 10,
-    paddingTop: 15,
-    backgroundColor: '#faf9f9',
-
+    paddingLeft: 7,
+    backgroundColor:'#289696' ,
+    alignItems:'center',
+    borderBottomEndRadius:200,
+    borderEndWidth:10,
+    borderEndColor:'#2d7474',
+    borderBottomStartRadius:20,
+    flexDirection: 'row'
   },
 })

@@ -15,6 +15,8 @@ import avatar1 from '../../images/avatar11.png';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {socket} from "../../Socket.io/socket.io";
 import anhbiadetail from './../../images/anhbiadetail.jpg';
+import Scroll from './scroll';
+import ActionButton from 'react-native-action-button';
 var e;
 const { height, width } = Dimensions.get('window');
 class Detail extends Component {
@@ -250,6 +252,7 @@ class Detail extends Component {
 
         return (
             <View style={styles.container}>
+               <ScrollView>
                 <View style={styles.header0}>
                     <TouchableOpacity style={{zIndex:2,width:'7%'}}  onPress={() => this.props.navigation.goBack()}>
                         <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
@@ -258,6 +261,7 @@ class Detail extends Component {
                                 <Image source={anhbiadetail} style={{width:'100%',height:'100%'}}/>
                      </View>
                 </View>
+                
                 <View style={{backgroundColor:'rgba(113, 183, 183, 0.8)',marginLeft:10, marginRight:10, borderRadius:10}}>
                             <View style={styles.bodyone}>
                                 {this.state.task_owner_id != this.props.route.params.task_owner_id ? <><View style={{ flexDirection: 'row' }}>
@@ -285,18 +289,8 @@ class Detail extends Component {
                                     </View>
                                 </View>
 
-                                    <View style={{ flexDirection: 'row', marginRight: 20 }}>
-                                      
-                                          <TouchableOpacity onPress={() => this.setState({ show: true })} style={styles.iconview1}>
-                                          <AntDesign name="pluscircle" size={24} color="Black" />
-                                         </TouchableOpacity>
-                                      
-                                       
-                                           <TouchableOpacity onPress={this.save} style={styles.iconview2}>
-                                           <Entypo name="save" size={24} color="black" />
-                                          </TouchableOpacity>
-                                     
-                                       
+                                    <View style={{ flexDirection: 'row', marginRight: 20, flex:1 }}>
+                                    
                                     </View></> : null}
                             </View>
                             <View style={{borderWidth:1, justifyContent:'center',borderColor:'white', marginTop:20,marginLeft:30,marginRight:30}}>
@@ -308,7 +302,7 @@ class Detail extends Component {
                                 </View>
                             </View>
                             </View>
-                <ScrollView>
+                           {/* <ScrollView>*/}
                     {this.state.task_owner_first_name == '' ?
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <ActivityIndicator size='large'></ActivityIndicator>
@@ -342,7 +336,7 @@ class Detail extends Component {
                                     - Ð?a ch?: {this.state.location}
                                 </Text>*/}
                                 </View>
-                                <View style={{ marginTop: 30 }}>
+                                <View style={{ marginTop: 30 }}>              
                                     <Text style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
                                         JOB REQUIREMENT:
                             </Text>
@@ -468,7 +462,7 @@ class Detail extends Component {
                                              />)}
  
                                          </View>
-                                     </ScrollView>
+                                 </ScrollView>
                                  }
                              </View>
                              </>
@@ -490,6 +484,7 @@ class Detail extends Component {
                                 alignContent: 'center'
                             }}>
                                 <View style={{ alignContent: 'center' }}>
+                                
                                     <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Introduction:</Text>
                                 </View>
                                 <View style={{ height: 120, padding: 10, borderColor: '#808080' }}>
@@ -538,7 +533,7 @@ class Detail extends Component {
                 <Modal transparent={true}
                     visible={this.state.shownotice}
                     animationType='slide'
-                    style={{ justifyContent: 'center', alignItems: 'center' }}
+                    style={{ justifyContent: 'center', alignItems: 'center',marginBottom:20 }}
                 >
                     <View style={{ backgroundColor: '#000000aa', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <View style={{
@@ -556,6 +551,15 @@ class Detail extends Component {
                         </View>
                     </View>
                 </Modal>
+                
+                    <ActionButton buttonColor="#2D7474" size={40}>
+                        <ActionButton.Item onPress={() => this.setState({ show: true })} style={styles.iconview1}>   
+                            <AntDesign name="pluscircle" size={20} color='white' />
+                        </ActionButton.Item>
+                        <ActionButton.Item onPress={this.save} style={styles.iconview2}>
+                            <Entypo name="save" size={20} color='white'   />       
+                        </ActionButton.Item>
+                    </ActionButton> 
             </View>
         )
     }
@@ -735,7 +739,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginRight: 10, justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 4
+        borderRadius: 4,
     },
     iconview2: {
         height: 40,

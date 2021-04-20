@@ -184,7 +184,9 @@ class Searchmenu extends React.Component {
         <SafeAreaView style={styles.header_safe_area}>
           <View style={styles.header}>
             <View style={styles.header_inner}>
-              
+            <View>
+                    <Entypo name="new-message" size={24} color="black" />
+                </View>
               <View style={{ flexDirection: 'row', marginLeft: 145 }}>
                 <TouchableHighlight
                   activeOpacity={1}
