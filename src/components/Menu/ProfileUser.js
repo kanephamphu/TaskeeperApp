@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, } from 'react-native';
 import { Avatar } from 'react-native-paper';
+import AppText from '../app-text';
 
 class ProfileUser extends Component {
   state = {
@@ -28,31 +29,31 @@ class ProfileUser extends Component {
         <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{this.state.user.name}</Text>
         <Text style={{ fontSize: 20 }}>{this.state.user.job}</Text>
         <View style={{ flexDirection: 'row', marginTop: 20, marginBottom: 20 }}>
-          <Text style={styles.fonttext}>Full name</Text>
+          <AppText i18nKey={'home_profile.fullname'} style={styles.fonttext}>Full name</AppText>
           <Text style={styles.fonttextinfor}>{this.state.user.fullname}</Text>
         </View>
         <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-          <Text style={styles.fonttext}>Email</Text>
+          <AppText i18nKey={'home_profile.email'} style={styles.fonttext}>Email</AppText>
           <Text style={styles.fonttextinfor}>{this.state.user.email}</Text>
         </View>
         <View style={{ marginLeft: 20, marginRight: 20, flexDirection: 'row', marginBottom: 20, borderBottomColor: '#71B7B7', borderBottomWidth: 1 }}>
-          <Text style={{ left: 10, fontWeight: 'bold', fontSize: 17 }}>Phone Number</Text>
+          <AppText i18nKey={'home_profile.phone'} style={{ left: 10, fontWeight: 'bold', fontSize: 17 }}>Phone Number</AppText>
           <Text style={styles.fonttextinfor}>{this.state.user.phonenumber}</Text>
         </View>
         <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-          <Text style={styles.fonttext}>Skill</Text>
+          <AppText i18nKey={'home_profile.skill'} style={styles.fonttext}>Skill</AppText>
           <Text style={styles.fonttextinfor}>{this.state.user.skill}</Text>
         </View>
         <View style={{ marginLeft: 20, marginRight: 20, flexDirection: 'row', marginBottom: 20, borderBottomColor: '#71B7B7', borderBottomWidth: 1 }}>
-          <Text style={{ left: 10, fontWeight: 'bold', fontSize: 17 }}>Language</Text>
+          <AppText i18nKey={'home_profile.language'} style={{ left: 10, fontWeight: 'bold', fontSize: 17 }}>Language</AppText>
           <Text style={styles.fonttextinfor}>{this.state.user.language}</Text>
         </View>
         <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-          <Text style={styles.fonttext}>Education</Text>
+          <AppText i18nKey={'home_profile.education'} style={styles.fonttext}>Education</AppText>
           <Text style={styles.fonttextinfor}>{this.state.user.education}</Text>
         </View>
         <TouchableOpacity style={styles.btnLogin} onPress={() => this.props.navigation.navigate("update")}>
-          <Text style={{ fontSize: 20, color: '#ffff' }}>Update</Text>
+          <AppText i18nKey={'home_profile.update'} style={{ fontSize: 20, color: '#ffff' }}>Update</AppText>
         </TouchableOpacity>
       </View>
 

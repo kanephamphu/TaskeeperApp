@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TextInput, Picker, ScrollView, ToastAndroid, To
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 const { height, width } = Dimensions.get('window');
 import { Ionicons } from '@expo/vector-icons';
+import AppText from '../app-text';
 var gender = [
   { label: "Male", value: 0 },
   { label: "Female", value: 1 }
@@ -43,19 +44,19 @@ class ChangeProfileUser extends Component {
         <View style={styles.header0}>
           <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.navigate("ProfileUser")}>
             <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#71B7B7" />
-            <Text style={{ fontWeight: 'bold', fontSize: 25, color: '#71B7B7', marginLeft: 15, marginTop: -2 }}>Change Profile</Text>
+            <AppText i18nKey={'home_update.title'} style={{ fontWeight: 'bold', fontSize: 25, color: '#71B7B7', marginLeft: 15, marginTop: -2 }}>Change Profile</AppText>
           </TouchableOpacity>
         </View>
         <ScrollView >
-          <Text style={styles.textall}>First Name</Text>
+          <AppText i18nKey={'home_update.firstname'} style={styles.textall}>First Name</AppText>
           <View style={styles.input}>
             <TextInput style={styles.textinput}></TextInput>
           </View>
-          <Text style={styles.textall}>Last Name</Text>
+          <AppText i18nKey={'home_update.lastname'} style={styles.textall}>Last Name</AppText>
           <View style={styles.input}>
             <TextInput style={styles.textinput}></TextInput>
           </View>
-          <Text style={styles.textall}>Birthday</Text>
+          <AppText i18nKey={'home_update.birthday'} style={styles.textall}>Birthday</AppText>
           <View style={styles.input}>
             <Picker
               style={styles.picker1}
@@ -119,7 +120,7 @@ class ChangeProfileUser extends Component {
             >
             </Picker>
           </View>
-          <Text style={styles.textall}>Gender</Text>
+          <AppText i18nKey={'home_update.gender'} style={styles.textall}>Gender</AppText>
           <View style={styles.input}>
             <RadioForm
               radio_props={gender}
@@ -133,11 +134,11 @@ class ChangeProfileUser extends Component {
               buttonColor={'#71B7B7'}
             />
           </View>
-          <Text style={styles.textall}>Identify Number</Text>
+          <AppText i18nKey={'home_update.identifynumber'} style={styles.textall}>Identify Number</AppText>
           <View style={styles.input}>
             <TextInput style={styles.textinput}></TextInput>
           </View>
-          <Text style={styles.textall}>Region</Text>
+          <AppText i18nKey={'home_update.region'} style={styles.textall}>Region</AppText>
           <View style={styles.input}>
             <Picker
               style={styles.picker4}
@@ -146,27 +147,27 @@ class ChangeProfileUser extends Component {
             >
             </Picker>
           </View>
-          <Text style={styles.textall}>Email</Text>
+          <AppText i18nKey={'home_update.email'} style={styles.textall}>Email</AppText>
           <View style={styles.input}>
             <TextInput style={styles.textinput}></TextInput>
           </View>
-          <Text style={styles.textall}>Phone</Text>
+          <AppText i18nKey={'home_update.phone'} style={styles.textall}>Phone</AppText>
           <View style={styles.input}>
             <TextInput style={styles.textinput}></TextInput>
           </View>
-          <Text style={styles.textall}>Address</Text>
+          <AppText i18nKey={'home_update.address'} style={styles.textall}>Address</AppText>
           <View style={styles.input}>
             <TextInput style={styles.textinput}></TextInput>
           </View>
-          <Text style={styles.textall}>University</Text>
+          <AppText i18nKey={'home_update.university'} style={styles.textall}>University</AppText>
           <View style={styles.input}>
             <TextInput style={styles.textinput}></TextInput>
           </View>
-          <Text style={styles.textall}>Major</Text>
+          <AppText i18nKey={'home_update.major'} style={styles.textall}>Major</AppText>
           <View style={styles.input}>
             <TextInput style={styles.textinput}></TextInput>
           </View>
-          <Text style={styles.textall}>Bank</Text>
+          <AppText i18nKey={'home_update.bank'} style={styles.textall}>Bank</AppText>
           <View style={styles.input}>
             <Picker
               style={styles.picker4}
@@ -175,11 +176,11 @@ class ChangeProfileUser extends Component {
             >
             </Picker>
           </View>
-          <Text style={styles.textall}>Account Number</Text>
+          <AppText i18nKey={'home_update.accountnumber'} style={styles.textall}>Account Number</AppText>
           <View style={styles.input}>
             <TextInput style={styles.textinput}></TextInput>
           </View>
-          <Text style={styles.textall}>Release Date</Text>
+          <AppText i18nKey={'home_update.releasedate'} style={styles.textall}>Release Date</AppText>
           <View style={styles.input}>
             <Picker
               style={styles.picker5}
@@ -194,16 +195,16 @@ class ChangeProfileUser extends Component {
             >
             </Picker>
           </View>
-          <Text style={styles.textall}>Account Name</Text>
+          <AppText i18nKey={'home_update.accountname'} style={styles.textall}>Account Name</AppText>
           <View style={styles.input}>
             <TextInput style={styles.textinput}></TextInput>
           </View>
           <View style={styles.vitributton}>
             <TouchableOpacity onPress={() => this.props.navigation.navigate("ProfileUser")} style={styles.button1}>
-              <Text style={styles.buttontext}>CANCEL</Text>
+              <AppText i18nKey={'home_update.cancel'} style={styles.buttontext}>CANCEL</AppText>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttontext}>SAVE</Text>
+              <AppText i18nKey={'home_update.save'} style={styles.buttontext}>SAVE</AppText>
             </TouchableOpacity>
           </View>
         </ScrollView>

@@ -47,7 +47,8 @@ export default class Register extends Component{
             nof:'',
             errors: {},
             shownotice:false,
-            notice:'',key:'', notice1:''
+            notice:'',key:'', notice1:'',
+            showtregister:false
         }
         this.onSubmit1 = this.onSubmit.bind(this)
       
@@ -60,7 +61,7 @@ export default class Register extends Component{
                     key:'success',
                     notice1:'Access email to verify your account!',
                 }); 
-                
+                console.log(data);
             }else if(data.success==false){ 
                 var dataserver=data.errors
              
@@ -439,12 +440,26 @@ export default class Register extends Component{
                                     <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                                     <Text>{this.state.notice}</Text>
                                     <Text>{this.state.notice1}</Text>
-                                    <TouchableOpacity onPress={() => {e.setState({shownotice:false,key:''}),this.props.navigation.navigate('Login')}} style={{
+                                    <TouchableOpacity onPress={() => {e.setState({shownotice:false,key:'',showtregister:false})}} style={{
                                         width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                                     }}>
                                         <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
                                     </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal >
+                        <Modal transparent={true}
+                            visible={this.state.showtregister}
+                            animationType='slide'
+                            style={{ justifyContent: 'center', alignItems: 'center' }}
+                            >
+                                 <View style={{backgroundColor: '#000000aa', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                 <View style={{
+                                    backgroundColor: '#faf9f9', borderRadius: 20,
+                                    height: 210, width: "70%", justifyContent: 'center', alignItems: 'center'
+                                }}>
+                                   <Text>dddd</Text>
                                 </View>
                             </View>
                         </Modal>

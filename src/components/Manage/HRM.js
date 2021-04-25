@@ -18,6 +18,7 @@ import avatarimage from "../../images/avatar11.png";
 import { connect } from "react-redux";
 import {socket} from "../../Socket.io/socket.io";
 import * as actions from "../../actions";
+import AppText from '../app-text';
 const { height, width } = Dimensions.get("window");
 var e;
 class HRM extends React.Component {
@@ -78,7 +79,7 @@ class HRM extends React.Component {
               backgroundColor: "#ffff",
             }}
           >
-            <Text>Blank task apply list</Text>
+            <AppText i18nKey={'home_manage.blank_show'}>Blank task apply list</AppText>
           </View>
         ) : (
           <View style={styles.flatlist}>

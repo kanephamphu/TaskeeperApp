@@ -17,23 +17,26 @@ import { MaterialIcons } from '@expo/vector-icons'
 import Animated from 'react-native-reanimated'
 import { Foundation } from '@expo/vector-icons'
 import DateTimePicker from 'react-native-modal-datetime-picker'
-import moment from 'moment'
+import moment from 'moment';
+import * as Permissions from 'expo-permissions';
 import iconsuccess from '../images/icon1.png'
 import iconerror from '../images/icon2.png'
 import MultiSelect from 'react-native-multiple-select'
 import MapInput from '../components/MapInput'
 import MyMapView from '../components/MapView'
+import * as ImagePicker from 'expo-image-picker';
 import { getLocation, geocodeLocationByName } from '../components/location-service'
 import {socket} from "../Socket.io/socket.io";
 const {height,width} =Dimensions.get('window');
 var e;
 var daynow = new Date()
 
-class TaskPage extends Component{
+export default class TaskPage extends React.Component{
     constructor(props){
         super(props);
         e=this;
         this.state={
+          localUri:null,
           user_id:'',
           number_task:'',
           skip:'',
@@ -85,50 +88,6 @@ class TaskPage extends Component{
           showtags:false,
           showlanguages:false,
           showlocation:false,
-          data:[
-            {
-                _id:'1',
-                name:'Lê Thị Thanh Ngân',
-                image:'https://scontent.fdad3-3.fna.fbcdn.net/v/t1.0-9/76722724_2450007135257757_1944716811731730432_o.jpg?_nc_cat=109&ccb=2&_nc_sid=e3f864&_nc_ohc=QX2RqVeIilcAX9FlbMD&_nc_oc=AQlW2Z7PIrrKBm6L9XL2G9I5bu6Ur_rANLzhAqwAvDiCgm-OT2Os-MOBKA-BXd9RwXY&_nc_ht=scontent.fdad3-3.fna&oh=b87ea6bc8d484a41077fb2fa178395ff&oe=5FE881E8',
-                rate: '4.6',
-            
-            },
-            {
-                _id:'2',
-                name:'Nguyễn Minh Nhã',
-                image:'https://scontent.fdad3-3.fna.fbcdn.net/v/t1.0-9/76722724_2450007135257757_1944716811731730432_o.jpg?_nc_cat=109&ccb=2&_nc_sid=e3f864&_nc_ohc=QX2RqVeIilcAX9FlbMD&_nc_oc=AQlW2Z7PIrrKBm6L9XL2G9I5bu6Ur_rANLzhAqwAvDiCgm-OT2Os-MOBKA-BXd9RwXY&_nc_ht=scontent.fdad3-3.fna&oh=b87ea6bc8d484a41077fb2fa178395ff&oe=5FE881E8',
-                rate: '4.6',
-             
-            },
-            {
-                _id:'3',
-                name:'Đỗ Đăng Phát',
-                image:'https://scontent.fdad3-3.fna.fbcdn.net/v/t1.0-9/76722724_2450007135257757_1944716811731730432_o.jpg?_nc_cat=109&ccb=2&_nc_sid=e3f864&_nc_ohc=QX2RqVeIilcAX9FlbMD&_nc_oc=AQlW2Z7PIrrKBm6L9XL2G9I5bu6Ur_rANLzhAqwAvDiCgm-OT2Os-MOBKA-BXd9RwXY&_nc_ht=scontent.fdad3-3.fna&oh=b87ea6bc8d484a41077fb2fa178395ff&oe=5FE881E8',
-                rate: '4.6',
-             
-            },
-            {
-                _id:'4',
-                name:'Phạm Phú Tài',
-                image:'https://scontent.fdad3-3.fna.fbcdn.net/v/t1.0-9/76722724_2450007135257757_1944716811731730432_o.jpg?_nc_cat=109&ccb=2&_nc_sid=e3f864&_nc_ohc=QX2RqVeIilcAX9FlbMD&_nc_oc=AQlW2Z7PIrrKBm6L9XL2G9I5bu6Ur_rANLzhAqwAvDiCgm-OT2Os-MOBKA-BXd9RwXY&_nc_ht=scontent.fdad3-3.fna&oh=b87ea6bc8d484a41077fb2fa178395ff&oe=5FE881E8',
-                rate: '4.6',
-             
-            },
-            {
-              _id:'5',
-              name:'Phạm Phú Tài',
-              image:'https://scontent.fdad3-3.fna.fbcdn.net/v/t1.0-9/76722724_2450007135257757_1944716811731730432_o.jpg?_nc_cat=109&ccb=2&_nc_sid=e3f864&_nc_ohc=QX2RqVeIilcAX9FlbMD&_nc_oc=AQlW2Z7PIrrKBm6L9XL2G9I5bu6Ur_rANLzhAqwAvDiCgm-OT2Os-MOBKA-BXd9RwXY&_nc_ht=scontent.fdad3-3.fna&oh=b87ea6bc8d484a41077fb2fa178395ff&oe=5FE881E8',
-              rate: '4.6',
-           
-            },
-            {
-              _id:'6',
-              name:'Phạm Phú Tài',
-              image:'https://scontent.fdad3-3.fna.fbcdn.net/v/t1.0-9/76722724_2450007135257757_1944716811731730432_o.jpg?_nc_cat=109&ccb=2&_nc_sid=e3f864&_nc_ohc=QX2RqVeIilcAX9FlbMD&_nc_oc=AQlW2Z7PIrrKBm6L9XL2G9I5bu6Ur_rANLzhAqwAvDiCgm-OT2Os-MOBKA-BXd9RwXY&_nc_ht=scontent.fdad3-3.fna&oh=b87ea6bc8d484a41077fb2fa178395ff&oe=5FE881E8',
-              rate: '4.6',
-          
-            },
-          ],
           items : [
             // this is the parent or 'item'
             {
@@ -343,7 +302,7 @@ class TaskPage extends Component{
         keycheck: '',
         task_id:'',
         showninvite:false,
-        dataemployee:[]
+        dataemployee:[],
         }
         this.onInvite = this.onInvite.bind(this)
         socket.on('sv-send-work-invitation',function(data){
@@ -401,7 +360,8 @@ class TaskPage extends Component{
               longitude:'',
               latitude:'',
               start_time:'',
-              end_time:''
+              end_time:'',
+              
             })
             //console.log(list)
           }
@@ -469,13 +429,14 @@ class TaskPage extends Component{
         })
 
       };
+
  	    onDetail(a) {
         this.props.detail(a)
       }
       componentDidMount=async()=>{
         const token= await AsyncStorage.getItem('token')
         const decode=jwt_decode(token)
-        if(this.props.sendshowposttask==undefined){
+        if(this.state.showpost==true){
           this.setState({
             showposttask:true
           })
@@ -1088,6 +1049,41 @@ class TaskPage extends Component{
           showrecommendperson:false
         })
     }
+    openImagePickerAsync = async () => {
+    let permissionResult = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      type: [ImagePicker.MediaTypeOptions.file]
+    });
+    console.log(pickerResult);
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    this.setState({ localUri: pickerResult.uri});
+      
+      // if(this.state.localUri!=null){
+      //   let apiUrl = 'https://taskeepererver.herokuapp.com/avataruploader/';
+      //   var data = new FormData();  
+      //   data.append('file', {  
+      //     uri: this.state.localUri,
+      //     name: 'file',
+      //     type: 'image/jpg'
+      //   })
+      //   data.append('secret_key', this.state.secret_key)
+      //   console.log(data)
+      //   fetch(apiUrl, {  
+      //     method: 'POST',
+      //     body: data
+      //   }).then(
+      //     response => {
+      //       console.log('success ')
+      //       console.log(response)
+      //     }
+      //     ).catch(err => {
+      //     console.log('err ')
+      //     console.log(err)
+      //   } )
+      // }
+    }
     renderInner = () => (
 
         <View style={styles.panel}>
@@ -1630,8 +1626,7 @@ class TaskPage extends Component{
       enableCont = false;
     render(){
       var size=this.state.position.length;
-      console.log(this.props.sendshowposttask);
-      //var d = new Date();
+      // console.log(this.state.showpost)
         return (
             <View style={styles.container}>
                 <Modal transparent={true}
@@ -1722,7 +1717,7 @@ class TaskPage extends Component{
                             />
                         <View style={styles.header}>
                             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                            {this.props.sendshowposttask==undefined?
+                            {this.state.showpost==true?
                                 <TouchableOpacity onPress={()=>{this.setState({showposttask:false});this.props.navigation.navigate("Home")}} style={{flexDirection:'row'}}>
                                 <Ionicons style={{marginTop:1}} name="ios-arrow-back" size={28} color="#2d7474" />
                                 <Text style={{fontWeight: 'bold', fontSize: 25, color: '#2d7474',marginLeft:15,marginTop:-2}}>Home Page</Text>
@@ -1738,11 +1733,24 @@ class TaskPage extends Component{
                         </View>
                         <View style={{marginBottom:20}}>
                         <View style={{flexDirection:'row'}}>
+                            <View>
+                            {this.state.localUri==null?
+                              <Avatar.Image
+                                  source={this.state.task_owner_avatar?{uri:this.state.task_owner_avatar}:null}
+                                  size={80}
+                                  style={{marginTop:10, marginLeft:30}}
+                              />
+                            :
                             <Avatar.Image
-                                source={this.state.task_owner_avatar?{uri:this.state.task_owner_avatar}:null}
-                                size={80}
-                                style={{marginTop:10, marginLeft:30}}
-                            />
+                                  source={{uri:this.state.localUri}}
+                                  size={80}
+                                  style={{marginTop:10, marginLeft:30}}
+                              />
+                            }
+                              <TouchableOpacity onPress={()=>this.openImagePickerAsync()} style={{position:'absolute',right:0,bottom:0,backgroundColor:"#cccc",borderRadius:100,width:30,height:30,justifyContent: 'center',alignItems: 'center'}}>
+                                <Entypo name="camera" size={15} color="black" />
+                              </TouchableOpacity>
+                            </View>
                             <View style={{marginTop:20,marginLeft:5,flexDirection:'column'}}>
                                 <View style={{flexDirection:'row',marginLeft:2}}>
                                     <Text style={{fontSize:20,fontWeight:'bold'}}>{this.state.task_owner_first_name} {this.state.task_owner_last_name} </Text>                 
@@ -2024,7 +2032,6 @@ class RenderItem  extends React.Component{
     }
   }
   
-export default TaskPage;
 const styles = StyleSheet.create({
   container:{
     flex: 1,

@@ -21,6 +21,7 @@ import iconsuccess from '../../../images/icon1.png';
 import {socket} from "../../../Socket.io/socket.io";
 import iconerror from '../../../images/icon2.png';
 import iconwarning from '../../../images/icon3.png';
+import AppText from '../../app-text';
 const { height, width } = Dimensions.get('window');
 var e;
 export default class Profilefriend extends React.Component {
@@ -284,8 +285,10 @@ export default class Profilefriend extends React.Component {
                                 backgroundColor: '#faf9f9', borderRadius: 20,
                                 height: 220, width: "70%", justifyContent: 'center', alignItems: 'center'
                             }}>
-
-                                <Text style={{ fontWeight: 'bold', fontSize: 23 }}>{this.state.votes} đánh giá</Text>
+                                <View style={{flexDirection:'row'}}>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 23 }}>{this.state.votes} </Text>
+                                    <AppText style={{ fontWeight: 'bold', fontSize: 23 }} i18nKey={'home_profilefriend.rate'}>rates</AppText>
+                                </View>
                                 <View style={{ flexDirection: 'row' }}>
                                     <TouchableOpacity onPress={() => this.setState({ vote: 1 })}>
                                         <AntDesign name={this.state.vote >= 1 ? "star" : "staro"} size={24} color={this.state.vote >= 1 ? "#FFD700" : "black"} />
@@ -323,7 +326,7 @@ export default class Profilefriend extends React.Component {
                                         borderWidth: 1, borderColor: '#488B8F',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
                                     }}>
-                                        <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</Text>
+                                        <AppText i18nKey={'home_profilefriend.cancel'} style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</AppText>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => this.onVote(_id)} style={{
                                         width: "50%", backgroundColor: '#488B8F',
@@ -420,7 +423,7 @@ export default class Profilefriend extends React.Component {
                                             <MaterialCommunityIcons name="cast-education" size={24} color="#555555" />
                                         </View>
                                         <View style={styles.viewtext}>
-                                            <Text style={styles.text}>Eucation infomation: <Text style={{ fontWeight: 'bold' }}></Text></Text>
+                                            <AppText i18nKey={'home_profilefriend.eduinfor'} style={styles.text}>Education infomation: <Text style={{ fontWeight: 'bold' }}></Text></AppText>
                                         </View>
                                     </View>
                                     :
@@ -430,7 +433,7 @@ export default class Profilefriend extends React.Component {
                                                     <MaterialIcons name="work" size={24} color="#555555" />
                                                 </View>
                                                 <View style={styles.viewtext}>
-                                                    <Text style={styles.text}>Working information:</Text>
+                                                    <AppText i18nKey={'home_profilefriend.workinfor'} style={styles.text}>Working information:</AppText>
                                                 </View>
                                     </View>
                                     :
@@ -441,7 +444,7 @@ export default class Profilefriend extends React.Component {
                                                     <MaterialCommunityIcons name="cast-education" size={24} color="#555555" />
                                                 </View>
                                                 <View style={styles.viewtext}>
-                                                    <Text style={styles.text}>Eucation infomation: <Text style={{ fontWeight: 'bold' }}>{item.school_name}</Text></Text>
+                                                    <AppText i18nKey={'home_profilefriend.eduinfor'} style={styles.text}>Education infomation:</AppText> <Text style={{ fontWeight: 'bold' }}>{item.school_name}</Text>
                                                 </View>
                                             </View>
                                         )
@@ -458,7 +461,7 @@ export default class Profilefriend extends React.Component {
                                             <MaterialIcons name="work" size={24} color="#555555" />
                                         </View>
                                         <View style={styles.viewtext}>
-                                            <Text style={styles.text}>Working information:  <Text style={{ fontWeight: 'bold' }}></Text></Text>
+                                            <AppText i18nKey={'home_profilefriend.workinfor'} style={styles.text}>Working information:  <Text style={{ fontWeight: 'bold' }}></Text></AppText>
                                         </View>
                                     </View>
                                     :
@@ -468,7 +471,7 @@ export default class Profilefriend extends React.Component {
                                                     <MaterialIcons name="work" size={24} color="#555555" />
                                                 </View>
                                                 <View style={styles.viewtext}>
-                                                    <Text style={styles.text}>Working information:</Text>
+                                                    <AppText i18nKey={'home_profilefriend.workinfor'} style={styles.text}>Working information:</AppText>
                                                 </View>
                                     </View>
                                     :
@@ -479,7 +482,7 @@ export default class Profilefriend extends React.Component {
                                                     <MaterialIcons name="work" size={24} color="#555555" />
                                                 </View>
                                                 <View style={styles.viewtext}>
-                                                    <Text style={styles.text}>Working information:  <Text style={{ fontWeight: 'bold' }}>{item.company_name}</Text></Text>
+                                                    <AppText i18nKey={'home_profilefriend.workinfor'} style={styles.text}>Working information: </AppText> <Text style={{ fontWeight: 'bold' }}> {item.company_name}</Text>
                                                 </View>
                                             </View>
                                         )
@@ -495,7 +498,8 @@ export default class Profilefriend extends React.Component {
                                         <Fontisto name="persons" size={24} color="#555555" />
                                     </View>
                                     <View style={styles.viewtext}>
-                                        <Text style={styles.text}>Follower: {this.state.follower_number==null?null:this.state.follower_number}</Text>
+                                        <AppText style={styles.text} i18nKey={'home_profilefriend.follower'}>Follower: </AppText>
+                                        <Text style={styles.text}>{this.state.follower_number==null?null:this.state.follower_number}</Text>
                                     </View>
                                 </View>
                                 <View style={styles.two}>
@@ -503,8 +507,9 @@ export default class Profilefriend extends React.Component {
                                         <MaterialCommunityIcons name="vote" size={24} color="#555555" />
                                     </View>
                                     <View style={styles.viewtext}>
+                                        <AppText style={styles.text} i18nKey={'home_profilefriend.avgvotes'}>Average votes: </AppText>
                                         <Text style={styles.text}>
-                                            Average votes: {!number?null:number}</Text>
+                                            {!number?null:number}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -513,14 +518,14 @@ export default class Profilefriend extends React.Component {
                         <View style={{ marginTop: 5, borderBottomWidth: 1, borderBottomColor: '#DDDDDD' }}>
                             <View style={{ flexDirection: 'column', margin: 10, }}>
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate("Detailprofile", { _id: this.props.route.params._id })} style={{ marginLeft: 10 }}>
-                                    <Text>See more profile...</Text>
+                                    <AppText i18nKey={'home_profilefriend.seemore'}>See more profile...</AppText>
                                 </TouchableOpacity>
                             </View>
                         </View>
                         <View style={{ marginTop: 5, borderBottomWidth: 1, borderBottomColor: '#DDDDDD' }}>
                             <View style={{ flexDirection: 'column', margin: 10 }}>
                                 <View style={{ marginLeft: 10 }}>
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}>History Jobs</Text>
+                                    <AppText i18nKey={'home_profilefriend.historyjob'} style={{ fontSize: 15, fontWeight: 'bold' }}>History Jobs</AppText>
                                 </View>
                                 <View style={{ marginTop: 20 }}>
                                     {this.state.data.map((item) => {
@@ -554,7 +559,7 @@ export default class Profilefriend extends React.Component {
                                         justifyContent: 'center', alignItems: 'center',
                                         width: "100%", height: 35, borderRadius: 5, flexDirection: "row"
                                     }}>
-                                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black' }}>View history jobs</Text>
+                                        <AppText i18nKey={'home_profilefriend.viewhistory'} style={{ fontSize: 16, fontWeight: 'bold', color: 'black' }}>View history jobs</AppText>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -562,7 +567,7 @@ export default class Profilefriend extends React.Component {
                         <View style={{ marginTop: 5, borderBottomWidth: 1, borderBottomColor: '#DDDDDD' }}>
                             <View style={{ flexDirection: 'column', margin: 10 }}>
                                 <View style={{ marginLeft: 10 }}>
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Jobs Page</Text>
+                                    <AppText i18nKey={'home_profilefriend.jobspage'} style={{ fontSize: 15, fontWeight: 'bold' }}>Jobs Page</AppText>
                                 </View>
                                 <View style={{ marginTop: 20 }}>
                                     {this.state.datawall.length!=1?this.state.datawall.map((item) => {
@@ -598,22 +603,22 @@ export default class Profilefriend extends React.Component {
                                                                     <Text style={{ fontWeight: 'bold', fontSize: 22, color: '#71B7B7' }}>{task_title}</Text>
                                                                 </TouchableOpacity>
                                                                 <View style={{ marginTop: 10, flexDirection: 'row' }}>
-                                                                    <Text style={{ color: '#696969' }}>Address: {item.location.formatted_address}</Text>
-                                                                    <Text style={{ color: '#696969' }}></Text>
+                                                                    <AppText i18nKey={'home_profilefriend.address'} style={{ color: '#696969' }}>Address: </AppText>
+                                                                    <Text style={{ color: '#696969' }}>{item.location.formatted_address}</Text>
                                                                 </View>
                                                                 <View style={{ marginTop: 10, flexDirection: 'row' }}>
-                                                                    <Text style={{ color: '#696969' }}>Full name:{item.task_owner_first_name} {item.task_owner_last_name}</Text>
-                                                                    <Text></Text>
+                                                                    <AppText i18nKey={'home_profilefriend.fullname'} style={{ color: '#696969' }}>Full name: </AppText>
+                                                                    <Text style={{ color: '#696969' }}>{item.task_owner_first_name} {item.task_owner_last_name}</Text>
                                                                 </View>
                                                                 <View style={{ marginTop: 10 }}>
                                                                 </View>
                                                                 <View style={{ marginTop: 10, flexDirection: 'column' }}>
-                                                                    <Text style={{ fontWeight: 'bold' }}>TASK DESCRIPTION:</Text>
+                                                                    <AppText i18nKey={'home_profilefriend.taskdes'} style={{ fontWeight: 'bold' }}>TASK DESCRIPTION:</AppText>
                                                                     <View style={{ marginTop: 10, flexDirection: 'row' }}>
                                                                         <Text style={{ marginLeft: 20 }}></Text>
                                                                         <Text>...</Text>
                                                                         <TouchableOpacity onPress={() => this.props.navigation.navigate("Detail", { _task_id: item._id })}>
-                                                                            <Text style={{ color: "#696969" }}> see detail</Text>
+                                                                            <AppText i18nKey={'home_profilefriend.seedetail'} style={{ color: "#696969" }}> see detail</AppText>
                                                                         </TouchableOpacity>
                                                                     </View>
                                                                 </View>

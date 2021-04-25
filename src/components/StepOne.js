@@ -8,6 +8,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io';
 import AsyncStorage from '@react-native-community/async-storage';
 import {socket} from "../Socket.io/socket.io";
+import AppText from './app-text';
 var gender = [
   { label: "male", value: "male" },
   { label: "female", value: "female" }
@@ -234,7 +235,7 @@ class StepOne extends Component {
       <View style={[styles.container]}>
         <ScrollView>
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ fontSize: 20, fontStyle: 'italic', fontWeight: 'bold' }}>Personal Information</Text>
+            <AppText i18nKey={'home_information.personalinfor'} style={{ fontSize: 20, fontStyle: 'italic', fontWeight: 'bold' }}>Personal Information</AppText>
           </View>
           <View >
             <Text style={styles.textall}>First Name:</Text>

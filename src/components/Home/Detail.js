@@ -17,6 +17,7 @@ import {socket} from "../../Socket.io/socket.io";
 import anhbiadetail from './../../images/anhbiadetail.jpg';
 import Scroll from './scroll';
 import ActionButton from 'react-native-action-button';
+import AppText from '../app-text';
 var e;
 const { height, width } = Dimensions.get('window');
 class Detail extends Component {
@@ -313,9 +314,9 @@ class Detail extends Component {
                         <View style={styles.body}>
                             <View style={styles.bodyThree}>
                                 <View style={{ marginTop: 30 }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
+                                    <AppText i18nKey={'home_detail.jobdescription'} style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
                                         JOB DESCRIPTION:
-                            </Text>
+                            </AppText>
                                 </View>
                                 <View style={{ marginLeft: 25, marginTop: 10, marginRight: 20, flexDirection: 'row', width: width - 38 }}>
 
@@ -337,9 +338,9 @@ class Detail extends Component {
                                 </Text>*/}
                                 </View>
                                 <View style={{ marginTop: 30 }}>              
-                                    <Text style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
+                                    <AppText i18nKey={'home_detail.jobrequirement'} style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
                                         JOB REQUIREMENT:
-                            </Text>
+                                    </AppText>
                                 </View>
                                 <View style={{ marginLeft: 25, marginTop: 10, marginRight: 20, flexDirection: 'row', width: width - 38 }}>
                                     {/*<Text style={styles.textJobRe}>
@@ -353,9 +354,9 @@ class Detail extends Component {
                                     </Text>
                                 </View>
                                 <View style={{ marginTop: 30 }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
+                                    <AppText i18nKey={'home_detail.worklocation'} style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
                                         WORK LOCATION:
-                            </Text>
+                                    </AppText>
                                 </View>
                                 <View style={{ alignItems: 'center', marginLeft: 25, marginTop: 10, marginRight: 30, flexDirection: 'row' }}>
                                     <Entypo name="location" size={24} color="red" />
@@ -366,27 +367,29 @@ class Detail extends Component {
                                     </View>
                                 </View>
                                 <View style={{ marginTop: 30 }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
+                                    <AppText i18nKey={'home_detail.other'} style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
                                         OTHER:
-                            </Text>
+                                    </AppText>
                                 </View>
                                 <View style={{ marginLeft: 25, marginTop: 10, marginRight: 20 }}>
                                     <View style={{ marginLeft: 10, marginTop: 5 }}>
                                         {this.state.price_type == "dealing" ?
-                                            <>
+                                            <View style={{flexDirection:'row'}}>
+                                                <AppText style={styles.textJobRe} i18nKey={'home_detail.pricetype'}>Price Type:</AppText>
                                                 <Text style={styles.textJobRe}>
-                                                    Price Type: {this.state.price_type}
+                                                    {this.state.price_type}
                                                 </Text>
-                                            </>
+                                            </View>
                                             :
-                                            <>
+                                            <View style={{flexDirection:'row'}}>
+                                                <AppText style={styles.textJobRe} i18nKey={'home_detail.pricetype'}>Price Type:</AppText>
                                                 <Text style={styles.textJobRe}>
-                                                    Price Type: {this.state.floor_price} - {this.state.ceiling_price}
+                                                    {this.state.floor_price} - {this.state.ceiling_price}
                                                 </Text>
-                                            </>}
+                                            </View>}
                                             <View style={{flexDirection: 'row'}}>
-                                            <Text style={styles.textJobRe}>
-                                                        Languages: </Text>
+                                            <AppText i18nKey={'home_detail.languages'} style={styles.textJobRe}>
+                                                        Languages: </AppText>
                                             {this.state.languages.map((items) => {
                                                 return (
                                                 <View key={items}>
@@ -401,25 +404,33 @@ class Detail extends Component {
                                      
                                         {this.state.task_type == 'freelance' ?
                                             null :
-                                            <>
-                                                <Text style={styles.textJobRe}>
-                                                    Industry: {this.state.industry}
-                                                </Text>
-                                                <Text style={styles.textJobRe}>
-                                                    Skills: {this.state.skills}
-                                                </Text>
-                                                <Text style={styles.textJobRe}>
-                                                    Task type: {this.state.task_type}
-                                                </Text>
-                                              
+                                            <>  
+                                                <View style={{flexDirection:"row"}}>
+                                                    <AppText style={styles.textJobRe} i18nKey={'home_detail.industry'}>Industry: </AppText>
+                                                    <Text style={styles.textJobRe}>
+                                                        {this.state.industry}
+                                                    </Text>
+                                                </View>
+                                                <View style={{flexDirection:"row"}}>
+                                                    <AppText style={styles.textJobRe} i18nKey={'home_detail.skills'}>Skills: </AppText>
+                                                    <Text style={styles.textJobRe}>
+                                                        {this.state.skills}
+                                                    </Text>
+                                                </View>
+                                                <View style={{flexDirection:"row"}}>
+                                                    <AppText style={styles.textJobRe} i18nKey={'home_detail.tasktype'}>Task type: </AppText>
+                                                    <Text style={styles.textJobRe}>
+                                                        {this.state.task_type}
+                                                    </Text>
+                                                </View>
                                             </>
                                         }
                                     </View>
                                 </View>
                                 <View style={{ marginTop: 30 }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
+                                    <AppText i18nKey={'home_detail.tags'} style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
                                         TAGS:
-                                </Text>
+                                </AppText>
                                 </View>
                                 <View style={{ marginLeft: 25, marginTop: 10, marginRight: 20, marginBottom: 50 }}>
                                     <FlatList numColumns={2} data={this.state.tags} renderItem={({ item, index }) => {
@@ -443,9 +454,9 @@ class Detail extends Component {
                             :
                              <>
                              <View>
-                                 <Text style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
+                                 <AppText i18nKey={'home_detail.title_show'} style={{ fontWeight: 'bold', fontSize: 13, marginLeft: 15 }}>
                                      RECOMMENDED FOR YOU:
-                             </Text>
+                             </AppText>
                              </View>
                              <View style={styles.recommend}>
                                  {this.state.isLoadingrecomend == false ?
@@ -485,7 +496,7 @@ class Detail extends Component {
                             }}>
                                 <View style={{ alignContent: 'center' }}>
                                 
-                                    <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Introduction:</Text>
+                                    <AppText i18nKey={'home_detail.introduction'} style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Introduction:</AppText>
                                 </View>
                                 <View style={{ height: 120, padding: 10, borderColor: '#808080' }}>
                                     <TextInput multiline={true}
@@ -502,7 +513,7 @@ class Detail extends Component {
                                    <Text style={{fontStyle: 'italic',color:'red'}}>{this.state.key=='intro'?this.state.notice:null}</Text>
                                </View>
                                 <View style={{ alignContent: 'center' }}>
-                                    <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Price:</Text>
+                                    <AppText i18nKey={'home_detail.price'} style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Price:</AppText>
                                 </View>
                                 <View style={{ padding: 10, borderColor: '#808080' }}>
                                     <TextInput
@@ -520,10 +531,10 @@ class Detail extends Component {
                                </View>
                                 <View style={styles.controlStyle}>
                                     <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false,key:'',introduction:'',price:''  })}>
-                                        <Text style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancle</Text>
+                                        <AppText i18nKey={'home_detail.cancel'} style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancel</AppText>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.apply} onPress={this.applyJob}>
-                                        <Text style={{ fontWeight: 'bold', color: "white", fontSize: 18 }}>Apply</Text>
+                                        <AppText i18nKey={'home_detail.apply'} style={{ fontWeight: 'bold', color: "white", fontSize: 18 }}>Apply</AppText>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -634,7 +645,7 @@ const Task = ({ onStack, _id, first_name, image, last_name, location, title, onS
                     shadowOpacity: 0.1,
                     elevation: 4, justifyContent: 'center', alignItems: 'center'
                 }}>
-                    <Text style={{ fontSize: 18, color: 'white', fontWeight: 'bold' }}>Detail</Text>
+                    <AppText i18nKey={'home_detail.detail'} style={{ fontSize: 18, color: 'white', fontWeight: 'bold' }}>Detail</AppText>
                 </TouchableOpacity>
                 </View>
                

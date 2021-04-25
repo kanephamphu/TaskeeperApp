@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
 import avatarimage from '../../images/avatar11.png';
 import {socket} from "../../Socket.io/socket.io";
+import AppText from '../app-text';
 const {height,width} =Dimensions.get('window');
 var e;
 
@@ -129,7 +130,7 @@ onVote= async () =>  {
                             height: 220, width: "70%", justifyContent: 'center', alignItems: 'center'
                         }}>
 
-                            <Text style={{ fontWeight: 'bold', fontSize: 23 }}>Vote</Text>
+                            <AppText i18nKey={'home_manage.vote'} style={{ fontWeight: 'bold', fontSize: 23 }}>Vote</AppText>
                             <View style={{ flexDirection: 'row' }}>
                                 <TouchableOpacity onPress={() => this.setState({ vote: 1 })}>
                                     <AntDesign name={this.state.vote >= 1 ? "star" : "staro"} size={24} color={this.state.vote >= 1 ? "#FFD700" : "black"} />
@@ -167,7 +168,7 @@ onVote= async () =>  {
                                         borderWidth:1,borderColor:'#488B8F',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
                                     }}>
-                                    <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Back</Text>
+                                    <AppText i18nKey={'home_manage.back'} style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Back</AppText>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => this.onVote()} style={{
                                         width: "50%", backgroundColor:'#488B8F',
@@ -191,7 +192,7 @@ onVote= async () =>  {
                                     height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
                                 }}>
                                     <Image source={iconsuccess} style={{ height: 50, width: 50 }}></Image>
-                                    <Text>Rate Success!</Text>
+                                    <AppText i18nKey={'home_manage.rate_notice'}>Rate Success!</AppText>
                                     <TouchableOpacity onPress={() => this.setState({ shownotice: false })} style={{
                                         width: "50%", backgroundColor: 'green' ,
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
@@ -208,7 +209,7 @@ onVote= async () =>  {
                   :this.state.dataemployee.length ===0 
                   ?
                   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "#ffff" }}>
-                    <Text>Blank task apply list</Text>
+                    <AppText i18nKey={'home_manage.blank_show'}>Blank task apply list</AppText>
                   </View>
                   :
                   <View style={styles.flatlist}>
@@ -287,7 +288,7 @@ class RenderItem  extends React.Component{
                           borderColor:'#71B7B7',
                           borderWidth:1,
                         }}>
-                            <Text style={{fontSize:15,color:'#ffff'}}>Rate</Text> 
+                            <AppText i18nKey={'home_manage.rate'} style={{fontSize:15,color:'#ffff'}}>Rate</AppText> 
                       </TouchableOpacity>
                 </View>
               </View>

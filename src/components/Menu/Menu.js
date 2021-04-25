@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { View, Text, Switch, StyleSheet, TouchableOpacity, TextInput, Image, ScrollView, Dimensions, SafeAreaView } from 'react-native'
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io'
@@ -11,9 +11,12 @@ import Collapsible from 'react-native-collapsible';
 import avatar1 from '../../images/avatar11.png'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import {socket} from "../../Socket.io/socket.io";
+import AppText from '../app-text';
+import { connect } from 'react-redux';
+import * as actions from '../../actions/index';
 const { height, width } = Dimensions.get('window');
 var e;
-class New extends Component {
+class New extends PureComponent {
     constructor(props) {
         super(props);
         e = this;
@@ -97,9 +100,17 @@ class New extends Component {
         })
 
     }
+    setLanguage = language => {
+        this.setState({ language });
+        this.props.setLanguage(language);
+    }
     toggleSwitch = (value) => {
         //onValueChange of the switch this function will be called
         this.setState({ switchValue: value })
+        if(this.state.switchValue==true){
+            this.setLanguage('en')
+        }
+        else{this.setLanguage('vi')}
         //state changes according to switch
         //which will result in re-render the text
     }
@@ -151,10 +162,12 @@ class New extends Component {
         }
     }
     render() {
+        const { language } = this.props;
+        const isVNLang = language === 'en' ? true : false;
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.header0}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 25, color: '#2d7474', marginLeft: 15, marginTop: -2 }}>Menu</Text>
+                <AppText style={{ fontWeight: 'bold', fontSize: 25, color: '#2d7474', marginLeft: 15, marginTop: -2 }} i18nKey={'menu'}>Menu</AppText>
                 </View>
                 <ScrollView>
                     <View style={styles.header}>
@@ -179,7 +192,7 @@ class New extends Component {
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate("ProfileUser", {
                                     first_name: this.state.first_name, last_name: this.state.last_name,
                                     _id: this.state._user_id
-                                })}>
+                                })}> 
                                     <ShimmerPlaceholder style={{ height: 45, marginTop: 2, borderRadius: 7,width:180}} autoRun visible={this.state.isLoading}>
                                         <Text style={{ fontWeight: 'bold', fontSize: 30 }}>{this.state.first_name} {this.state.last_name}</Text>
                                     </ShimmerPlaceholder>
@@ -189,17 +202,17 @@ class New extends Component {
                                     <View style={{ flexDirection: 'row' }} >
                                         <SimpleLineIcons style={{ marginRight: 3 }} name="user-follow" size={12} color="#71B7B7" />
                                         <TouchableOpacity onPress={()=>this.props.navigation.navigate("Listfollower",{ _id: this.state._user_id})}>
-                                        <Text style={{ fontSize: 12 }}>
-                                            Follower {this.state.follower_number}
-                                        </Text>
+                                        <AppText i18nKey={'home_menu.follower'} style={{ fontSize: 12 }}>
+                                        Follower {this.state.follower_number}
+                                        </AppText>
                                         </TouchableOpacity>
                                        
                                     </View>
                                     <View style={{ flexDirection: 'row', marginLeft: 30 }} >
                                         <SimpleLineIcons style={{ marginRight: 3 }} name="user-following" size={12} color="#71B7B7" />
-                                        <Text style={{ fontSize: 12 }}>
-                                            Following {this.state.following_number}
-                                        </Text>
+                                        <AppText i18nKey={'home_menu.following'} style={{ fontSize: 12 }}>
+                                        Following {this.state.following_number}
+                                        </AppText>
                                     </View>
                                 </View>
                             </View>
@@ -220,13 +233,13 @@ class New extends Component {
                             height: height * 0.07, paddingTop: 8
                         }}>
                             <Ionicons style={{ marginLeft: 20 }} name="md-settings" size={30} color="#71B7B7" />
-                            <Text style={{ fontSize: 23, marginLeft: 15 }}>Settings</Text>
+                            <AppText style={{ fontSize: 23, marginLeft: 15 }} i18nKey={'home_menu.setting'}>Settings</AppText>
                         </View>
                         <View>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate("Savetask")} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View style={{ flexDirection: 'row',marginLeft:5 }}>
                                     <View style={styles.texticon}>
-                                        <Text style={styles.text}>Save jobs</Text>
+                                        <AppText style={styles.text} i18nKey={'home_menu.savejob'}>Save jobs</AppText>
                                     </View>
                                 </View>
                                 <View style={styles.iconstyle}>
@@ -237,7 +250,7 @@ class New extends Component {
                                 <View style={{ flexDirection: 'row',marginLeft:5 }}>
                                   
                                     <View style={styles.texticon}>
-                                        <Text style={styles.text}>Apply jobs</Text>
+                                        <AppText style={styles.text} i18nKey={'home_menu.applyjob'}>Apply jobs</AppText>
                                     </View>
                                 </View>
 
@@ -248,7 +261,7 @@ class New extends Component {
                             <TouchableOpacity onPress={this.toggleExpanded} style={{ flexDirection: 'row',marginLeft:5 }}>
                               
                                 <View style={styles.texticon}>
-                                    <Text style={styles.text}>Change password</Text>
+                                    <AppText style={styles.text} i18nKey={'home_menu.changpass'}>Change Password</AppText>
                                 </View>
                             </TouchableOpacity>
                             <Collapsible collapsed={this.state.collapsed}>
@@ -287,7 +300,7 @@ class New extends Component {
                                     </TextInput>
                                     <View><Text>{this.state.nof}</Text></View>
                                     <TouchableOpacity onPress={this.onSubmitPassword} style={styles.btnLogin}>
-                                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#ffff' }}>Save</Text>
+                                    <AppText style={{ fontSize: 18, fontWeight: 'bold', color: '#ffff' }} i18nKey={'home_menu.save'}>Save</AppText>
                                     </TouchableOpacity>
 
                                 </View>
@@ -298,7 +311,7 @@ class New extends Component {
                             <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5 }}>
                                
                                 <View style={styles.texticon}>
-                                    <Text style={styles.text}>Language</Text>
+                                    <AppText style={styles.text} i18nKey={'home_menu.lang'}>Language</AppText>
                                 </View>
                             </TouchableOpacity>
 
@@ -307,7 +320,7 @@ class New extends Component {
                             <View style={{ flexDirection: 'row',marginLeft:5 }}>
                                
                                 <View style={styles.texticon}>
-                                    <Text style={styles.text}>Notification</Text>
+                                <AppText style={styles.text} i18nKey={'home_menu.notification'}>Notification</AppText>
                                 </View>
                             </View>
                             <View style={styles.iconstyle}>
@@ -321,7 +334,7 @@ class New extends Component {
                         <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5 }}>
                            
                             <View style={styles.texticon}>
-                                <Text style={styles.text}>Help</Text>
+                                <AppText style={styles.text} i18nKey={'home_menu.help'}>Help</AppText>
                             </View>
                         </TouchableOpacity>
 
@@ -331,7 +344,7 @@ class New extends Component {
                             height: height * 0.07, paddingTop: 8
                         }}>
                             <MaterialIcons style={{ marginLeft: 18 }} name="payment" size={30} color="#71B7B7" />
-                            <Text style={{ fontSize: 23, marginLeft: 15 }}>Payment</Text>
+                            <AppText style={{ fontSize: 23, marginLeft: 15 }} i18nKey={'home_menu.payment'}>Payment</AppText>
                         </View>
                         <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5,justifyContent:'space-between'  }} onPress={() => this.props.navigation.navigate("HomePayment")} >
                           
@@ -358,7 +371,7 @@ class New extends Component {
                                 <AntDesign name="logout" size={30} color="#71B7B7" />
                             </View>
                             <View style={styles.texticon}>
-                                <Text style={styles.text}>Log out</Text>
+                            <AppText style={styles.text} i18nKey={'home_menu.logout'}>Log out</AppText>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -372,7 +385,22 @@ class New extends Component {
     }
 }
 
-export default New;
+const mapStateToProps = state => {
+	return {
+		language: state.languageReducer.language
+	};
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setLanguage: language => {
+            dispatch(actions.changeLanguage(language));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(New);
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

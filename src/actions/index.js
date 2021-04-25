@@ -10,3 +10,10 @@ export * from './hrm.action';
 export * from './education.action';
 export * from './authentication.action';
 export * from './working.action';
+import * as types from '../constants/action-types';
+export const changeLanguage = language => {
+    return {
+        type: types.CHANGE_LANGUAGE,
+        language
+    }
+}

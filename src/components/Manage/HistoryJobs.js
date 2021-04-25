@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import avatarimage from '../../images/avatar11.png';
 import jwt_decode from 'jwt-decode'
 import {socket} from "../../Socket.io/socket.io";
+import AppText from '../app-text';
 const {height,width} =Dimensions.get('window');
 var e;
 
@@ -58,7 +59,7 @@ export default class HistoryJob extends React.Component {
           this.state.dataJob.length ===0 
           ?
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "#ffff" }}>
-            <Text>Blank task apply list</Text>
+            <AppText i18nKey={'home_manage.blank_show'}>Blank task apply list</AppText>
           </View>
           :
           <View style={styles.flatlist}>

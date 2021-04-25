@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
     View, Text, StyleSheet, TouchableOpacity,
     FlatList, Image, ScrollView, Dimensions,
@@ -23,9 +23,10 @@ import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { MaterialIcons } from '@expo/vector-icons';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
+import AppText from '../app-text';
 var e;
 const { height, width } = Dimensions.get('window');
-class Home extends Component {
+class Home extends PureComponent {
     constructor(props) {
         super(props);
         e = this;
@@ -42,7 +43,7 @@ class Home extends Component {
             isLoading: false,
             secret_key: '',
             refreshing: false,
-            posttaskshow:'1',
+            posttaskshow:false,
             show: false,
             number_task:10,
             skip: 10,
@@ -126,16 +127,16 @@ class Home extends Component {
                         </Swiper>
                         
                         <View style={styles.text1}>
-                            <Text style={{ fontStyle: 'italic',color:'black' }}>The suitable of for you today !!!</Text>
+                            <AppText style={{ fontStyle: 'italic',color:'black' }} i18nKey={'home_page.quotes'}>The suitable of for you today !!!</AppText>
                         </View>
                         <View style={styles.text}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 20}}>Hi </Text>
+                            <AppText style={{ fontWeight: 'bold', fontSize: 20}} i18nKey={'home_page.hi'}>Hi</AppText>
                             <Text style={{ fontSize: 20 ,color:'black'}}>{this.state.first_name} !</Text>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={styles.texttitle} >
-                            <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }}>Recommend Work</Text>
+                            <AppText style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }} i18nKey={'home_page.title_home'}>Recommend Work</AppText>
                         </View>
                     </View>
                     <View style={styles.recommend}>
@@ -161,7 +162,7 @@ class Home extends Component {
                         
                     </View>
                     <View style={{ marginLeft: 10, marginTop: 10, width: 130, marginBottom: 10, borderBottomWidth: 2, borderBottomColor: '#71B7B7' }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }}>Bulletin Board</Text>
+                        <AppText style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }} i18nKey={'home_page.title_home2'}>Bulletin Board</AppText>
                     </View>
                 </View>   
             </SafeAreaView>   
@@ -213,6 +214,12 @@ class Home extends Component {
         )
        
     }
+    functionOne =async()=>{
+        await this.setState({
+            posttaskshow:true,
+        })
+        this.props.navigation.navigate("posttaskforhomepage", { showposttask: this.state.posttaskshow })
+    }
     render() {
 
         return (
@@ -222,7 +229,7 @@ class Home extends Component {
                     <Search stack={this.onStack} message={this.onMessage} />
                 </View>
                 <View style={{ zIndex:2,top:'84%', left:'86%', borderRadius:19, width:'9%', height:'5%',backgroundColor:'#2D7474'}}>
-                    <TouchableOpacity onPress={()=>{this.props.navigation.navigate('posttaskforhomepage');sendshowposttask=this.state.posttaskshow}} style={{alignItems:'center', margin:5}} >
+                    <TouchableOpacity onPress={()=>{this.functionOne()}} style={{alignItems:'center', margin:5}} >
                         <Entypo name="new-message" size={18} color="white" />
                     </TouchableOpacity>
                 </View>     
@@ -235,7 +242,7 @@ class Home extends Component {
                                 <View style={styles.viewimage}>
                                   
                                     <View style={styles.text1}>
-                                        <Text style={{ fontStyle: 'italic',color:'black' }}>The suitable of for you today !!!</Text>
+                                        <AppText style={{ fontStyle: 'italic',color:'black' }} i18nKey={'home_page.quotes'}>The suitable of for you today !!!</AppText>
                                     </View>
                                     <View style={styles.text}>
                                         <Text style={{ fontWeight: 'bold', fontSize: 20,color:'black' }}>Hi </Text>
@@ -245,7 +252,7 @@ class Home extends Component {
                                 </View>
                                 <View style={{ flexDirection: 'row' }}>
                                     <View style={styles.texttitle}>
-                                        <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }}>Recommend Work</Text>
+                                        <AppText style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }} i18nKey={'home_page.title_home'}>Recommend Work</AppText>
                                     </View>
                                 </View>
                                 <View style={styles.recommend}>
@@ -265,7 +272,7 @@ class Home extends Component {
                                     </ScrollView>
                                 </View>
                                 <View style={{ marginLeft: 10, marginTop: 10, width: 130, marginBottom: 10, borderBottomWidth: 2, borderBottomColor: '#71B7B7' }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }}>Bulletin Board</Text>
+                                    <AppText style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }} i18nKey={'home_page.title_home2'}>Bulletin Board</AppText>
                                 </View>
                             </View>
                             <View style={styles.container}>
@@ -313,7 +320,7 @@ class Home extends Component {
                                                     ...
                                 </Text>
                                                 <TouchableOpacity>
-                                                    <Text style={{ color: "#888888" }}> see detail</Text>
+                                                    <AppText style={{ color: "#888888" }} i18nKey={'home_page.seedetail'}>see detail</AppText>
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
@@ -330,7 +337,7 @@ class Home extends Component {
                                                 <AntDesign name="pluscircle" size={24} color="#71B7B7" />
                                             </View>
                                             <View style={{ marginLeft: 5 }}>
-                                                <Text>Apply</Text>
+                                                <AppText i18nKey={'home_page.btnapply'}>Apply</AppText>
                                             </View>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.iconBulliten2} >
@@ -338,7 +345,7 @@ class Home extends Component {
                                                 <Entypo name="save" size={24} color="#71B7B7" />
                                             </View>
                                             <View style={{ marginLeft: 5 }}>
-                                                <Text>Save</Text>
+                                                <AppText i18nKey={'home_page.btnsave'}>Save</AppText>
                                             </View>
                                         </TouchableOpacity>
                                     </View>
@@ -387,7 +394,7 @@ class Home extends Component {
                                                     ...
                                 </Text>
                                                 <TouchableOpacity>
-                                                    <Text style={{ color: "#888888" }}> see detail</Text>
+                                                    <AppText style={{ color: "#888888" }} i18nKey={'home_page.seedetail'}>see detail</AppText>
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
@@ -429,7 +436,7 @@ class Home extends Component {
                                                 <AntDesign name="pluscircle" size={24} color="#71B7B7" />
                                             </View>
                                             <View style={{ marginLeft: 5 }}>
-                                                <Text>Apply</Text>
+                                                <AppText i18nKey={'home_page.btnapply'}>Apply</AppText>
                                             </View>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.iconBulliten2} >
@@ -437,7 +444,7 @@ class Home extends Component {
                                                 <Entypo name="save" size={24} color="#71B7B7" />
                                             </View>
                                             <View style={{ marginLeft: 5 }}>
-                                                <Text>Save</Text>
+                                                <AppText i18nKey={'home_page.btnsave'}>Save</AppText>
                                             </View>
                                         </TouchableOpacity>
                                     </View>
@@ -529,7 +536,7 @@ const Task = ({ onStack,_id,first_name, image,last_name, location,title }) => {
                 shadowColor: 'green',
                 shadowOpacity: 0.1,
                 elevation: 4,justifyContent: 'center',alignItems: 'center'}}>
-                        <Text style={{fontSize: 18, color: 'white',fontWeight: 'bold'}}>Detail</Text>
+                        <AppText style={{fontSize: 18, color: 'white',fontWeight: 'bold'}} i18nKey={'home_page.detail'}>Detail</AppText>
                 </TouchableOpacity>
             </View>
         </View>

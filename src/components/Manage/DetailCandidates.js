@@ -11,6 +11,7 @@ import iconerror from '../../images/icon2.png';
 import {socket} from "../../Socket.io/socket.io";
 import avatarimage from '../../images/avatar11.png';
 import io from 'socket.io-client/dist/socket.io';
+import AppText from '../app-text';
 import { toHumanSize } from 'i18n-js';
 
 var e;
@@ -219,7 +220,7 @@ export default class DetailCandidates extends React.Component {
                             borderWidth: 2, borderColor: '#009387', padding: 20,
                             alignContent: 'center',alignItems:'center'
                         }}>
-                            <Text style={{color:'#488B8F',fontSize:20}}>Recommended for you</Text>
+                            <AppText i18nKey={'home_manage.notice_show'} style={{color:'#488B8F',fontSize:20}}>Recommended for you</AppText>
                             <FlatList data={this.state.dataemployee} 
                                 renderItem={({item,index})=>{                              
                                     return(
@@ -230,7 +231,7 @@ export default class DetailCandidates extends React.Component {
                             >
                             </FlatList>
                             <TouchableOpacity onPress={() => this.setState({ showrecommendperson: false })} style={styles.button}>
-                                <Text style={{fontSize:20,color:'#ffff'}}>Cancel</Text> 
+                                <AppText i18nKey={'cancel'} style={{fontSize:20,color:'#ffff'}}>Cancel</AppText> 
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -253,13 +254,13 @@ export default class DetailCandidates extends React.Component {
                   <FontAwesome name="chevron-left" size={24} color="white" />
                 </TouchableOpacity>
                 <View style={{flex:1, justifyContent:'center',alignItems:'center'}}>
-                    <Text style={{fontWeight:'bold',fontSize:20}}>Applies </Text>
+                    <AppText style={{fontWeight:'bold',fontSize:20}} i18nKey={'home_manage.applies'}>Applies </AppText>
                 </View>
               </View>
             </View>
             <View style={styles.footer}>
                 <View style={{alignItems:'center'}}>
-                    <Text style={{color:'#488B8F',fontSize:20}}>Business Analyst</Text>
+                    <AppText i18nKey={'home_manage.titledetailcandidate'} style={{color:'#488B8F',fontSize:20}}>Business Analyst</AppText>
                     {!this.state.loadingdata == true ?
                     <View style={{ justifyContent:'center',marginTop:20}}>
                       <ActivityIndicator size='large'></ActivityIndicator>
@@ -267,7 +268,7 @@ export default class DetailCandidates extends React.Component {
                     :this.state.dataTask.length ===0 
                     ?
                     <View style={{ justifyContent:'center',marginTop:20}}>
-                      <Text style={{fontSize:16}}>Blank task apply list</Text>
+                      <AppText i18nKey={'home_manage.blank_show'} style={{fontSize:16}}>Blank task apply list</AppText>
                     </View>
                     :
                     <View style={{height:height/3,marginBottom:20}}>
@@ -297,7 +298,7 @@ export default class DetailCandidates extends React.Component {
                       borderColor:'#71B7B7',
                       borderWidth:1
                     }}>
-                          <Text style={{fontSize:20,color:'#ffff'}}>Recommend Candidates</Text> 
+                          <AppText i18nKey={'home_manage.btnrecommend'} style={{fontSize:20,color:'#ffff'}}>Recommend Candidates</AppText> 
                         </TouchableOpacity>
                 </View>
             </View>
@@ -340,15 +341,15 @@ class RenderItem  extends React.Component{
                           </View>
                         </View>
                         <View style={{flexDirection:'column',width:width-120,marginTop:2}}>
-                            <Text style={{fontWeight:'bold'}}>Introduction: </Text>
+                            <AppText i18nKey={'home_manage.introduction'} style={{fontWeight:'bold'}}>Introduction: </AppText>
                             <Text>{this.props.item.introduction}</Text>
                         </View>
                         <View style={{flexDirection:'row',marginTop:2}}>
-                            <Text style={{fontWeight:'bold'}}>Price dealing: </Text>
+                            <AppText i18nKey={'home_manage.pricedeal'} style={{fontWeight:'bold'}}>Price dealing: </AppText>
                             <Text>{this.props.item.price}</Text>
                         </View>
                         <View style={{flexDirection:'row',marginTop:2}}>
-                          <Text style={{fontWeight:'bold'}}>Rate: </Text>
+                          <AppText i18nKey={'home_manage.rate'} style={{fontWeight:'bold'}}>Rate: </AppText>
                           <Text>{this.props.item.vote_average.toFixed(0)}/5</Text> 
                           <Image 
                               source={require('../../images/star.png')}

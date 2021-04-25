@@ -10,6 +10,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Jobs from '../Manage/Jobs';
 import History from '../Manage/HistoryJobs'
 import {socket} from "../../Socket.io/socket.io";
+import AppText from '../app-text';
 var e;
 const { width,height } = Dimensions.get("window");
 export default class HomeManageJobs extends React.Component {
@@ -28,11 +29,11 @@ export default class HomeManageJobs extends React.Component {
     return(
       <View style={styles.container}>
          <View style={styles.header0} /*onPress={()=>this.props.navigation.navigate("detailcandidates")}*/> 
-              <Text style={{fontWeight:'bold',fontSize:20,color:'black'}}>Careers Management</Text>
+              <AppText style={{fontWeight:'bold',fontSize:20,color:'black'}} i18nKey={'home_manage.titlehomemanagejobs'}>Careers Management</AppText>
               <TouchableOpacity onPress={()=>{this.props.navigation.navigate("HomeManageCandidate")}} style={{flexDirection:'row',padding:7,borderRadius:5}}>
                   <FontAwesome5 name="sync-alt" size={24} color="#2d7474" />
                   <View style={{marginLeft:5,marginTop:2}}>
-                    <Text style={{color:'#2d7474',fontWeight:'bold'}}>Candidate</Text>
+                    <AppText style={{color:'#2d7474',fontWeight:'bold'}} i18nKey={'home_manage.candidate'}>Candidate</AppText>
                   </View>
               </TouchableOpacity>
         </View>

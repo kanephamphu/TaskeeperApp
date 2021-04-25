@@ -7,6 +7,7 @@ const { height, width } = Dimensions.get('window');
 import {connect} from 'react-redux';
 import {socket} from "../../Socket.io/socket.io";
 import * as actions from '../../actions';
+import AppText from '../app-text';
 var e;
  class Jobs extends React.Component {
   constructor(props) {
@@ -61,7 +62,7 @@ var e;
       this.props.jobs.length ===0 
         ?
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "#ffff" }}>
-          <Text>Blank task apply list</Text>
+          <AppText i18nKey={'home_manage.blank_show'}>Blank task apply list</AppText>
         </View>
         :
         <View style={styles.container}>

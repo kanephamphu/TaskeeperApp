@@ -8,6 +8,7 @@ import { Entypo } from '@expo/vector-icons';
 import avatarimage from '../images/avatar.jpg';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import {socket} from "../Socket.io/socket.io";
+import AppText from './app-text';
 
 const { height, width } = Dimensions.get('window');
 var e;
@@ -96,11 +97,11 @@ export default class ProfileUser extends React.Component {
             <ShimmerPlaceholder style={{height: 45, borderRadius: 7}} autoRun visible={this.state.isLoading}>
               <Text style={{ fontSize: 28, fontWeight: 'bold' }}>{this.state.first_name} {this.state.last_name}</Text>
             </ShimmerPlaceholder>
-            <Text style={{ fontSize: 20 }}>Business Analyst</Text>  
+            <AppText i18nKey={'home_profile.businessanalyst'} style={{ fontSize: 20 }}>Business Analyst</AppText>  
           </View>
           <View>
           <View style={{flexDirection:'row',marginTop:50,marginLeft:30,marginRight:30}}>
-              <Text style={{ fontSize: 19,fontWeight:'bold'}}>Full name:</Text>
+              <AppText i18nKey={'home_profile.fullname'} style={{ fontSize: 19,fontWeight:'bold'}}>Full name:</AppText>
             <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:50}}>
               <ShimmerPlaceholder style={{borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 <Text style={{ fontSize: 19 }}>{this.state.first_name} {this.state.last_name}</Text>
@@ -108,7 +109,7 @@ export default class ProfileUser extends React.Component {
             </View>
           </View>
           <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
-              <Text style={{ fontSize: 19,fontWeight:'bold'}}>Email:</Text>
+              <AppText i18nKey={'home_profile.email'} style={{ fontSize: 19,fontWeight:'bold'}}>Email:</AppText>
               <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:85}}>
               <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 <Text style={{ fontSize: 19 }}>{this.state.email}</Text>
@@ -116,12 +117,12 @@ export default class ProfileUser extends React.Component {
             </View>
           </View>
           <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
-            <Text style={{ fontSize: 19,fontWeight:'bold'}}>Birthday:</Text>
+            <AppText i18nKey={'home_profile.birthday'} style={{ fontSize: 19,fontWeight:'bold'}}>Birthday:</AppText>
             <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:60}}>
               <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 {
                   this.state.day_of_birth==undefined?
-                  <Text style={{ fontSize: 19 }}>undefined</Text>
+                  <AppText i18nKey={'home_profile.undefined'} style={{ fontSize: 19 }}>undefined</AppText>
                   :
                 <Text style={{ fontSize: 19 }}>{this.state.day_of_birth}/{this.state.month_of_birth}/{this.state.year_of_birth}</Text>
                 }
@@ -129,12 +130,12 @@ export default class ProfileUser extends React.Component {
             </View>
           </View>
           <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
-            <Text style={{ fontSize: 19,fontWeight:'bold'}}>Gender:</Text>
+            <AppText i18nKey={'home_profile.gender'} style={{ fontSize: 19,fontWeight:'bold'}}>Gender:</AppText>
             <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:71}}>
               <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 {
                   this.state.gender=='undefined'?
-                  <Text style={{ fontSize: 19 }}>undefined</Text>
+                  <AppText i18nKey={'home_profile.undefined'} style={{ fontSize: 19 }}>undefined</AppText>
                   :
                 <Text style={{ fontSize: 19 }}>{this.state.gender}</Text>
                 }
@@ -142,7 +143,7 @@ export default class ProfileUser extends React.Component {
             </View>
           </View>
           <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
-            <Text style={{ fontSize: 19,fontWeight:'bold'}}>Phone number:</Text>
+            <AppText i18nKey={'home_profile.phone'} style={{ fontSize: 19,fontWeight:'bold'}}>Phone number:</AppText>
             <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:8}}>
               <ShimmerPlaceholder style={{borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 <Text style={{ fontSize: 19 }}>{this.state.phone_number}</Text>
@@ -150,7 +151,7 @@ export default class ProfileUser extends React.Component {
             </View>
           </View>
           <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
-            <Text style={{ fontSize: 19,fontWeight:'bold'}}>Education:</Text>
+            <AppText i18nKey={'home_profile.education'} style={{ fontSize: 19,fontWeight:'bold'}}>Education:</AppText>
             <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:48}}>
             <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 {this.state.education.map((item) => {
@@ -164,7 +165,7 @@ export default class ProfileUser extends React.Component {
             </View>
           </View>
           <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
-            <Text style={{ fontSize: 19,fontWeight:'bold'}}>Working:</Text>
+            <AppText i18nKey={'home_profile.working'} style={{ fontSize: 19,fontWeight:'bold'}}>Working:</AppText>
             <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:60}}>
             <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 {this.state.working_information.map((item) => {
@@ -180,7 +181,7 @@ export default class ProfileUser extends React.Component {
           </View>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 30 }}>
               <TouchableOpacity onPress={this.props.onUp} style={styles.btnLogin}>
-                <Text style={{ fontSize: 20, color: '#ffff',fontWeight: 'bold' }}>Update</Text>
+                <AppText i18nKey={'home_profile.update'} style={{ fontSize: 20, color: '#ffff',fontWeight: 'bold' }}>Update</AppText>
               </TouchableOpacity>
           </View>
         </ScrollView>

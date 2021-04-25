@@ -10,10 +10,11 @@ import {createStackNavigator} from '@react-navigation/stack';
 import AsyncStorage from '@react-native-community/async-storage';
 import HRM from '../Manage/HRM';
 import {socket} from "../../Socket.io/socket.io";
-import History from '../Manage/HistoryCandidate'
+import History from '../Manage/HistoryCandidate';
+import AppText from '../app-text';
 var e;
 const { width,height } = Dimensions.get("window");
-export default class HomeManageCandidate extends React.Component {
+export default class HomeManageCandidate extends React.PureComponent {
   constructor(props){
     super(props);
     e=this;
@@ -37,11 +38,11 @@ export default class HomeManageCandidate extends React.Component {
     return(
       <View style={styles.container}>
          <View style={styles.header0} /*onPress={()=>this.props.navigation.navigate("detailcandidates")}*/> 
-              <Text style={{fontWeight:'bold',fontSize:20,color:'black'}}>Candidates Management</Text>
+              <AppText i18nKey={'home_manage.titlehomemanagecandidates'} style={{fontWeight:'bold',fontSize:20,color:'black'}}>Candidates Management</AppText>
               <TouchableOpacity onPress={()=>{this.props.navigation.navigate("HomeManageJobs")}} style={{flexDirection:'row',padding:7,borderRadius:5}}>
                   <FontAwesome5 name="sync-alt" size={24} color="#2d7474" />
                   <View style={{marginLeft:5,marginTop:2}}>
-                    <Text style={{color:'#2d7474',fontWeight:'bold'}}>Jobs</Text>
+                    <AppText i18nKey={'home_manage.job'} style={{color:'#2d7474',fontWeight:'bold'}}>Jobs</AppText>
                   </View>
               </TouchableOpacity>
         </View>

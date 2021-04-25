@@ -11,6 +11,7 @@ import hrm from './hrm.reducer';
 import education from './education.reducer';
 import authentication from './authenticaiton.reducer';
 import working from './working.reducer';
+import languageReducer from './language.reducer';
 const myReducer = combineReducers({
     follower,
     status,
@@ -23,6 +24,7 @@ const myReducer = combineReducers({
     hrm,
     education,
     authentication,
-    working
+    working,
+    languageReducer
 });
 export default myReducer;

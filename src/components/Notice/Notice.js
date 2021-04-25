@@ -11,6 +11,7 @@ import noitem from '../../images/box.png';
 import  {connect} from 'react-redux';
 import * as actions from '../../actions';
 import {socket} from "../../Socket.io/socket.io";
+import AppText from '../app-text';
 const { height, width } = Dimensions.get('window');
 var e;
 class Notice extends Component {
@@ -119,7 +120,7 @@ class Notice extends Component {
                 <View style={styles.header0}>
                     <View style={styles.header_inner}>
                         <View>
-                            <Text style={{ fontSize: 25, color: '#EE9A49' }}>Notifications</Text>
+                            <AppText i18nKey={'home_notice.notification'} style={{ fontSize: 25, color: '#EE9A49' }}>Notifications</AppText>
                         </View>
                         <TouchableOpacity onPress={() => this.setState({ showarning: true })} >
                             <Entypo name="menu" size={26} color="#71B7B7" />
@@ -136,7 +137,7 @@ class Notice extends Component {
                 this.props.notice.length===0?
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Image source={noitem} style={{ height: 100, width: 100 }}></Image>
-                <Text>No item</Text>
+                <AppText i18nKey={'home_notice.notice_show'}>No item</AppText>
               </View>
                 :
                 <View style={{marginBottom:60}}>
@@ -199,14 +200,14 @@ class Notice extends Component {
                                 height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
                             }}>
                                 <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
-                                <Text>Do you want to read all notification!</Text>
+                                <AppText i18nKey={'home_notice.btnreadall'}>Do you want to read all notification!</AppText>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
                                     <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
                                         width: "50%", backgroundColor:'#ffff',
                                         borderWidth:1,borderColor:'#488B8F',
                                         height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
                                     }}>
-                                        <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</Text>
+                                        <AppText i18nKey={'home_notice.cancel'} style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</AppText>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => this.readAllnotice()} style={{
                                         width: "50%", backgroundColor:'#488B8F',

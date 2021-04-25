@@ -13,6 +13,7 @@ import anhbiadetail from '../../../images/anhbiadetail.jpg';
 import {socket} from "../../../Socket.io/socket.io";
 import {connect} from 'react-redux';
 import * as actions from '../../../actions';
+import AppText from '../../app-text';
 var e;
 const { height, width } = Dimensions.get('window');
 class FlatListdata extends Component {
@@ -211,10 +212,10 @@ class FlatListdata extends Component {
                             <TouchableOpacity style={{ alignSelf: 'flex-start' }} onPress={() => this.props.stackDetail(this.props.item._id, this.props.item.isSaved, this.props.item.isApplied)}>
                                 <View><Text style={{ fontWeight: 'bold', fontSize: 20, fontStyle: 'normal', color: '#000000' }}>{task_title}</Text></View>
                             </TouchableOpacity>
-                            {new Date(this.props.item.created_time).toLocaleDateString() != d.toLocaleDateString() ?
+                            {new Date(this.props.item.created_time).toLocaleDateString() == d.toLocaleDateString() ?
                                 <TouchableOpacity style={{ alignSelf: 'center', borderWidth: 1, borderColor: '#F7B32D', width: '15%', borderRadius: 8, marginTop: 2 }}>
                                     <View style={{ alignItems: 'center' }}>
-                                        <Text style={{ color: '#F7B32D',fontStyle:'normal' }} >NEW</Text>
+                                        <AppText i18nKey={"home_page.new"} style={{ color: '#F7B32D',fontStyle:'normal' }} >NEW</AppText>
                                     </View>
 
                                 </TouchableOpacity>
@@ -227,7 +228,7 @@ class FlatListdata extends Component {
                                     <>
                                         <Text>...</Text>
                                         <TouchableOpacity onPress={() => this.props.stackDetail(this.props.item._id, this.props.item.isSaved, this.props.item.isApplied)}>
-                                            <Text style={{ color: "#b30000", fontSize: 13 }}> see detail</Text>
+                                            <AppText i18nKey={'home_page.seedetail'} style={{ color: "#b30000", fontSize: 13 }}> see detail</AppText>
                                         </TouchableOpacity>
                                     </> : null}
                             </View>
@@ -276,7 +277,7 @@ class FlatListdata extends Component {
                             </View>*/}
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ color: '#0E0E0E', fontSize: 13 }}>Price:</Text>
+                                <AppText i18nKey={'home_page.price'} style={{ color: '#0E0E0E', fontSize: 13 }}>Price:</AppText>
                                 {this.props.item.price.price_type === 'dealing' ?
                                     <View style={{ marginLeft: 5 }}>
                                         <Text style={{ color: '#0E0E0E', fontSize: 13, fontWeight: 'bold' }}>{this.props.item.price.price_type != null ? this.props.item.price.price_type : null}</Text>
@@ -287,7 +288,7 @@ class FlatListdata extends Component {
                                     </View>}
                             </View>
                             <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ color: '#0E0E0E', fontSize: 13 }}>Working Time:</Text>
+                                <AppText i18nKey={'home_page.workingtime'} style={{ color: '#0E0E0E', fontSize: 13 }}>Working Time:</AppText>
                                 <View style={{ marginLeft: 5 }}>
                                     <Text style={{ color: '#0E0E0E', fontSize: 13, fontWeight: 'bold' }}>{this.props.item.working_time != null ? this.props.item.working_time.start_time : null} - {this.props.item.working_time != null ? this.props.item.working_time.end_time : null}</Text>
                                 </View>
@@ -311,7 +312,7 @@ class FlatListdata extends Component {
                                             <AntDesign name="pluscircle" size={17} color="#ccc" />
                                         </View>
                                         <View style={{ marginLeft: 10 }}>
-                                            <Text style={{ color: '#ccc', fontWeight: 'bold' }}>Apply</Text>
+                                            <AppText i18nKey={'home_page.btnapply'} style={{ color: '#ccc', fontWeight: 'bold' }}>Apply</AppText>
                                         </View>
                                     </View>
                             </View> :
@@ -321,7 +322,7 @@ class FlatListdata extends Component {
                                             <AntDesign name="pluscircle" size={17} color="#71B7B7" />
                                         </View>
                                         <View style={{ marginLeft: 10 }}>
-                                            <Text style={{ fontWeight: 'bold' }}>Apply</Text>
+                                            <AppText i18nKey={'home_page.btnapply'} style={{ fontWeight: 'bold' }}>Apply</AppText>
                                         </View>
                                     </View>
                             </TouchableOpacity> :
@@ -332,7 +333,7 @@ class FlatListdata extends Component {
                                                 <AntDesign name="pluscircle" size={17} color="#71B7B7" />
                                             </View>
                                             <View style={{ marginLeft: 10 }}>
-                                                <Text style={{ fontWeight: 'bold' }}>Apply</Text>
+                                                <AppText i18nKey={'home_page.btnapply'} style={{ fontWeight: 'bold' }}>Apply</AppText>
                                             </View>
                                         </View>
                                     </TouchableOpacity> :
@@ -342,7 +343,7 @@ class FlatListdata extends Component {
                                                 <AntDesign name="checkcircle" size={17} color="#007700" />
                                             </View>
                                             <View style={{ marginLeft: 10 }}>
-                                                <Text style={{ color: '#ccc', fontWeight: 'bold' }}>Applied</Text>
+                                                <AppText i18nKey={'home_page.btnapplied'} style={{ color: '#ccc', fontWeight: 'bold' }}>Applied</AppText>
                                             </View>
                                         </View>
                                     </View>
@@ -353,7 +354,7 @@ class FlatListdata extends Component {
                                             <Entypo name="save" size={17} color="#71B7B7" />
                                         </View>
                                         <View style={{ marginLeft: 10 }}>
-                                            <Text style={{ fontWeight: 'bold' }}>Save</Text>
+                                            <AppText i18nKey={'home_page.btnsave'} style={{ fontWeight: 'bold' }}>Save</AppText>
                                         </View>
                                     </View>
                         </TouchableOpacity> :
@@ -364,7 +365,7 @@ class FlatListdata extends Component {
                                             <Entypo name="save" size={17} color="#71B7B7" />
                                         </View>
                                         <View style={{ marginLeft: 10 }}>
-                                            <Text style={{ fontWeight: 'bold' }}>Save</Text>
+                                            <AppText i18nKey={'home_page.btnsave'} style={{ fontWeight: 'bold' }}>Save</AppText>
                                         </View>
                                     </View>
                                 </TouchableOpacity>
@@ -375,7 +376,7 @@ class FlatListdata extends Component {
                                             <AntDesign name="checkcircle" size={17} color="#007700" />
                                         </View>
                                         <View style={{ marginLeft: 10 }}>
-                                            <Text style={{ color: '#ccc', fontWeight: 'bold' }}>Saved</Text>
+                                            <AppText i18nKey={'home_page.btnsaved'} style={{ color: '#ccc', fontWeight: 'bold' }}>Saved</AppText>
                                         </View>
                                     </View>
                                 </View>
@@ -396,7 +397,7 @@ class FlatListdata extends Component {
                                 alignContent: 'center'
                             }}>
                                 <View style={{ alignContent: 'center' }}>
-                                    <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Introduction:</Text>
+                                    <AppText i18nKey={'home_page.introduction'} style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Introduction:</AppText>
                                 </View>
                                 <View style={{ height: 120, padding: 10, borderColor: '#808080', borderColor: '#009387', }}>
                                     <TextInput multiline={true}
@@ -416,7 +417,7 @@ class FlatListdata extends Component {
                                 <Text style={{ fontStyle: 'italic', color: 'red' }}>{this.state.abc == "intro" ? this.state.notice : null}</Text>
 
                                 <View style={{ alignContent: 'center' }}>
-                                    <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Price:</Text>
+                                    <AppText i18nKey={'home_page.price'} style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>Price:</AppText>
                                 </View>
                                 <View style={{ padding: 10, borderColor: '#808080' }}>
                                     <TextInput
@@ -433,10 +434,10 @@ class FlatListdata extends Component {
                                 </View>
                                 <View style={styles.controlStyle}>
                                     <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false, abc: '', introduction: '', price: '' })}>
-                                        <Text style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancle</Text>
+                                        <AppText i18nKey={'home_page.cancel'} style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancle</AppText>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.apply} onPress={this.applyJob}>
-                                        <Text style={{ fontWeight: 'bold', color: "white", fontSize: 18 }}>Apply</Text>
+                                        <AppText i18nKey={'home_page.btnapply'} style={{ fontWeight: 'bold', color: "white", fontSize: 18 }}>Apply</AppText>
                                     </TouchableOpacity>
                                 </View>
                             </View>

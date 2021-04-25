@@ -10,6 +10,7 @@ import iconerror from '../../images/icon2.png';
 import iconwarning from '../../images/icon3.png';
 import {socket} from "../../Socket.io/socket.io";
 import avatarimage from '../../images/avatar11.png';
+import AppText from '../app-text';
 const { height, width } = Dimensions.get('window');
 var e;
 export default class RenderItem extends React.Component {
@@ -106,7 +107,7 @@ export default class RenderItem extends React.Component {
                 height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
               }}>
                 <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
-                <Text>Do you want to cancel this jobs ?</Text>
+                <AppText i18nKey={'shownotice'}>Do you want to cancel this jobs ?</AppText>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
 
                   <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
@@ -114,7 +115,7 @@ export default class RenderItem extends React.Component {
                     borderWidth: 1, borderColor: '#488B8F',
                     height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
                   }}>
-                    <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</Text>
+                    <AppText i18nKey={'cancel'} style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</AppText>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => this.deleteApplyjob()} style={{
                     width: "50%", backgroundColor: '#488B8F',
