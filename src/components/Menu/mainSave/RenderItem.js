@@ -128,7 +128,7 @@ class RenderItem extends React.Component {
                 }}>
                   <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                   <Text>{this.state.notice}</Text>
-                  <TouchableOpacity onPress={() =>  this.props.onDelete(this.props.item._id)} style={{
+                  <TouchableOpacity onPress={() => this.props.onDelete(this.props.item._id)} style={{
                     width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                     height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                   }}>
