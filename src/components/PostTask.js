@@ -3,6 +3,7 @@ import { View, Text, StyleSheet,Image,TextInput ,TouchableOpacity,FlatList,Switc
 import { AntDesign } from '@expo/vector-icons'; 
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io';
+import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Ionicons } from '@expo/vector-icons'; 
 import BottomSheet from 'reanimated-bottom-sheet'
@@ -20,6 +21,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment';
 import * as Permissions from 'expo-permissions';
 import iconsuccess from '../images/icon1.png'
+import anhgrabjob from '../images/anhgrabjob.jpg';
 import iconerror from '../images/icon2.png'
 import MultiSelect from 'react-native-multiple-select'
 import MapInput from '../components/MapInput'
@@ -1084,6 +1086,9 @@ export default class TaskPage extends React.Component{
       //   } )
       // }
     }
+    onSlideRight = () => {
+      //perform Action on slide success.
+  };
     renderInner = () => (
 
         <View style={styles.panel}>
@@ -1860,7 +1865,77 @@ export default class TaskPage extends React.Component{
                         </View>
                       </ScrollView>
                     </View>
-                </Modal>          
+                </Modal>    
+                <Modal transparent={true} visible={true}>
+                     <View style={{flexDirection:'column', flex:1, backgroundColor:'#000000aa'}}>
+                      <View style={styles.enterInformation}>
+                            <View style={{width:303,height:87, backgroundColor:'#FFFFFF', margin:5, borderRadius:10, flexDirection:'row'}}>
+                             <View>
+                              <Avatar.Image
+                                      style={{marginTop:10, marginLeft:30,width:43, height:44}}
+                                  />
+                             </View>
+                             <View style={{margin:10, flexDirection:'column'}}>
+                                  <View>
+                                    <Text style={{fontSize:14, fontStyle:'normal', fontWeight:'bold', color:'#2d7474'}}>New freelance jobs</Text>
+                                  </View>
+                                  <View>
+                                    <Text style={{fontSize:14, fontStyle:'normal', fontWeight:'bold'}}>Làm nghành dropshipping</Text>
+                                  </View>
+                                  <View style={{flexDirection:'row', flexWrap:'wrap', width:219}}>
+                                    <Text style={{fontSize:14, fontStyle:'normal'}}>K560/09 Ông Ích Khiêm, Hải Châu, Đà Nẵng</Text>
+                                  </View>
+                             </View>
+                            </View>
+                            <View style={{width:275,height:350, backgroundColor:'#FFFFFF', margin:20, borderRadius:10, flexDirection:'column'}}>
+                                  <View style={{flexDirection:'row', justifyContent:'space-between', marginLeft:10, marginRight:10, margin:10}}>
+                                      <Text style={{fontSize:14,color:'rgba(0, 0, 0, 0.38)',fontWeight:'bold'}}>Name</Text>
+                                      <Text style={{color:'#2d7474', fontWeight:'bold'}}>$3.387 - 3 Kms</Text>
+                                  </View>
+                                  <View style={{flexDirection:'row', justifyContent:'space-between', marginLeft:10, marginRight:10, margin:5}}>
+                                      <Text style={{fontSize:14,color:'rgba(0, 0, 0, 0.6)',fontWeight:'bold'}}>NHA NGUYEN MINH</Text>
+                                      <View style={{flexDirection:'row'}}>
+                                        <View style={{margin:3}}>
+                                         <AntDesign name="clockcircleo" size={14} color="black" />
+                                        </View>
+                                      <View>
+                                        <Text style={{fontSize:14,color:'rgba(0, 0, 0, 0.38)'}}>1 Hour ago</Text>
+                                      </View>
+                                      </View> 
+                                  </View>
+                                  <View style={{borderWidth:1, borderColor:'rgba(0, 0, 0, 0.38)', marginLeft:40, marginRight:40, alignItems:'center'}}></View>
+                                    <View style={{margin:20}}>
+                                      <Image source={ anhgrabjob } style={{ height: 167, width: 237 }}></Image>
+                                    </View>
+                                    <View style={{margin:20, marginTop:-10}}>
+                                      <Text style={{color:'rgba(0, 0, 0, 0.38)', fontWeight:'bold'}}>
+                                        Làm cho ông đó, ổng bảo ổng kiếm được 500.000 đô... quá ghê....
+                                      </Text>
+                                    </View>
+                                    <View style={{flexDirection:'row', justifyContent:'flex-end', marginRight:20}}>                                   
+                                        <Text style={{color:'#2d7474',fontWeight:'bold'}}>10 </Text>
+                                        <Text style={{color:'rgba(0, 0, 0, 0.38)'}}>candidates</Text> 
+                                    </View>
+                            </View>
+                            <View style={{margin:20, marginTop:-6}}>
+                                <RNSlidingButton
+                                  style={{
+                                    width: 240,
+                                  }}
+                                  height={35}
+                                  color='black'
+                                  onSlidingSuccess={this.onSlideRight}
+                                  slideDirection={SlideDirection.RIGHT}>
+                                  <View>
+                                    <Text numberOfLines={1} style={styles.titleText}>
+                                      SLIDE RIGHT TO ACCEPT
+                                    </Text>
+                                  </View>
+                                </RNSlidingButton>
+                            </View>
+                        </View>
+                     </View>
+                  </Modal>      
                         <View 
                             style={{flexDirection:'row', 
                             marginTop:20, 
@@ -2174,6 +2249,22 @@ const styles = StyleSheet.create({
         backgroundColor: '#D8D8D8',
         marginBottom: 10,
       },
+      enterInformation:{
+        backgroundColor:'#E5E5E5',
+        width:'76%',
+        height:550,
+        margin:'10%', 
+        marginTop:'25%',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.58,
+        shadowRadius: 16.00,
+        elevation: 24,
+        borderRadius:10
+    },
       panel: {
         padding: 20,
         backgroundColor: 'white',
