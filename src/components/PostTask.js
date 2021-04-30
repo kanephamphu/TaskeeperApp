@@ -4,6 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io';
 import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
+import SwipeButton from 'rn-swipe-button';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Ionicons } from '@expo/vector-icons'; 
 import BottomSheet from 'reanimated-bottom-sheet'
