@@ -1,10 +1,8 @@
 import React,{Component} from 'react';
-import { View, Text, StyleSheet,Image,TextInput ,TouchableOpacity,FlatList,Switch,ActivityIndicator,ScrollView,ToastAndroid,Dimensions,Modal, Keyboard, KeyboardAvoidingView,TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet,Image,TextInput,Button ,TouchableOpacity,FlatList,Switch,ActivityIndicator,ScrollView,ToastAndroid,Dimensions,Modal, Keyboard, KeyboardAvoidingView,TouchableWithoutFeedback } from 'react-native';
 import { AntDesign } from '@expo/vector-icons'; 
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io';
-import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
-import SwipeButton from 'rn-swipe-button';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Ionicons } from '@expo/vector-icons'; 
 import BottomSheet from 'reanimated-bottom-sheet'
@@ -1873,7 +1871,7 @@ export default class TaskPage extends React.Component{
                             <View style={{width:303,height:87, backgroundColor:'#FFFFFF', margin:5, borderRadius:10, flexDirection:'row'}}>
                              <View>
                               <Avatar.Image
-                                      style={{marginTop:10, marginLeft:30,width:43, height:44}}
+                                      style={{marginTop:10, marginLeft:20,width:43, height:44}}
                                   />
                              </View>
                              <View style={{margin:10, flexDirection:'column'}}>
@@ -1918,21 +1916,14 @@ export default class TaskPage extends React.Component{
                                         <Text style={{color:'rgba(0, 0, 0, 0.38)'}}>candidates</Text> 
                                     </View>
                             </View>
-                            <View style={{margin:20, marginTop:-6}}>
-                                <RNSlidingButton
-                                  style={{
-                                    width: 240,
-                                  }}
-                                  height={35}
-                                  color='black'
-                                  onSlidingSuccess={this.onSlideRight}
-                                  slideDirection={SlideDirection.RIGHT}>
-                                  <View>
-                                    <Text numberOfLines={1} style={styles.titleText}>
-                                      SLIDE RIGHT TO ACCEPT
-                                    </Text>
-                                  </View>
-                                </RNSlidingButton>
+                            <View style={{ justifyContent:'center' ,flexDirection:'row'}}>
+                              <View style={{marginRight:20}}>
+                               <Button  color='gray' title="Cancel"/>
+                              </View>
+                              <View style={{marginLeft:20}}>
+                               <Button color='#2d7474'   title="Apply Job"/>
+                              </View>
+                               
                             </View>
                         </View>
                      </View>
@@ -2252,7 +2243,7 @@ const styles = StyleSheet.create({
       },
       enterInformation:{
         backgroundColor:'#E5E5E5',
-        width:'76%',
+        width:'80%',
         height:550,
         margin:'10%', 
         marginTop:'25%',

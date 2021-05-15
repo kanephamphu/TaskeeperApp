@@ -1,15 +1,20 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import {
     View, Text, StyleSheet, TouchableOpacity,
     FlatList, Image, ScrollView, Dimensions,
-    SafeAreaView, Alert,ActivityIndicator,StatusBar
+    SafeAreaView, Alert,ActivityIndicator,StatusBar, Modal, TextInput,Button
 } from 'react-native'
 import Swiper from 'react-native-swiper';
+import DropDownPicker from 'react-native-dropdown-picker';
+import MyMapView from '.././MapView'
+import { FontAwesome } from '@expo/vector-icons';
+import MultiSelect from 'react-native-multiple-select';
 import jwt_decode from 'jwt-decode'
 import io from 'socket.io-client/dist/socket.io'
 import girl from '../../images/home4.png';
 import job from '../../images/home5.png';
 import header from '../../images/home3.png';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import avatar1 from '../../images/avatar11.png';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -23,16 +28,23 @@ import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { MaterialIcons } from '@expo/vector-icons';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
-import AppText from '../app-text';
+import MapInput2 from '../../components/MapInput2'
+import ActionButton, { ActionButtonItem } from 'react-native-action-button';
 var e;
 const { height, width } = Dimensions.get('window');
-class Home extends PureComponent {
+var gender = [
+    { label: "male", value: "male" },
+    { label: "female", value: "female" }
+];
+class Home extends Component {
     constructor(props) {
         super(props);
         e = this;
         this.state = {
             first_name: '',
             last_name: '',
+            formatted_address:'',
+            showlocation:false,
             email: '',
             avatar: '',
             username: '',
@@ -43,17 +55,60 @@ class Home extends PureComponent {
             isLoading: false,
             secret_key: '',
             refreshing: false,
-            posttaskshow:false,
+            posttaskshow:'1',
             show: false,
             number_task:10,
             skip: 10,
+            tags:'',
+            latitude:'',
+            showtags:false,
             datasource: [],
+            region: [],
             datasourcenew: [],
+            tag_query:'IT - Phần Mềm',
             test:'abc',
             datarecommend:[],
             test:false,
             isLoadingrecomend: false,
-            location:''
+            location:'',
+            selectedTags: [],
+            datatags:[],
+            day_of_birth: '',
+            month_of_birth: '',
+            year_of_birth: '',
+            items: [
+                { label: '1', value: '1' },
+                { label: '2', value: '2' },
+                { label: '3', value: '3' },
+                { label: '4', value: '4' },
+                { label: '5', value: '5' },
+                { label: '6', value: '6' },
+                { label: '7', value: '7' },
+                { label: '8', value: '8' },
+                { label: '9', value: '9' },
+                { label: '10', value: '10' },
+                { label: '11', value: '11' },
+                { label: '12', value: '12' },
+                { label: '13', value: '13' },
+                { label: '14', value: '14' },
+                { label: '15', value: '15' },
+                { label: '16', value: '16' },
+                { label: '17', value: '17' },
+                { label: '18', value: '18' },
+                { label: '19', value: '19' },
+                { label: '20', value: '20' },
+                { label: '21', value: '21' },
+                { label: '22', value: '22' },
+                { label: '23', value: '23' },
+                { label: '24', value: '24' },
+                { label: '25', value: '25' },
+                { label: '26', value: '26' },
+                { label: '27', value: '27' },
+                { label: '28', value: '28' },
+                { label: '29', value: '29' },
+                { label: '30', value: '30' },
+                { label: '31', value: '31' },
+            ],
         }
         this.onProfile = this.onProfile.bind(this);
         this.onStack = this.onStack.bind(this);
@@ -81,6 +136,17 @@ class Home extends PureComponent {
                 isLoadingrecomend:true
             })                        
         })
+        socket.on("sv-get-tags-list",function(data){
+            var list=data.data
+            if(data.success==false){
+              //console.log(JSON.stringify(data))
+            }else if(data.success==true){
+              e.setState({
+                datatags:list,
+              })
+            }
+            // console.log(data)
+          })
     }
 
     componentDidMount = async () => {
@@ -92,6 +158,7 @@ class Home extends PureComponent {
             secret_key: token,
 
         })
+        
         const getnewtask = {
             secret_key: this.state.secret_key,
             number_task: this.state.number_task,
@@ -101,9 +168,51 @@ class Home extends PureComponent {
         const listrecommend ={
             secret_key: this.state.secret_key,
         }
+
         socket.emit('cl-get-recommend-task',listrecommend)
+        const gettags={
+            tag_query:this.state.tag_query
+          }
+         socket.emit("cl-get-tags-list",gettags)
+          const post ={
+            user_id : decode._id,
+            number_task:2,
+            skip:1
+          }
+          socket.emit("cl-get-wall-task",post)
       
     }
+    onSelectedTagsChange = (selectedTags) => {
+        this.setState({ selectedTags });
+      };
+      onChangeTagsInput(tag_query){
+        this.setState({tag_query})
+        const gettags={
+          tag_query:this.state.tag_query
+        }
+        socket.emit("cl-get-tags-list",gettags)
+      };
+      setInputLocation(a,b,c){
+        this.setState({
+          formatted_address:a,
+          latitude:b,
+          longitude:c,
+          showlocation:false
+        })
+      }
+      getCoordsFromName(loc,name) {
+        //console.log(loc)
+        //console.log(name)
+        this.setState({
+            region: {
+                formatted_address:name,
+                latitude: loc.lat,
+                longitude: loc.lng,
+                latitudeDelta: 0.003,
+                longitudeDelta: 0.003
+            }
+        });
+        }
     /*followTask=async()=>{
         const follow={
             secret_key:this.state.secret_key,
@@ -127,16 +236,16 @@ class Home extends PureComponent {
                         </Swiper>
                         
                         <View style={styles.text1}>
-                            <AppText style={{ fontStyle: 'italic',color:'black' }} i18nKey={'home_page.quotes'}>The suitable of for you today !!!</AppText>
+                            <Text style={{ fontStyle: 'italic',color:'black' }}>The suitable of for you today !!!</Text>
                         </View>
                         <View style={styles.text}>
-                            <AppText style={{ fontWeight: 'bold', fontSize: 20}} i18nKey={'home_page.hi'}>Hi</AppText>
+                            <Text style={{ fontWeight: 'bold', fontSize: 20}}>Hi </Text>
                             <Text style={{ fontSize: 20 ,color:'black'}}>{this.state.first_name} !</Text>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={styles.texttitle} >
-                            <AppText style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }} i18nKey={'home_page.title_home'}>Recommend Work</AppText>
+                            <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }}>Recommend Work</Text>
                         </View>
                     </View>
                     <View style={styles.recommend}>
@@ -162,7 +271,7 @@ class Home extends PureComponent {
                         
                     </View>
                     <View style={{ marginLeft: 10, marginTop: 10, width: 130, marginBottom: 10, borderBottomWidth: 2, borderBottomColor: '#71B7B7' }}>
-                        <AppText style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }} i18nKey={'home_page.title_home2'}>Bulletin Board</AppText>
+                        <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }}>Bulletin Board</Text>
                     </View>
                 </View>   
             </SafeAreaView>   
@@ -214,35 +323,175 @@ class Home extends PureComponent {
         )
        
     }
-    functionOne =async()=>{
-        await this.setState({
-            posttaskshow:true,
-        })
-        this.props.navigation.navigate("posttaskforhomepage", { showposttask: this.state.posttaskshow })
-    }
-    render() {
-
+    
+    render() {      
         return (
             <View style={styles.container}>
                  <StatusBar />
                 <View style={{ marginTop:10}}>
                     <Search stack={this.onStack} message={this.onMessage} />
                 </View>
-                <View style={{ zIndex:2,top:'84%', left:'86%', borderRadius:19, width:'9%', height:'5%',backgroundColor:'#2D7474'}}>
-                    <TouchableOpacity onPress={()=>{this.functionOne()}} style={{alignItems:'center', margin:5}} >
+                <ActionButton /*onPress={()=>{this.props.navigation.navigate('posttaskforhomepage');sendshowposttask=this.state.posttaskshow}}*/  style={{zIndex:2}} buttonColor="#2D7474" size={40}>
+                    {/* <ActionButtonItem >
                         <Entypo name="new-message" size={18} color="white" />
-                    </TouchableOpacity>
-                </View>     
+                    </ActionButtonItem> */}
+                </ActionButton>
+                    <Modal transparent={true} visible={false} >
+                    <View style={{flexDirection:'column', flex:1, backgroundColor:'#000000aa'}}>
+                        <View style={styles.enterInformation}>
+                            <View style={{marginTop:10, marginLeft:5}}>
+                                <Text style={{fontSize:15, color:'#2d7474'}}>
+                                    Address:
+                                </Text> 
+                            </View>   
+                            <View style={{marginTop:10,height:50}}>
+                                    <MapInput2 notifyChange={(loc,name) => this.getCoordsFromName(loc,name)}
+                                    />
+                            </View>
+                            <View style={{marginLeft:5, zIndex:1}}>
+                                <Text style={{fontSize:15, color:'#2d7474'}}>Gender:</Text>
+                                <View style={{marginTop:10}}>
+                                    <RadioForm
+                                        radio_props={gender}
+                                        initial={0}
+                                        formHorizontal={true}
+                                        onPress={(gender) => this.setState({ gender })}
+                                        buttonSize={10}
+                                        defaultValue={this.state.gender}
+                                        selectedButtonColor={'#71B7B7'}
+                                        selectedLabelColor={'black'}
+                                        labelColor={'black'}
+                                        buttonColor={'#71B7B7'}
+                                    />
+                             </View>   
+                             </View>
+                             <View style={{flexDirection:'column'}}>
+                            <View style={{marginTop:10, marginLeft:5,marginBottom:10,zIndex:3}}>
+                                <Text style={{fontSize:15, color:'#2d7474'}}>
+                                    Tags:
+                                </Text>
+                            </View>  
+                                <MultiSelect
+                                            items={this.state.datatags}
+                                            //items={this.state.items4}
+                                            uniqueKey="name"
+                                            onSelectedItemsChange={this.onSelectedTagsChange}
+                                            onChangeInput={(tag_query)=>this.onChangeTagsInput(tag_query)}
+                                            selectedItems={this.state.selectedTags}
+                                            selectText="    Choose Tags"
+                                            searchInputPlaceholderText="Search Tags..."
+                                            tagRemoveIconColor="#2d7474"
+                                            tagColor="#2d7474"
+                                            tagTextColor="#2d7474"
+                                            selectedItemTextColor="black"
+                                            selectedItemIconColor="black"
+                                            itemTextColor="black"
+                                            searchInputStyle={{ color: 'black' }}
+                                            hideSubmitButton={true}
+                                            styleSelectorContainer={{
+                                                position: 'absolute',
+                                                height:100,
+                                                width:width*0.7,
+                                                marginHorizontal: 5,
+                                                marginLeft:10,
+                                                marginRight:10,
+                                                zIndex:3
+                                            }}
+                                            hideTags={true}
+                                        />
+                                        <FlatList style={{height:70}} numColumns={2} data={this.state.selectedTags} renderItem={({ item, index }) => {
+                                         let tag = item;
+                                         let count =tag.length;
+                                         if (count >=14) {
+                                            tag = tag.slice(0,14)+'..';
+                                         }
+                                        return (
+                                            <View key={item} style={{ borderWidth: 1, backgroundColor: '#EEEEEE', borderColor: '#D2D2D2', alignItems: 'center', justifyContent: 'center', borderRadius: 5, height: 30, paddingLeft: 20, paddingRight: 20, marginBottom: 10, marginRight: 10 }}>
+                                                <Text style={{ color: '#505050', lineHeight: 20, fontSize: 13 }}>{tag}</Text>
+                                            </View>
+                                        )
+                                        }}
+                                            keyExtractor={(item) => item.toString()}>
+                                        </FlatList>
+                            </View>
+                            <View style={{marginTop:10, marginLeft:5}}>
+                                <Text style={{fontSize:15, color:'#2d7474'}}>
+                                   Birthday:
+                                </Text>
+                            </View>   
+                           
+                            <View style={{ flexDirection: 'row', margin:10, zIndex:2}}>
+                            <DropDownPicker
+                                items={this.state.items}
+                                placeholder=""
+                                containerStyle={{ height: 30 }}
+                                onChangeItem={(day_of_birth) => this.setState({ day_of_birth })}
+                                style={styles.picker1}
+                            />
+                            <DropDownPicker
+                                items={[
+                                    { label: '1', value: 1 },
+                                    { label: '2', value: 2 },
+                                    { label: '3', value: 3 },
+                                    { label: '4', value: 4 },
+                                    { label: '5', value: 5},
+                                    { label: '6', value: 6 },
+                                    { label: '7', value: 7 },
+                                    { label: '8', value: 8 },
+                                    { label: '9', value: 9 },
+                                    { label: '10', value: 10 },
+                                    { label: '11', value: 11 },
+                                    { label: '12', value: 12 },
+                                ]}
+                                defaultNull
+                                placeholder=""
+                                onChangeItem={(month_of_birth) => this.setState({ month_of_birth })}
+                                style={styles.picker2}
+                            />
+                            <DropDownPicker
+                                items={ [
+                                    { label: '1990', value: 1990 },
+                                    { label: '1991', value: 1991 },
+                                    { label: '1992', value: 199 },
+                                    { label: '1993', value: 1993 },
+                                    { label: '1994', value: 1994},
+                                    { label: '1995', value: 1995 },
+                                    { label: '1996', value: 1996 },
+                                    { label: '1997', value: 1997 },
+                                    { label: '1998', value: 1998 },
+                                    { label: '1999', value: 1999 },
+                                    { label: '2000', value: 2000 },
+                                    { label: '2001', value: 2001 },
+                                    { label: '2002', value: 2002 }, 
+                                    { label: '2003', value: 2003 },  
+                                    { label: '2004', value: 2004 },  
+                                    { label: '2005', value: 2005 },  
+                                    { label: '2006', value: 2006 },    
+                                ]}
+                                placeholder=""
+                                onChangeItem={(year_of_birth) => this.setState({ year_of_birth })}
+                                style={styles.picker3}
+                            />
+                            </View>
+                            <View style={{margin:20, marginLeft:60, marginRight:60, zIndex:1}}>
+                                <Button 
+                                    title="Save"
+                                    color="#2d7474"
+                                    style={{fontSize:18, color:'white'}}
+                                /> 
+                            </View>
+                        </View>
+                        </View>  
+                    </Modal>
                 {this.props.status === false
                     ?
                         <SafeAreaView >  
-                             
                             <ScrollView>
                             <View>
                                 <View style={styles.viewimage}>
                                   
                                     <View style={styles.text1}>
-                                        <AppText style={{ fontStyle: 'italic',color:'black' }} i18nKey={'home_page.quotes'}>The suitable of for you today !!!</AppText>
+                                        <Text style={{ fontStyle: 'italic',color:'black' }}>The suitable of for you today !!!</Text>
                                     </View>
                                     <View style={styles.text}>
                                         <Text style={{ fontWeight: 'bold', fontSize: 20,color:'black' }}>Hi </Text>
@@ -252,7 +501,7 @@ class Home extends PureComponent {
                                 </View>
                                 <View style={{ flexDirection: 'row' }}>
                                     <View style={styles.texttitle}>
-                                        <AppText style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }} i18nKey={'home_page.title_home'}>Recommend Work</AppText>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }}>Recommend Work</Text>
                                     </View>
                                 </View>
                                 <View style={styles.recommend}>
@@ -272,7 +521,7 @@ class Home extends PureComponent {
                                     </ScrollView>
                                 </View>
                                 <View style={{ marginLeft: 10, marginTop: 10, width: 130, marginBottom: 10, borderBottomWidth: 2, borderBottomColor: '#71B7B7' }}>
-                                    <AppText style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }} i18nKey={'home_page.title_home2'}>Bulletin Board</AppText>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#71B7B7', fontStyle: 'italic' }}>Bulletin Board</Text>
                                 </View>
                             </View>
                             <View style={styles.container}>
@@ -320,7 +569,7 @@ class Home extends PureComponent {
                                                     ...
                                 </Text>
                                                 <TouchableOpacity>
-                                                    <AppText style={{ color: "#888888" }} i18nKey={'home_page.seedetail'}>see detail</AppText>
+                                                    <Text style={{ color: "#888888" }}> see detail</Text>
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
@@ -337,7 +586,7 @@ class Home extends PureComponent {
                                                 <AntDesign name="pluscircle" size={24} color="#71B7B7" />
                                             </View>
                                             <View style={{ marginLeft: 5 }}>
-                                                <AppText i18nKey={'home_page.btnapply'}>Apply</AppText>
+                                                <Text>Apply</Text>
                                             </View>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.iconBulliten2} >
@@ -345,7 +594,7 @@ class Home extends PureComponent {
                                                 <Entypo name="save" size={24} color="#71B7B7" />
                                             </View>
                                             <View style={{ marginLeft: 5 }}>
-                                                <AppText i18nKey={'home_page.btnsave'}>Save</AppText>
+                                                <Text>Save</Text>
                                             </View>
                                         </TouchableOpacity>
                                     </View>
@@ -394,7 +643,7 @@ class Home extends PureComponent {
                                                     ...
                                 </Text>
                                                 <TouchableOpacity>
-                                                    <AppText style={{ color: "#888888" }} i18nKey={'home_page.seedetail'}>see detail</AppText>
+                                                    <Text style={{ color: "#888888" }}> see detail</Text>
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
@@ -436,7 +685,7 @@ class Home extends PureComponent {
                                                 <AntDesign name="pluscircle" size={24} color="#71B7B7" />
                                             </View>
                                             <View style={{ marginLeft: 5 }}>
-                                                <AppText i18nKey={'home_page.btnapply'}>Apply</AppText>
+                                                <Text>Apply</Text>
                                             </View>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.iconBulliten2} >
@@ -444,7 +693,7 @@ class Home extends PureComponent {
                                                 <Entypo name="save" size={24} color="#71B7B7" />
                                             </View>
                                             <View style={{ marginLeft: 5 }}>
-                                                <AppText i18nKey={'home_page.btnsave'}>Save</AppText>
+                                                <Text>Save</Text>
                                             </View>
                                         </TouchableOpacity>
                                     </View>
@@ -536,7 +785,7 @@ const Task = ({ onStack,_id,first_name, image,last_name, location,title }) => {
                 shadowColor: 'green',
                 shadowOpacity: 0.1,
                 elevation: 4,justifyContent: 'center',alignItems: 'center'}}>
-                        <AppText style={{fontSize: 18, color: 'white',fontWeight: 'bold'}} i18nKey={'home_page.detail'}>Detail</AppText>
+                        <Text style={{fontSize: 18, color: 'white',fontWeight: 'bold'}}>Detail</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -787,6 +1036,29 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         zIndex:1
     },
+    picker1: {
+        backgroundColor: '#ffff',
+        width: 60,
+        height: 30,
+        marginRight: 10,
+        borderWidth: 1,
+        borderColor: '#71B7B7'
+    },
+    picker2: {
+        backgroundColor: '#ffff',
+        width: 60,
+        height: 30,
+        marginRight: 10,
+        borderColor: '#71B7B7',
+        borderWidth: 1,
+    },
+    picker3: {
+        backgroundColor: '#ffff',
+        width: 90,
+        height: 30,
+        borderColor: '#71B7B7',
+        borderWidth: 1,
+    },
     recommend: {
         height: height * 0.51,
         marginTop: 10,
@@ -818,5 +1090,26 @@ const styles = StyleSheet.create({
         justifyContent: 'center', alignItems: 'center',
         borderColor: '#71B7B7',
         flexDirection: 'row', zIndex:1
+    },
+    enterInformation:{
+        backgroundColor:'#FFFF',
+        width:'80%',
+        height:height*0.7,
+        margin:'10%', 
+        padding:10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.58,
+        shadowRadius: 16.00,
+        elevation: 24,
+        borderRadius:10
+    },
+    inputIcon:{
+        position:'absolute',
+        top:10,
+        left:35,
     },
 })

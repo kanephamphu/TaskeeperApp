@@ -1,4 +1,5 @@
 import {GET_NEWFEED,ON_REFRESH,APPLY_TASK} from '../constants';
+import _ from 'lodash';
 let initialState=[];
 let findIndex=(data,id)=>{
     let result=-1;
@@ -15,7 +16,9 @@ let findIndex=(data,id)=>{
 let myReducer=(state=initialState,action)=>{
     switch(action.type) {
         case GET_NEWFEED :
+            state = _.unionBy(state,action.payload,'id')
             state=state.concat(action.payload)
+            state = _.unionBy(state,state,'_id')
             return [...state];
         case ON_REFRESH:   
             state=[]

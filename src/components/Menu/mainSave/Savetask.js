@@ -60,7 +60,6 @@ class Savetask extends React.Component {
               <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={25} color="#ffff" />
             </TouchableOpacity>
             <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'white', marginLeft: '20%', marginTop: -2 }}>List Task Save</Text>
-           
         </View>
         {this.props.onstatus === true ?
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
