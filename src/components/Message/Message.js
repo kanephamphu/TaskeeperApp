@@ -1,120 +1,89 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Dimensions, TouchableHighlight } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import _ from "lodash";
 import profile from '../../images/nha.jpg'
 import io from 'socket.io-client/dist/socket.io'
 import { AntDesign } from '@expo/vector-icons';
+import avatarimage from '../../images/avatar11.png';
+import moment from 'moment';
+import jwt_decode from "jwt-decode";
 import AsyncStorage from '@react-native-community/async-storage';
-import {socket} from "../../Socket.io/socket.io";
+import {socket,sockettest} from "../../Socket.io/socket.io";
 const { height, width } = Dimensions.get('window');
 var e;
 class Message extends Component {
     constructor(props) {
         super(props);
         e = this;
+        this.sendIDMessage=this.sendIDMessage.bind(this);
         this.state = {
-            dataSource: [
-                {
-                    _id: 1,
-                    name: 'Nguyen Minh Nha',
-                    messagetext: 'Hom nay toi buon',
-                    time: '10:25'
-                },
-                {
-                    _id: 2,
-                    name: 'Nguyen Minh Nha',
-                    messagetext: 'Hom nay toi buon',
-                    time: '10:25'
-                },
-                {
-                    _id: 3,
-                    name: 'Nguyen Minh Nha',
-                    messagetext: 'Hom nay toi buon',
-                    time: '10:25'
-                },
-                {
-                    _id: 4,
-                    name: 'Nguyen Minh Nha',
-                    messagetext: 'Hom nay toi buon',
-                    time: '10:25'
-                },
-                {
-                    _id: 5,
-                    name: 'Nguyen Minh Nha',
-                    messagetext: 'Hom nay toi buon',
-                    time: '10:25'
-                },
-                {
-                    _id: 6,
-                    name: 'Nguyen Minh Nha',
-                    messagetext: 'Hom nay toi buon',
-                    time: '10:25'
-                },
-            ],
             isLoading: true,
             refeshing: false,
             secret_key: '',
-            dataMessage:[]
+            dataMessage:[],
+            receiver_id:''
         }
-        this.ondetail=this.ondetail.bind(this);
-       socket.on('sv-get-message-list', function (data) {
-            var listdata = data.data
-            if (data.success == true) {
-                e.setState({
-                    dataMessage: listdata,
-                })
-               console.log(JSON.stringify(listdata))
-            }
-
+        socket.on('sv-get-message-list', function (data) {       
+            //console.log(data)
         })
+        sockettest.on('sv-get-list-messages', data => {
+            var list = data
+            let listdata = _.uniqBy(list.result,'receiver_id');
+            e.setState({dataMessage:listdata})
+            //console.log(list)
+        })
+        sockettest.on("sv-set-socketID",data =>{
+            //console.log(data);
+        }) 
     }
     componentDidMount= async ()=>{
         const token = await AsyncStorage.getItem("token");
+        const decode = jwt_decode(token);
         const message ={
-            secret_key:token,
-            skip:0,
+             secret_key:token,
+             skip:1,
         }
+        sockettest.emit("set-socketID" ,{user_id:decode._id})
+        //console.log(decode._id)
         socket.emit("cl-get-message-list",message);
+        //console.log(message)
+        const sendID_Message ={
+            user_id:decode._id
+        }
+        sockettest.emit("cl-get-list-messages",sendID_Message);
+        //console.log(sendID_Message);
     }
-    renderHeader = () => {
-        return (
-            <View style={{ height: 30, backgroundColor: '#faf9f9', justifyContent: 'center', alignItems: 'center' }}>
-                <Text>You have 1 unread meassage</Text>
-            </View>
-        )
-    }
-    ondetail(receiver_id){
-        this.props.navigation.navigate("MesagePersonHome",{receiver_id :receiver_id });
+    sendIDMessage(receiver_id,first_name,last_name,avatar){
+        this.props.navigation.navigate("MessageNewHome",{receiver_id :receiver_id,first_name:first_name,last_name:last_name,avatar:avatar })    
     }
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.header0}>
-                    <View style={{ flexDirection: 'row', marginTop: 40, marginLeft: 10 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-                                <Ionicons style={{ marginTop: 1, marginLeft: 5 }} name="ios-arrow-back" size={28} color="#faf9f9" />
+                    <View style={{ justifyContent:'center', marginLeft: 10,width:width*0.95,flex:1 }}>
+                        <View style={{justifyContent:'space-between',flexDirection:'row'}}>
+                            <TouchableOpacity style={{marginTop:6}} onPress={() => this.props.navigation.goBack()}>
+                                <Ionicons name="ios-arrow-back" size={28} color="#faf9f9" />
                             </TouchableOpacity>
-                            <Text style={{ fontSize: 25, color: '#2d7474', marginLeft: 120, marginTop: -2 }}>Message</Text>
-                        </View>
-                        <View style={{ justifyContent: 'center', alignItems: 'flex-end', marginLeft: 110 }}>
-                            <TouchableHighlight
-                                activeOpacity={1}
-                                underlayColor={"#ccd0d5"}  
-                                onPress={this.ondetail}              
-                                style={styles.search_icon_box}
-                            >
-                                <AntDesign name="search1" size={22} color="#000000" />
-                            </TouchableHighlight>
+                            <Text style={{ fontSize: 20, color: 'black',fontWeight:'bold',marginTop:8 }}>Message</Text>
+                            <View>
+                                <TouchableHighlight
+                                    activeOpacity={1}
+                                    underlayColor={"#ccd0d5"}           
+                                    style={styles.search_icon_box}
+                                >
+                                    <AntDesign style={{marginTop:10,marginLeft:9}} name="search1" size={22} color="#000000" />
+                                </TouchableHighlight>
+                            </View>
                         </View>
                     </View>
                 </View>
                 <View >
                     <FlatList data={this.state.dataMessage}
-                        ListHeaderComponent={this.renderHeader}
                         renderItem={({ item, index }) => {
                             return (
-                                <RenderItem onMessage={this.ondetail} item={item} index={index}></RenderItem>
+                                <RenderItem onMessage={this.sendIDMessage} item={item} index={index}></RenderItem>
                             )
                         }}
                         keyExtractor={(item) => item._id.toString()}
@@ -127,42 +96,34 @@ class Message extends Component {
 }
 class RenderItem extends Component {
     render() {
+        var text = this.props.item.text
+        var counttext = this.props.item.text.length;
+        if (counttext >= 15) {
+            text = text.slice(0, 15) + "...";
+        }
+        var name = this.props.item.first_name+" "+this.props.item.last_name
+        var countname = (this.props.item.first_name+" "+this.props.item.last_name).length;
+        if (countname >= 15) {
+            name = name.slice(0, 15) + "...";
+        }
         return (
-            <View style={{ flexDirection: 'column' }}>
-                <View style={styles.header}>
-                    <TouchableOpacity onpress={this.props.onMessage}>
-                        <Image source={this.props.item.user.avatar ? { uri: this.props.item.user.avatar } : null} style={{
-                            width: 80
-                            , height: 80, borderRadius: 50,
-                        }}></Image>
-                        <View style={{
-                            width: 30
-                            , height: 30, borderRadius: 50, backgroundColor: '#71B7B7',
-                            alignItems: 'center', justifyContent: 'center', position: 'absolute', left: 50, top: -10
-                        }}>
-                            <Text style={{ color: '#ffff' }}>2</Text>
+                <View style={styles.header}>  
+                        <TouchableOpacity onPress={()=>this.props.onMessage(this.props.item.receiver_id,this.props.item.first_name,this.props.item.last_name,this.props.item.avatar)} style={styles.imageview}>
+                            <Image source={this.props.item.avatar ? { uri: this.props.item.avatar } : avatarimage} style={styles.image}></Image>
+                        </TouchableOpacity>
+                        <View style={{marginBottom: 10,marginTop:10, paddingTop: 20, marginLeft: 20, width: width*0.65,borderBottomWidth:1,height:100,borderBottomColor:'gray', }}>
+                            <TouchableOpacity  onPress={()=>this.props.onMessage(this.props.item.receiver_id,this.props.item.first_name,this.props.item.last_name,this.props.item.avatar)}>
+                                <View style={{justifyContent:'space-between',flexDirection:'row',marginBottom: 10}}>
+                                    <Text style={styles.textTitle}>
+                                        {name}
+                                    </Text>
+                                    <Text style={{ marginTop: 5}}> {moment(this.props.item.createdAt).format('HH:MM')}</Text>
+                                </View>
+                                    <Text style={{ fontSize: 16,color:'gray' }}>
+                                        {this.props.item.text}
+                                    </Text>
+                            </TouchableOpacity>                      
                         </View>
-                    </TouchableOpacity>
-
-                    <View >
-                        <View style={{ flexDirection: 'column', marginBottom: 10, marginTop: 5, marginLeft: 30, width: 170 }}>
-                            <TouchableOpacity  onpress={this.props.onMessage}>
-                                <Text style={styles.textTitle}>
-                                    {this.props.item.user.name}
-                                </Text>
-                            </TouchableOpacity>
-                            <View>
-                                <Text style={{ fontSize: 16 }}>
-                                    {this.props.item.text}
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={{ marginLeft: 40 }}>
-                        <Text> {new Date(this.props.item.createdAt).toLocaleDateString()}</Text>
-                    </View>
-                </View>
-                <View style={{ height: 1, borderWidth: 1, borderColor: '#e6e4eb', backgroundColor: 'black', marginLeft: 100 }}></View>
             </View>
 
         )
@@ -176,7 +137,7 @@ const styles = StyleSheet.create({
     },
     textTitle: {
         fontWeight: 'bold',
-        color: '#71B7B7',
+        color: '#2D7474',
         fontSize: 20
     },
     header_inner: {
@@ -191,16 +152,15 @@ const styles = StyleSheet.create({
         height: 100,
         alignItems: 'center',
         marginLeft: 16,
-        marginTop: 5, marginBottom: 10
+        marginRight:10,
+        marginTop: 5,
+        marginBottom: 10,
     },
     search_icon_box: {
         width: 40,
         height: 40,
         borderRadius: 40,
         backgroundColor: '#e4e6eb',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
     },
     iconBulliten: {
         flexDirection: 'row',
@@ -222,5 +182,18 @@ const styles = StyleSheet.create({
         height: height * 0.13,
         backgroundColor: 'rgba(113, 183, 183, 0.3)',
 
+    },
+    imageview: {
+        shadowOffset: { width: 0, height: 3 },
+        shadowColor: 'green',
+        shadowOpacity: 0.5,
+        elevation: 10,
+        borderColor: '#71B7B7',
+        borderRadius: 50,
+    },
+    image: {
+        height: 70,
+        width: 70,
+        borderRadius: 50,
     },
 })

@@ -22,6 +22,7 @@ export default{
     back:"Back",
     titlehomemanagejobs:"Careers Management",
     titlehomemanagecandidates:"Candidates Management",
+    createtime:"Create Time: ",
   },
   home_page:{
     quotes:"The suitable of for you today!!!",
@@ -77,6 +78,26 @@ export default{
     working:"Working:",
     birthday:"Birthday:",
     gender:"Gender:",
+    firstname:"First Name:",
+    lastname:"Last Name:",
+    save:"Save",
+    personalinfor:"Personal Information",
+    editprofile:"Edit profile",
+    year:"+ Year:",
+    addeducation:"Add education",
+    educationat:"Education at ",
+    educationdescription:"+ Education description:",
+    educationname:"Education name:",
+    editeducation:"Edit education",
+    notice:"Do you want to delete !",
+    ok:"Ok",
+    time:"Time:",
+    workingat:"Working at ",
+    workingdescription:"+ Working description:",
+    position:"+ Position:",
+    addworking:"Add working",
+    cancel:"Cancel",
+    add:"Add"
   },
   home_apply:{
     jobs:"Jobs",
@@ -86,7 +107,12 @@ export default{
   historyjob:"History Job",
   home_taskpage:{
     taskpage:"Task Page",
-    titlepost:"Do you want to post new task?"
+    titlepost:"Do you want to post new task?",
+    address:"Address:",
+    updated:"Updated:",
+    price:"Price:",
+    taskdescription:"TASK DESCRIPTION:",
+    seedetail:"see detail",
   },
   home_changepass:{
     password:"Password",

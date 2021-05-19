@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 import {socket} from "../../Socket.io/socket.io";
 import * as actions from '../../actions';
+import AppText from "../app-text";
 var e;
 
 class Education extends Component {
@@ -358,11 +359,12 @@ class Education extends Component {
                                             <View >
                                                 <MaterialIcons name="work" size={24} color="#555555" />
                                             </View>
-                                            <View style={{ marginLeft: 5, padding: 5, width: width - 100 }}>
-                                                <Text>
+                                            <View style={{ marginLeft: 5, padding: 5, width: width - 100,flexDirection:'row' }}>
+                                                <AppText i18nKey={'home_profile.workingat'}>
                                                     Working at
-                                            <Text style={{ fontWeight: 'bold' }}> {item.company_name}</Text>
-                                                </Text>
+                                            
+                                                </AppText>
+                                                <Text style={{ fontWeight: 'bold' }}> {item.company_name}</Text>
                                             </View>
                                         </View>
                                         <TouchableOpacity onPress={() => {
@@ -376,20 +378,20 @@ class Education extends Component {
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 }}>
                                         <View style={{ flexDirection: 'column', marginLeft: 35, marginRight: 15, marginBottom: 5, width: width - 120 }}>
                                             <View>
-                                                <Text>+ Working decription:</Text>
+                                                <AppText i18nKey={'home_profile.workingdescription'}>+ Working decription:</AppText>
                                             </View>
                                             <View style={{ width: width - 130, marginLeft: 15 }}>
                                                 <Text style={{ fontWeight: 'bold' }}>{item.description} </Text>
                                             </View>
                                             <View>
-                                                <Text>+ Position:</Text>
+                                                <AppText i18nKey={'home_profile.position'}>+ Position:</AppText>
                                             </View>
                                             <View style={{ width: width - 130, marginLeft: 15 }}>
                                                 <Text style={{ fontWeight: 'bold' }}>{item.position} </Text>
                                             </View>
                                             <View style={{ flexDirection: 'row' }}>
                                                 <View>
-                                                    <Text>+ Year:</Text>
+                                                    <AppText i18nKey={'home_profile.year'}>+ Year:</AppText>
                                                 </View>
                                                 <View style={{ width: width - 130, marginLeft: 5 }}>
                                                     <Text style={{ fontWeight: 'bold' }}>{item.time_period.from_time}{item.time_period.to_time == null ? null : " - "}{item.time_period.to_time === null ? null : item.time_period.to_time}</Text>
@@ -412,7 +414,7 @@ class Education extends Component {
                         })}
                         <TouchableOpacity onPress={() => this.setState({ show: true })} style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <Ionicons name="ios-add-circle" size={40} color="#71B7B7" />
-                            <Text style={{ color: '#71B7B7', fontWeight: 'bold' }}>Add Working</Text>
+                            <AppText i18nKey={'home_profile.addworking'} style={{ color: '#71B7B7', fontWeight: 'bold' }}>Add Working</AppText>
                         </TouchableOpacity>
                         {this.props.working.length===0?
                             <View style={{flex:1,justifyContent: 'center', alignItems: 'center' ,marginTop:70}}>

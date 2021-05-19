@@ -101,51 +101,51 @@ class Detail extends Component {
         this.save = this.saveTask.bind(this);
         this.onDetail = this.onDetail.bind(this)
         this.onDetail1 = this.onDetail1.bind(this)
-        socket.on("sv-save-task", function (data) {
-            if (data.success == false) {
-                e.setState({
-                    shownotice: true,
-                    notice: 'Already Exist!',
-                    key: "error",
-                })
-            } else if (data.success == true) {
-                e.setState({
-                    shownotice: true,
-                    notice: 'Saved Successfully!',
-                    key: "success",
-                })
-            }
-        })
-        socket.on("sv-apply-job", function (data) {
-            if (data.success == false) {
-                if (data.errors.introduction) {
-                    e.setState({
+        // socket.on("sv-save-task", function (data) {
+        //     if (data.success == false) {
+        //         e.setState({
+        //             shownotice: true,
+        //             notice: 'Already Exist!',
+        //             key: "error",
+        //         })
+        //     } else if (data.success == true) {
+        //         e.setState({
+        //             shownotice: true,
+        //             notice: 'Saved Successfully!',
+        //             key: "success",
+        //         })
+        //     }
+        // })
+        // socket.on("sv-apply-job", function (data) {
+        //     if (data.success == false) {
+        //         if (data.errors.introduction) {
+        //             e.setState({
                       
                       
-                    })
+        //             })
 
-                } if(data.errors.price){
-                    e.setState({
+        //         } if(data.errors.price){
+        //             e.setState({
                        
-                    })
-                }else {
-                    e.setState({
-                        shownotice: true,
-                        notice: 'Already Exist!',
-                        key: "error",
-                    })
+        //             })
+        //         }else {
+        //             e.setState({
+        //                 shownotice: true,
+        //                 notice: 'Already Exist!',
+        //                 key: "error",
+        //             })
 
-                }
+        //         }
               
-            } else if (data.success == true) {
-                e.setState({
+        //     } else if (data.success == true) {
+        //         e.setState({
                   
-                    shownotice: true,
-                    notice: 'Applied Successfully!',
-                    key: "success",
-                })
-            }
-        })
+        //             shownotice: true,
+        //             notice: 'Applied Successfully!',
+        //             key: "success",
+        //         })
+        //     }
+        // })
         socket.on("sv-task-detail", function (data) {
             var list = data.data
             if (data.success == true) {

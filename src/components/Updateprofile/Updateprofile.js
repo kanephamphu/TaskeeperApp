@@ -8,6 +8,7 @@ import iconsuccess from '../../images/checked.png';
 import iconerror from '../../images/close.png';
 import {socket} from "../../Socket.io/socket.io";
 import AsyncStorage from '@react-native-community/async-storage';
+import AppText from '../app-text';
 
 var gender = [
     { label: "male", value: "male" },
@@ -184,22 +185,22 @@ class Updateprofile extends Component {
             <View style={[styles.container]}>
                 <ScrollView>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ fontSize: 20, fontStyle: 'italic', fontWeight: 'bold' }}>Personal Information</Text>
+                        <AppText i18nKey={'home_profile.personalinfor'} style={{ fontSize: 20, fontStyle: 'italic', fontWeight: 'bold' }}>Personal Information</AppText>
                     </View>
                     <View style={{backgroundColor:'#faf9f9'}}>
-                        <Text style={styles.textall}>First Name:</Text>
+                        <AppText style={styles.textall} i18nKey={'home_profile.firstname'}>First Name:</AppText>
                         <View style={styles.input}>
                             <TextInput placeholder="First name"  onChangeText={(first_name) => this.setState({ first_name })} value={this.state.first_name} style={styles.textinput}></TextInput>
                         </View>
-                        <Text style={styles.textall}>Last Name:</Text>
+                        <AppText style={styles.textall} i18nKey={'home_profile.lastname'}>Last Name:</AppText>
                         <View style={styles.input}>
                             <TextInput placeholder="Last name" onChangeText={(last_name) => this.setState({ last_name })} value={this.state.last_name} style={styles.textinput}></TextInput>
                         </View>
-                        <Text style={styles.textall}>Phone number:</Text>
+                        <AppText style={styles.textall} i18nKey={'home_profile.phone'}>Phone number:</AppText>
                         <View style={styles.input}>
                             <TextInput placeholder="Phone number" onChangeText={(phone_number) => this.setState({ phone_number })} value={this.state.phone_number} value={this.state.phone_number} style={styles.textinput}></TextInput>
                         </View>
-                            <Text style={styles.textall}>Birthday:</Text>
+                            <AppText style={styles.textall} i18nKey={'home_profile.birthday'}>Birthday:</AppText>
                         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                             <DropDownPicker
                                 items={this.state.items}
@@ -253,7 +254,7 @@ class Updateprofile extends Component {
                                 style={styles.picker3}
                             />
                         </View>
-                        <Text style={styles.textall}>Gender:</Text>
+                        <AppText style={styles.textall} i18nKey={'home_profile.gender'}>Gender:</AppText>
                         <View style={styles.input}>
                             <RadioForm
                                 radio_props={gender}
@@ -273,7 +274,7 @@ class Updateprofile extends Component {
                     </View>
                     <View style={styles.btnContainer}>
                         <TouchableOpacity /*onPress={this.nextStep}*/ onPress={this.onSubmit} style={styles.btnStyle}>
-                           <Text style={{fontWeight: 'bold',color: '#ffff',fontSize: 20}}>Save</Text>
+                           <AppText style={{fontWeight: 'bold',color: '#ffff',fontSize: 20}} i18nKey={'home_profile.save'}>Save</AppText>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

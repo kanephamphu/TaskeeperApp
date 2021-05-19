@@ -18,12 +18,16 @@ export default class Homesearch extends Component {
         }
         this.onProfile = this.onProfile.bind(this);
         this.onDetail = this.onDetail.bind(this);
+        this.sendIDMessage=this.sendIDMessage.bind(this);
     }
     onProfile(first, last, _id) {
         this.props.navigation.navigate("Profilefriend", { first_name: first, last_name: last, _id: _id })
     }
     onDetail(_id) {
         this.props.navigation.navigate("Detail", { _task_id: _id })
+    }
+    sendIDMessage(receiver_id,first_name,last_name,avatar){
+        this.props.navigation.navigate("MessageNewHome",{receiver_id :receiver_id,first_name:first_name,last_name:last_name,avatar:avatar })    
     }
     render() {
         const { key } = this.props.route.params;
@@ -61,7 +65,7 @@ export default class Homesearch extends Component {
                     <Tab tabStyle={{ backgroundColor: '#faf9f9' }} activeTabStyle={{ backgroundColor: '#faf9f9' }}
                         textStyle={{ color: 'black' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }} heading="People">
                        
-                            <SearchUser stackDetail={this.onDetail}
+                            <SearchUser onMessage={this.sendIDMessage} stackDetail={this.onDetail}
                             stackProfile={this.onProfile} search_key={key} />
                     </Tab>
                 </Tabs>
