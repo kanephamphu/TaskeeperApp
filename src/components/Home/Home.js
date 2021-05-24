@@ -39,7 +39,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Search from "./Search";
 import FlatListdata from "./Listdata/FlatListdata";
 import AsyncStorage from "@react-native-community/async-storage";
-import { socket,sockettest } from "../../Socket.io/socket.io";
+import { socket, sockettest } from "../../Socket.io/socket.io";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 import { MaterialIcons } from "@expo/vector-icons";
 import { connect } from "react-redux";
@@ -79,7 +79,7 @@ class Home extends Component {
       latitude: "",
       showtags: false,
       datasource: [],
-      showmodalnew:true,
+      showmodalnew: true,
       region: [],
       latitude: null,
       longitude: null,
@@ -148,6 +148,7 @@ class Home extends Component {
     socket.on("sv-get-news-feed", (data) => {
       this.props.onStatus();
       this.props.getNewfeed(data.data);
+      //console.log(data)
     });
     socket.on("sv-get-recommend-task", function (data) {
       e.setState({
@@ -167,6 +168,10 @@ class Home extends Component {
       // console.log(data)
     });
 
+    sockettest.on("sv-set-socketID", (data) => {
+      //console.log(data);
+    });
+
     sockettest.on("sv-check-information", function (data) {
       //console.log(JSON.stringify(data))
     });
@@ -183,10 +188,18 @@ class Home extends Component {
         //console.log(JSON.stringify(data))
       } else if (data.success == true) {
         //console.log(JSON.stringify(data))
-        e.setState({
-          showmodalnew:false
-        })
       }
+    });
+    sockettest.on("sv-check-information", function (data) {
+      // if (data.success == false) {
+      //   console.log(JSON.stringify(data))
+      // } else if (data.success == true) {
+      //   console.log(JSON.stringify(data))
+      // }
+      console.log(data)
+      e.setState({
+        showmodalnew:data.result
+      })
     });
   }
 
@@ -199,11 +212,9 @@ class Home extends Component {
       secret_key: token,
     });
 
-    const sendServerTest = {
-      _id:decode._id
-    }
-    sockettest.emit('cl-check-information',sendServerTest)
-    //console.log(sendServerTest)
+    sockettest.emit("set-socketID", { user_id: decode._id });
+    sockettest.emit("cl-check-information", {_id: decode._id });
+    console.log(decode._id);
 
     const getnewtask = {
       secret_key: this.state.secret_key,
@@ -252,31 +263,31 @@ class Home extends Component {
       longitude: loc.lng,
     });
   }
-  onSubmitLocation = ()=>{
-    if(this.state.latitude==null){
-      alert("Please enter address!")
-    }
-    else if(this.state.longitude==null){
-      alert("Please enter address!")
-    }
-    else if(this.state.selectedTags==""){
-      alert("Please select tags!")
-    }
-    else{
+  onSubmitLocation = () => {
+    if (this.state.latitude == null) {
+      alert("Please enter address!");
+    } else if (this.state.longitude == null) {
+      alert("Please enter address!");
+    } else if (this.state.selectedTags == "") {
+      alert("Please select tags!");
+    } else {
       const sendlocation = {
-        secret_key:this.state.secret_key,
-        lat:this.state.longitude,
-        lng:this.state.latitude
-      }
+        secret_key: this.state.secret_key,
+        lat: this.state.longitude,
+        lng: this.state.latitude,
+      };
       socket.emit("cl-send-new-location", sendlocation);
       const sendTags = {
-        secret_key:this.state.secret_key,
-        tags:this.state.selectedTags
-      }
+        secret_key: this.state.secret_key,
+        tags: this.state.selectedTags,
+      };
       socket.emit("cl-send-new-tags", sendTags);
-      alert("send location and tags success!")
+      alert("send location and tags success!");
+      this.setState({
+        showmodalnew:true
+      })
     }
-  }
+  };
   /*followTask=async()=>{
         const follow={
             secret_key:this.state.secret_key,
@@ -463,219 +474,78 @@ class Home extends Component {
         <View style={{ marginTop: 10 }}>
           <Search stack={this.onStack} message={this.onMessage} />
         </View>
-        <ActionButton
-          /*onPress={()=>{this.props.navigation.navigate('posttaskforhomepage');sendshowposttask=this.state.posttaskshow}}*/ style={{
-            zIndex: 2,
-          }}
-          buttonColor="#2D7474"
-          size={40}
-        >
-          {/* <ActionButtonItem >
-                        <Entypo name="new-message" size={18} color="white" />
-                    </ActionButtonItem> */}
-        </ActionButton>
-        <Modal transparent={true} visible={false}>
-          <View
-            style={{
-              flexDirection: "column",
-              flex: 1,
-              backgroundColor: "#000000aa",
-            }}
-          >
-            <View style={styles.enterInformation}>
-              <View style={{ marginTop: 10, marginLeft: 5 }}>
-                <Text style={{ fontSize: 15, color: "#2d7474" }}>Address:</Text>
-              </View>
-              <View style={{ marginTop: 10, height: 50 }}>
-                <MapInput2
-                  notifyChange={(loc, name) =>
-                    this.getCoordsFromName(loc, name)
-                  }
-                />
-              </View>
-              <View style={{ marginLeft: 5, zIndex: 1 }}>
-                <Text style={{ fontSize: 15, color: "#2d7474" }}>Gender:</Text>
-                <View style={{ marginTop: 10 }}>
-                  <RadioForm
-                    radio_props={gender}
-                    initial={0}
-                    formHorizontal={true}
-                    onPress={(gender) => this.setState({ gender })}
-                    buttonSize={10}
-                    defaultValue={this.state.gender}
-                    selectedButtonColor={"#71B7B7"}
-                    selectedLabelColor={"black"}
-                    labelColor={"black"}
-                    buttonColor={"#71B7B7"}
-                  />
-                </View>
-              </View>
-              <View style={{ flexDirection: "column" }}>
-                <View
-                  style={{
-                    marginTop: 10,
-                    marginLeft: 5,
-                    marginBottom: 10,
-                    zIndex: 3,
-                  }}
-                >
-                  <Text style={{ fontSize: 15, color: "#2d7474" }}>Tags:</Text>
-                </View>
-                <MultiSelect
-                  items={this.state.datatags}
-                  //items={this.state.items4}
-                  uniqueKey="name"
-                  onSelectedItemsChange={this.onSelectedTagsChange}
-                  onChangeInput={(tag_query) =>
-                    this.onChangeTagsInput(tag_query)
-                  }
-                  selectedItems={this.state.selectedTags}
-                  selectText="    Choose Tags"
-                  searchInputPlaceholderText="Search Tags..."
-                  tagRemoveIconColor="#2d7474"
-                  tagColor="#2d7474"
-                  tagTextColor="#2d7474"
-                  selectedItemTextColor="black"
-                  selectedItemIconColor="black"
-                  itemTextColor="black"
-                  searchInputStyle={{ color: "black" }}
-                  hideSubmitButton={true}
-                  styleSelectorContainer={{
-                    position: "absolute",
-                    height: 100,
-                    width: width * 0.7,
-                    marginHorizontal: 5,
-                    marginLeft: 10,
-                    marginRight: 10,
-                    zIndex: 3,
-                  }}
-                  hideTags={true}
-                />
-                <FlatList
-                  style={{ height: 70 }}
-                  numColumns={2}
-                  data={this.state.selectedTags}
-                  renderItem={({ item, index }) => {
-                    let tag = item;
-                    let count = tag.length;
-                    if (count >= 14) {
-                      tag = tag.slice(0, 14) + "..";
-                    }
-                    return (
-                      <View
-                        key={item}
-                        style={{
-                          borderWidth: 1,
-                          backgroundColor: "#EEEEEE",
-                          borderColor: "#D2D2D2",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          borderRadius: 5,
-                          height: 30,
-                          paddingLeft: 20,
-                          paddingRight: 20,
-                          marginBottom: 10,
-                          marginRight: 10,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color: "#505050",
-                            lineHeight: 20,
-                            fontSize: 13,
-                          }}
-                        >
-                          {tag}
-                        </Text>
-                      </View>
-                    );
-                  }}
-                  keyExtractor={(item) => item.toString()}
-                ></FlatList>
-              </View>
-              <View style={{ marginTop: 10, marginLeft: 5 }}>
-                <Text style={{ fontSize: 15, color: "#2d7474" }}>
-                  Birthday:
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: "row", margin: 10, zIndex: 2 }}>
-                <DropDownPicker
-                  items={this.state.items}
-                  placeholder=""
-                  containerStyle={{ height: 30 }}
-                  onChangeItem={(day_of_birth) =>
-                    this.setState({ day_of_birth })
-                  }
-                  style={styles.picker1}
-                />
-                <DropDownPicker
-                  items={[
-                    { label: "1", value: 1 },
-                    { label: "2", value: 2 },
-                    { label: "3", value: 3 },
-                    { label: "4", value: 4 },
-                    { label: "5", value: 5 },
-                    { label: "6", value: 6 },
-                    { label: "7", value: 7 },
-                    { label: "8", value: 8 },
-                    { label: "9", value: 9 },
-                    { label: "10", value: 10 },
-                    { label: "11", value: 11 },
-                    { label: "12", value: 12 },
-                  ]}
-                  defaultNull
-                  placeholder=""
-                  onChangeItem={(month_of_birth) =>
-                    this.setState({ month_of_birth })
-                  }
-                  style={styles.picker2}
-                />
-                <DropDownPicker
-                  items={[
-                    { label: "1990", value: 1990 },
-                    { label: "1991", value: 1991 },
-                    { label: "1992", value: 199 },
-                    { label: "1993", value: 1993 },
-                    { label: "1994", value: 1994 },
-                    { label: "1995", value: 1995 },
-                    { label: "1996", value: 1996 },
-                    { label: "1997", value: 1997 },
-                    { label: "1998", value: 1998 },
-                    { label: "1999", value: 1999 },
-                    { label: "2000", value: 2000 },
-                    { label: "2001", value: 2001 },
-                    { label: "2002", value: 2002 },
-                    { label: "2003", value: 2003 },
-                    { label: "2004", value: 2004 },
-                    { label: "2005", value: 2005 },
-                    { label: "2006", value: 2006 },
-                  ]}
-                  placeholder=""
-                  onChangeItem={(year_of_birth) =>
-                    this.setState({ year_of_birth })
-                  }
-                  style={styles.picker3}
-                />
-              </View>
-              <View
-                style={{
-                  margin: 20,
-                  marginLeft: 60,
-                  marginRight: 60,
-                  zIndex: 1,
-                }}
-              >
-                <Button
-                  title="Save"
-                  color="#2d7474"
-                  style={{ fontSize: 18, color: "white" }}
-                  onPress={()=>{this.onSubmitLocation()}}
-                />
-              </View>
-            </View>
-          </View>
-        </Modal>
+        
+        <Modal transparent={true} visible={!this.state.showmodalnew} >
+                    <View style={{flexDirection:'column', flex:1, backgroundColor:'#000000aa'}}>
+                        <View style={styles.enterInformation}>
+                            <View style={{marginTop:10, marginLeft:5}}>
+                                <Text style={{fontSize:15, color:'#2d7474'}}>
+                                    Address:
+                                </Text> 
+                            </View>   
+                            <View style={{marginTop:10,height:50}}>
+                                    <MapInput2 notifyChange={(loc,name) => this.getCoordsFromName(loc,name)}
+                                    />
+                            </View>
+                             <View style={{flexDirection:'column'}}>
+                            <View style={{marginTop:10, marginLeft:5,marginBottom:10,zIndex:3}}>
+                                <Text style={{fontSize:15, color:'#2d7474'}}>
+                                    Tags:
+                                </Text>
+                            </View>  
+                                <MultiSelect
+                                            items={this.state.datatags}
+                                            //items={this.state.items4}
+                                            uniqueKey="name"
+                                            onSelectedItemsChange={this.onSelectedTagsChange}
+                                            onChangeInput={(tag_query)=>this.onChangeTagsInput(tag_query)}
+                                            selectedItems={this.state.selectedTags}
+                                            selectText="    Choose Tags"
+                                            searchInputPlaceholderText="Search Tags..."
+                                            tagRemoveIconColor="#2d7474"
+                                            tagColor="#2d7474"
+                                            tagTextColor="#2d7474"
+                                            selectedItemTextColor="black"
+                                            selectedItemIconColor="black"
+                                            itemTextColor="black"
+                                            searchInputStyle={{ color: 'black' }}
+                                            hideSubmitButton={true}
+                                            styleSelectorContainer={{
+                                                position: 'absolute',
+                                                height:100,
+                                                width:width*0.7,
+                                                marginHorizontal: 5,
+                                                marginLeft:10,
+                                                marginRight:10,
+                                                zIndex:3
+                                            }}
+                                            hideTags={true}
+                                        />
+                                        <FlatList style={{height:70}} numColumns={2} data={this.state.selectedTags} renderItem={({ item, index }) => {
+                                         let tag = item;
+                                         let count =tag.length;
+                                         if (count >=14) {
+                                            tag = tag.slice(0,14)+'..';
+                                         }
+                                        return (
+                                            <View key={item} style={{ borderWidth: 1, backgroundColor: '#EEEEEE', borderColor: '#D2D2D2', alignItems: 'center', justifyContent: 'center', borderRadius: 5, height: 30, paddingLeft: 20, paddingRight: 20, marginBottom: 10, marginRight: 10 }}>
+                                                <Text style={{ color: '#505050', lineHeight: 20, fontSize: 13 }}>{tag}</Text>
+                                            </View>
+                                        )
+                                        }}
+                                            keyExtractor={(item) => item.toString()}>
+                                        </FlatList>
+                            </View>
+                            <View style={{margin:20, marginLeft:60, marginRight:60, zIndex:1}}>
+                                <Button onPress={()=>this.onSubmitLocation()}
+                                    title="Save"
+                                    color="#2d7474"
+                                    style={{fontSize:18, color:'white'}}
+                                /> 
+                            </View>
+                        </View>
+                        </View>  
+                    </Modal>
         {this.props.status === false ? (
           <SafeAreaView>
             <ScrollView>
@@ -1445,20 +1315,20 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   enterInformation: {
-    backgroundColor: "#FFFF",
-    width: "80%",
-    height: height * 0.8,
-    margin: "10%",
-    padding: 10,
+    backgroundColor:'#FFFF',
+    width:'80%',
+    height:height*0.5,
+    margin:'10%', 
+    padding:10,
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
-      height: 12,
+        width: 0,
+        height: 12,
     },
     shadowOpacity: 0.58,
-    shadowRadius: 16.0,
+    shadowRadius: 16.00,
     elevation: 24,
-    borderRadius: 10,
+    borderRadius:10
   },
   inputIcon: {
     position: "absolute",

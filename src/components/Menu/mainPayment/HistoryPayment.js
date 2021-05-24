@@ -12,6 +12,7 @@ import { Foundation } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-community/async-storage";
 import jwt_decode from "jwt-decode";
+import _ from "lodash";
 import { socket } from "../../../Socket.io/socket.io";
 const { height, width } = Dimensions.get("window");
 var e;
@@ -57,16 +58,10 @@ export default class HistoryPayment extends React.Component {
               style={{ marginTop: 1 }}
               name="ios-arrow-back"
               size={28}
-              color="black"
+              color="#2d7474"
             />
             <Text
-              style={{
-                fontWeight: "bold",
-                fontSize: 22,
-                color: "black",
-                marginLeft: 15,
-                marginTop: -2,
-              }}
+              style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}
             >
               History Transaction
             </Text>
@@ -131,11 +126,26 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header0: {
-    height: height * 0.1,
-    shadowOffset: { width: 0, height: 3 },
-    paddingLeft: 10,
-    paddingTop: 15,
-    backgroundColor: "#add2c9",
+    ...Platform.select({
+      ios: {
+        height: height * 0.1,
+        shadowOffset: { width: 0, height: 3 },
+        paddingLeft: 10,
+        paddingTop: 15,
+        backgroundColor: "#add2c9",
+        paddingTop:36
+      },
+      android: {
+        height: height * 0.1,
+        shadowOffset: { width: 0, height: 3 },
+        paddingLeft: 10,
+        paddingTop: 15,
+        backgroundColor: "#add2c9",
+      },
+      default: {
+        // other platforms, web for example
+      }
+    })
   },
   timeheader: {
     backgroundColor: "rgba(92, 141, 137, 0.5)",

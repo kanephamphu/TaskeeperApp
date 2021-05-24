@@ -23,6 +23,8 @@ export default{
     titlehomemanagejobs:"Careers Management",
     titlehomemanagecandidates:"Candidates Management",
     createtime:"Create Time: ",
+    english:"English",
+    vietnam:"Vietnamese"
   },
   home_page:{
     quotes:"The suitable of for you today!!!",

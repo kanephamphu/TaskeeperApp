@@ -377,6 +377,11 @@ const ManageStackScreen = ({ navigation }) => {
         component={RenderItem}
         options={{ headerShown: false }}
       />
+       <HomeStack.Screen
+        name="Setamountmenu"
+        component={Setamount}
+        options={{ headerShown: false }}
+      />
     </HomeStack.Navigator>
   );
 };

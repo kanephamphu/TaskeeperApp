@@ -1,5 +1,5 @@
 import React from 'react';
-import { View ,Dimensions,TouchableOpacity,Text,StatusBar} from 'react-native';
+import { View ,Dimensions,TouchableOpacity,Text,StatusBar,TouchableWithoutFeedback, Keyboard,StyleSheet} from 'react-native';
 import MapInput from '../Map/MapInput'
 import MyMapView from '../Map/MapView';
 import { AntDesign } from '@expo/vector-icons';
@@ -87,7 +87,8 @@ class Map extends React.Component {
     }
     render() {
         return (
-            <View style={{ flex: 1}}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1}}>
+            <View style={styles.container}>
                 <StatusBar backgroundColor='blue' animated={true}/>
                 <View style={{ flex: 1,marginTop:10,zIndex: 1000}}>
                     <MapInput style={{zIndex: 2000}} notifyChange={(loc,name) => this.getCoordsFromName(loc,name)}/>
@@ -105,8 +106,25 @@ class Map extends React.Component {
                                 region={this.state.region} />
                         </View> : null}
             </View>
+            </TouchableWithoutFeedback>
         );
     }
 }
 
 export default Map;
+const styles = StyleSheet.create({
+  container: {
+    ...Platform.select({
+      ios: {
+        flex:1,
+        paddingTop:36
+      },
+      android: {
+        flex:1,
+      },
+      default: {
+        // other platforms, web for example
+      }
+    })
+  },
+})

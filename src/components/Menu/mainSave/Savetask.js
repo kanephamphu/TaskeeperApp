@@ -166,15 +166,34 @@ const styles = StyleSheet.create({
     })
   },
   header0: {
-    height: height * 0.07,
-    shadowOffset: { width: 0, height: 3 },
-    paddingLeft: 7,
-    backgroundColor:'#289696' ,
-    alignItems:'center',
-    borderBottomEndRadius:200,
-    borderEndWidth:10,
-    borderEndColor:'#2d7474',
-    borderBottomStartRadius:20,
-    flexDirection: 'row'
-  },
+    ...Platform.select({
+      ios: {
+        height: height * 0.11,
+        shadowOffset: { width: 0, height: 3 },
+        paddingLeft: 7,
+        backgroundColor:'#289696' ,
+        alignItems:'center',
+        borderBottomEndRadius:200,
+        borderEndWidth:10,
+        borderEndColor:'#2d7474',
+        borderBottomStartRadius:20,
+        flexDirection: 'row'
+      },
+      android: {
+        height: height * 0.07,
+        shadowOffset: { width: 0, height: 3 },
+        paddingLeft: 7,
+        backgroundColor:'#289696' ,
+        alignItems:'center',
+        borderBottomEndRadius:200,
+        borderEndWidth:10,
+        borderEndColor:'#2d7474',
+        borderBottomStartRadius:20,
+        flexDirection: 'row'
+      },
+      default: {
+        // other platforms, web for example
+      }
+    })
+  }
 })

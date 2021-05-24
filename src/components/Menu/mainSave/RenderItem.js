@@ -288,6 +288,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "rgba(200,200,200,0.3)",
     borderRadius: 10,
+    borderWidth:1,
+    borderColor:'#2d7474'
   },
   time: {
     fontWeight: "bold",

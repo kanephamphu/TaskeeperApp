@@ -23,6 +23,8 @@ export default{
     titlehomemanagejobs:"Quản lý công việc",
     titlehomemanagecandidates:"Quản lý ứng cử viên",
     createtime:"Thời gian tạo: ",
+    english:"Tiếng Anh",
+    vietnam:"Tiếng Việt"
   },
   home_page:{
     title_home:"Đề xuất công việc",

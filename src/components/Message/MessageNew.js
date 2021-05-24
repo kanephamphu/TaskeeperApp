@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  Image
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
@@ -16,7 +16,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import _ from "lodash";
 import io from "socket.io-client/dist/socket.io";
 const { height, width } = Dimensions.get("window");
-import { socket,sockettest } from "../../Socket.io/socket.io";
+import { socket, sockettest } from "../../Socket.io/socket.io";
 import { TransferWithinAStationSharp } from "@material-ui/icons";
 var e;
 class Message extends Component {
@@ -26,25 +26,23 @@ class Message extends Component {
     this.state = {
       // message: 'asas',
       message: "",
-      dataMessage:[
-      ],
-      color:'green',
+      dataMessage: [],
+      color: "green",
       isLoadingEarlier: false,
       secret_key: "",
       avatar: "",
       _id: "",
-      first_name:"",
-      last_name:""
+      first_name: "",
+      last_name: "",
     };
     this.onsend = this.onSend.bind(this);
 
-    sockettest.on("chat-one-messages",mes =>{
-        this.setState({dataMessage:[...this.state.dataMessage,mes]});
-      })
-      sockettest.on("chat-messages",data =>{
-        
-        this.setState({dataMessage:data});
-      }) 
+    sockettest.on("chat-one-messages", (mes) => {
+      this.setState({ dataMessage: [...this.state.dataMessage, mes] });
+    });
+    sockettest.on("chat-messages", (data) => {
+      this.setState({ dataMessage: data });
+    });
   }
   // handleSend(message) {
   //   const write = message.map((m) => chatsRef.add(m))
@@ -57,46 +55,46 @@ class Message extends Component {
       secret_key: token,
       _id: decode._id,
       avatar: decode.avatar,
-      first_name:decode.first_name,
-      last_name:decode.last_name
+      first_name: decode.first_name,
+      last_name: decode.last_name,
     });
-    sockettest.emit("get-messages",{receiver_id:this.props.route.params.receiver_id,user_id:this.state._id}) 
+    sockettest.emit("get-messages", {
+      receiver_id: this.props.route.params.receiver_id,
+      user_id: decode._id,
+    });
     //5f2ac6648e857e00041dc2b9
   };
-  s4(){
-    return Math.random((1+Math.random())*0x10000).toString(16).substring(1);
+  s4() {
+    return Math.random((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
   }
-  createID=()=>{
-    return this.s4() + this.s4()+ '-'+this.s4();
-  }
+  createID = () => {
+    return this.s4() + this.s4() + "-" + this.s4();
+  };
   onLoadEarlier = () => {
-    e.setState({ isLoadingEarlier: true},() => {
-      e.setState({ isLoadingEarlier: false})
-    })
-    }
-  onSend=(data = [])=> {
+    e.setState({ isLoadingEarlier: true }, () => {
+      e.setState({ isLoadingEarlier: false });
+    });
+  };
+  onSend = (data = []) => {
     const send = {
-      _id:this.createID(),
-      receiver_id:this.props.route.params.receiver_id,
-      first_name:this.props.route.params.first_name,
-      last_name:this.props.route.params.last_name,
-      avatar_receiver:this.props.route.params.avatar,
+      _id: this.createID(),
+      receiver_id: this.props.route.params.receiver_id,
+      first_name: this.props.route.params.first_name,
+      last_name: this.props.route.params.last_name,
+      avatar_receiver: this.props.route.params.avatar,
       text: data[0].text,
       createdAt: new Date(),
       user: {
-        _id:this.state._id,
-        name: this.state.first_name+" "+this.state.last_name,
+        _id: this.state._id,
+        name: this.state.first_name + " " + this.state.last_name,
         avatar: this.state.avatar,
       },
-    }
-    sockettest.emit("chat-message",send);
-    console.log(send)
-    this.setState((previousState) => {
-      return {
-        dataMessage: GiftedChat.append(previousState.dataMessage, data),
-      };
-    });
-  }
+    };
+    sockettest.emit("chat-message", send);
+    console.log(send);
+  };
   render() {
     let listnew = _.orderBy(this.state.dataMessage, ["createdAt"], ["desc"]);
     return (
@@ -122,7 +120,9 @@ class Message extends Component {
               }}
             >
               <Text style={{ fontSize: 25, color: "#2d7474" }}>
-               {this.props.route.params.first_name+" "+this.props.route.params.last_name}
+                {this.props.route.params.first_name +
+                  " " +
+                  this.props.route.params.last_name}
               </Text>
             </View>
 
@@ -134,24 +134,12 @@ class Message extends Component {
           </View>
         </View>
 
-        <View
-          style={{
-            height: 30,
-            backgroundColor: "#faf9f9",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text>10:25,08 Sep</Text>
-        </View>
-
         <GiftedChat
           scrollToBottom
           infiniteScroll
           alwaysShowSend
           renderUsernameOnMessage
           inverted={true}
-          showUserAvatar
           loadEarlier={true}
           renderAvatarOnTop
           onLoadEarlier={this.onLoadEarlier}
@@ -160,10 +148,9 @@ class Message extends Component {
           messages={listnew}
           onSend={(messages) => this.onSend(messages)}
           user={{
-            _id:this.state._id,
-            avatar: this.state.avatar,
+            _id: this.state._id,
             createdAt: new Date(Date.UTC(2016, 5, 11, 17, 20, 0)),
-            name: this.state.first_name+" "+this.state.last_name,
+            name: this.state.first_name + " " + this.state.last_name,
           }}
         ></GiftedChat>
       </View>

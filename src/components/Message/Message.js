@@ -33,9 +33,7 @@ class Message extends Component {
             e.setState({dataMessage:listdata})
             //console.log(list)
         })
-        sockettest.on("sv-set-socketID",data =>{
-            //console.log(data);
-        }) 
+       
     }
     componentDidMount= async ()=>{
         const token = await AsyncStorage.getItem("token");
@@ -44,8 +42,7 @@ class Message extends Component {
              secret_key:token,
              skip:1,
         }
-        sockettest.emit("set-socketID" ,{user_id:decode._id})
-        //console.log(decode._id)
+       
         socket.emit("cl-get-message-list",message);
         //console.log(message)
         const sendID_Message ={

@@ -12,8 +12,8 @@ export default class HomePayment extends React.Component {
       <View style={styles.container}>
         <View style={styles.header0}>
           <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.navigate("Menu")}>
-            <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#ffff" />
-            <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 25, marginTop: -2 }}>Payment information</Text>
+            <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
+            <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>Payment information</Text>
           </TouchableOpacity>
         </View>
         <Tabs tabBarUnderlineStyle={{ backgroundColor: '#2d7474' }} tabContainerStyle={{ borderTopWidth: 3, borderColor: '#ffff' }} >
@@ -83,14 +83,32 @@ const styles = StyleSheet.create({
     })
   },
   header0: {
-    height: height * 0.08,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    paddingLeft: 10,
+    ...Platform.select({
+      ios: {
+        height: height * 0.08,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        paddingLeft: 10,
         paddingTop:15,
-    shadowOpacity: 0.2,
-    elevation: 1,
-   
+        shadowOpacity: 0.2,
+        elevation: 1,
+        paddingHorizontal: 16,
+        paddingTop:36
+      },
+      android: {
+        height: height * 0.08,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        paddingLeft: 10,
+        paddingTop:15,
+        shadowOpacity: 0.2,
+        elevation: 1,
+        paddingHorizontal: 16,
+      },
+      default: {
+        // other platforms, web for example
+      }
+    })
   },
   header: {
     ...Platform.select({

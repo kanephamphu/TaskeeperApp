@@ -297,12 +297,26 @@ const styles = StyleSheet.create({
         })
     },
     header0: {
-        height: height * 0.08,
-        shadowOffset: { width: 0, height: 3 },
-        paddingLeft: 10,
-        paddingTop: 15,
-
-        backgroundColor: '#faf9f9',
+        ...Platform.select({
+            ios: {
+                height: height * 0.08,
+                shadowOffset: { width: 0, height: 3 },
+                paddingLeft: 10,
+                paddingTop: 15,
+                backgroundColor: '#faf9f9',
+                paddingTop:36
+            },
+            android: {
+                height: height * 0.08,
+                shadowOffset: { width: 0, height: 3 },
+                paddingLeft: 10,
+                paddingTop: 15,
+                backgroundColor: '#faf9f9',
+            },
+            default: {
+              // other platforms, web for example
+            }
+          })
 
     },
 })

@@ -29,7 +29,7 @@ export default class Addnewcard extends React.Component {
             <View style={styles.container}>
                 <View style={styles.header0}>
                     <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
-                        <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="black" />
+                        <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
                         <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>Add new card</Text>
                     </TouchableOpacity>
                 </View>
@@ -108,11 +108,26 @@ const styles = StyleSheet.create({
         height: 50, width: 65, borderRadius: 5, backgroundColor: "#E5E5E5", justifyContent: 'center', alignItems: "center"
     },
     header0: {
-        height: height * 0.1,
-        shadowOffset: { width: 0, height: 3 },
-        paddingLeft: 10,
-        paddingTop:15,
-        backgroundColor: '#add2c9',
+        ...Platform.select({
+            ios: {
+                height: height * 0.1,
+                shadowOffset: { width: 0, height: 3 },
+                paddingLeft: 10,
+                paddingTop:15,
+                backgroundColor: '#add2c9',
+                paddingTop:36
+            },
+            android: {
+                height: height * 0.1,
+                shadowOffset: { width: 0, height: 3 },
+                paddingLeft: 10,
+                paddingTop:15,
+                backgroundColor: '#add2c9',
+            },
+            default: {
+              // other platforms, web for example
+            }
+          })
     },
     body: {
   justifyContent: 'center',alignItems: 'center'
