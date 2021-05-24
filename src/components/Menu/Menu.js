@@ -8,6 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import Collapsible from 'react-native-collapsible';
+import { Entypo } from "@expo/vector-icons";
 import avatar1 from '../../images/avatar11.png'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import {socket} from "../../Socket.io/socket.io";
@@ -29,6 +30,7 @@ class New extends PureComponent {
             phone_number: '',
             secret_key: '',
             collapsed: true,
+            collapsed1: true,
             showPass: true,
             press: false,
             switchValue: false,
@@ -46,9 +48,8 @@ class New extends PureComponent {
             education: [],
             isLoading: false,
             follower_number:'',
-            following_number:''
-
-
+            following_number:'',
+            showtick:false
         }
         this.onSubmitPassword = this.onSubmitChangePassword.bind(this)
       socket.on("sv-change-password", function (data) {
@@ -104,18 +105,11 @@ class New extends PureComponent {
         this.setState({ language });
         this.props.setLanguage(language);
     }
-    toggleSwitch = (value) => {
-        //onValueChange of the switch this function will be called
-        this.setState({ switchValue: value })
-        if(this.state.switchValue==true){
-            this.setLanguage('en')
-        }
-        else{this.setLanguage('vi')}
-        //state changes according to switch
-        //which will result in re-render the text
-    }
     toggleExpanded = () => {
         this.setState({ collapsed: !this.state.collapsed })
+    }
+    toggleExpanded1 = () => {
+        this.setState({ collapsed1: !this.state.collapsed1 })
     }
     showPass = () => {
         if (this.state.press == false) {
@@ -248,18 +242,6 @@ class New extends PureComponent {
                                     <MaterialIcons name="navigate-next" size={30} color="#71B7B7" />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate("HomeApply")} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <View style={{ flexDirection: 'row',marginLeft:5 }}>
-                                  
-                                    <View style={styles.texticon}>
-                                        <AppText style={styles.text} i18nKey={'home_menu.applyjob'}>Apply jobs</AppText>
-                                    </View>
-                                </View>
-
-                                <View style={styles.iconstyle}>
-                                    <MaterialIcons name="navigate-next" size={30} color="#71B7B7" />
-                                </View>
-                            </TouchableOpacity>
                             <TouchableOpacity onPress={this.toggleExpanded} style={{ flexDirection: 'row',marginLeft:5 }}>
                               
                                 <View style={styles.texticon}>
@@ -310,12 +292,27 @@ class New extends PureComponent {
                             </Collapsible>
                         </View>
                         <View>
-                            <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5 }}>
+                            <TouchableOpacity onPress={this.toggleExpanded1} style={{ flexDirection: 'row',marginLeft:5 }}>
                                
                                 <View style={styles.texticon}>
                                     <AppText style={styles.text} i18nKey={'home_menu.lang'}>Language</AppText>
                                 </View>
                             </TouchableOpacity>
+                            <Collapsible collapsed={this.state.collapsed1}>
+
+                                <View style={{ flexDirection: 'column',borderWidth:1,margin:10,borderColor:'gray',paddingBottom:10,borderRadius: 10}}>
+                                    <TouchableOpacity onPress={()=>{this.setLanguage('en');this.setState({showtick:false})}} style={{marginLeft: 15,marginTop:10,flexDirection:'row'}}>
+                                        <AppText i18nKey={'home_manage.english'} style={{fontSize: 16,color:'#2d7474',paddingTop:5}}>English</AppText>
+                                        {this.state.showtick==false?<Entypo name="check" size={20} color="#71B7B7" />:null}
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={()=>{this.setLanguage('vi');this.setState({showtick:true})}} style={{marginLeft: 15,marginTop:10,flexDirection:'row'}}>
+                                        <AppText i18nKey={'home_manage.vietnam'} style={{fontSize: 16,color:'#2d7474',paddingTop:5}}>Vietnamese</AppText>
+                                        {this.state.showtick==true?<Entypo name="check" size={20} color="#71B7B7" />:null}
+                                    </TouchableOpacity>
+
+                                </View>
+
+                            </Collapsible>
 
                         </View>
                         <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "space-between" }}>
@@ -325,13 +322,6 @@ class New extends PureComponent {
                                 <AppText style={styles.text} i18nKey={'home_menu.notification'}>Notification</AppText>
                                 </View>
                             </View>
-                            <View style={styles.iconstyle}>
-                                <Switch
-                                    value={this.state.switchValue}
-                                    onValueChange={this.toggleSwitch}
-                                />
-                            </View>
-
                         </TouchableOpacity>
                         <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5 }}>
                            

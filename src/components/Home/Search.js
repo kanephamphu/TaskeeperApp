@@ -244,7 +244,7 @@ class Search extends React.Component {
               <View style={styles.separator} />
               {!this.state.key
                 ?
-                <SearchTrending />
+                <SearchTrending stackTrending={this.props.stack}/>
                 :
                 <FlatList
                   data={this.state.data}

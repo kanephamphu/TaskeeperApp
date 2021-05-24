@@ -81,7 +81,6 @@ export default class Profilefriend extends React.Component {
             checkloading: false,
             listVote:[]
         }
-      
         socket.on("sv-user-detail", function (data) {
             var list = data.data
             if (data.success == true) {
@@ -411,7 +410,7 @@ export default class Profilefriend extends React.Component {
                                 
                         <Text style={{ fontSize: 16, fontWeight: 'bold', color:this.state.isFollowing==false?'#ffff':"black", marginLeft: 5 }}>{this.state.isFollowing==false?"Follow":"Followed"}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{
+                            <TouchableOpacity onPress={()=> this.props.navigation.navigate("MessageNewHome", { receiver_id: this.props.route.params._id,first_name:this.state.first_name,last_name:this.state.last_name,avatar:this.state.avatar})} style={{
                                 borderRadius: 5,
                                 backgroundColor: '#DDDDDD', justifyContent: 'center', alignItems: 'center', width: "10%", height: 35
                             }}>
@@ -718,16 +717,33 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#faf9f9',
     },
-    header0: {
-        height: height * 0.08,
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.2,
-        paddingLeft: 10,
-        paddingTop:15,
-        shadowOpacity: 0.2,
-        elevation: 1,
-  
-    },
+    header0: 
+    {
+        ...Platform.select({
+          ios: {
+            height: height * 0.08,
+            shadowOffset: { width: 0, height: 3 },
+            shadowOpacity: 0.2,
+            paddingLeft: 10,
+            paddingTop:15,
+            shadowOpacity: 0.2,
+            elevation: 1,
+            paddingTop:36
+          },
+          android: {
+            height: height * 0.08,
+            shadowOffset: { width: 0, height: 3 },
+            shadowOpacity: 0.2,
+            paddingLeft: 10,
+            paddingTop:15,
+            shadowOpacity: 0.2,
+            elevation: 1,
+          },
+          default: {
+            // other platforms, web for example
+          }
+        })
+      },
     input: {
         width:230,
         height: 55,

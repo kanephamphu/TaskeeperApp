@@ -233,6 +233,8 @@ const styles = StyleSheet.create({
     width: width - 60,
     backgroundColor: "rgba(200,200,200,0.3)",
     margin: 10,
+    borderWidth:1,
+    borderColor:'#2d7474'
   },
   time: {
     fontWeight: "bold",

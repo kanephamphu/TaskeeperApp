@@ -55,7 +55,7 @@ export default class Setamount extends React.Component {
     const token = await AsyncStorage.getItem("token");
     const request = {
       secret_key: token,
-      receiver_id: "5fb378656eae3400041711a3",
+      receiver_id: "60a721b0e071a3000407605d",
       money_amount: "1200000",
       description: "yeu em",
     };
@@ -84,16 +84,10 @@ export default class Setamount extends React.Component {
               style={{ marginTop: 1 }}
               name="ios-arrow-back"
               size={28}
-              color="black"
+              color="#2d7474"
             />
             <Text
-              style={{
-                fontWeight: "bold",
-                fontSize: 25,
-                color: "black",
-                marginLeft: 15,
-                marginTop: -2,
-              }}
+              style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}
             >
               Set Amount
             </Text>
@@ -291,11 +285,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   header0: {
-    height: height * 0.1,
-    shadowOffset: { width: 0, height: 3 },
-    paddingLeft: 10,
-    paddingTop: 15,
-    backgroundColor: "#add2c9",
+    ...Platform.select({
+      ios: {
+          height: height * 0.1,
+          shadowOffset: { width: 0, height: 3 },
+          paddingLeft: 10,
+          paddingTop: 15,
+          backgroundColor: "#add2c9",
+          paddingTop:36
+      },
+      android: {
+        height: height * 0.1,
+        shadowOffset: { width: 0, height: 3 },
+        paddingLeft: 10,
+        paddingTop: 15,
+        backgroundColor: "#add2c9",
+      },
+      default: {
+        // other platforms, web for example
+      }
+    })
   },
   body: {
     justifyContent: "center",

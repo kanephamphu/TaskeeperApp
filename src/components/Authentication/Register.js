@@ -38,7 +38,6 @@ export default class Register extends Component{
             first_name: '',
             last_name: '',
             email: '',
-            address:'',
             phone_number:'',
             password: '',
             day:'23',
@@ -168,7 +167,6 @@ export default class Register extends Component{
             last_name: this.state.last_name,
             email: this.state.email,
             phone_number: this.state.phone_number,
-            address: this.state.address,
             password: this.state.password,
             day: this.state.day,
             month: this.state.month,
@@ -343,33 +341,6 @@ export default class Register extends Component{
                                 size={24} 
                                 color='#2d7474'
                                 ></MaterialIcons>
-                            </View>
-                        </View>
-                        <View>
-                            <TextInput 
-                                style={{ width:300,
-                                    height:40,
-                                    borderRadius:10,
-                                    fontSize:16,
-                                    paddingLeft:45,
-                                    paddingTop:-10,
-                                    backgroundColor:'#ffff',
-                                    color:'#2d7474',
-                                    marginHorizontal:25,
-                                    marginTop:10,
-                                    borderWidth: 1,
-                                    borderColor:this.state.key==='address'?'red':'#2d7474'}}
-                                     placeholder={'Address'} 
-                                    onChangeText={(address)=> this.setState({address})}
-                                    value={this.state.address}                      
-                                    placeholderTextColor={'#2d7474'}
-                            >
-                            </TextInput>
-                            <View style={styles.inputIcon}>
-                                <Entypo name="location"
-                                size={24} 
-                                color='#2d7474'
-                                />   
                             </View>
                         </View>
                

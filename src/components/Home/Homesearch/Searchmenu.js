@@ -159,7 +159,7 @@ class Searchmenu extends React.Component {
       search_string: search_string
     }
     socket.emit("cl-search-autocomplete", search)
-  }
+  } 
   renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => this.props.stack(item.query_string)}>

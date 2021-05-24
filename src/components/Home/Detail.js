@@ -39,7 +39,7 @@ class Detail extends Component {
             ceiling_price: '',
             location: '',
             task_title: '',
-            avatar: '',
+            avatar: "",
             _id: '',
             industry: '',
             isLoadingrecomend: false,
@@ -51,6 +51,7 @@ class Detail extends Component {
             introduction: '',
             show: false,
             price: '',
+            image:"",
             data: [{
                 key: '1',
                 name: 'Business Analyst',
@@ -168,8 +169,8 @@ class Detail extends Component {
                     price_type: list.price.price_type,
                     industry: list.industry,
                     skills: list.skills,
-                    position: list.position
-
+                    position: list.position,
+                    image:list.image
                 })
             } else {
                 
@@ -250,16 +251,15 @@ class Detail extends Component {
         if (count >= 10) {
             fullname = fullname.slice(0,10) + "...";
         }
-
         return (
             <View style={styles.container}>
                <ScrollView>
                 <View style={styles.header0}>
                     <TouchableOpacity style={{zIndex:2,width:'7%'}}  onPress={() => this.props.navigation.goBack()}>
-                        <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
+                        <Ionicons style={styles.backScreen} name="ios-arrow-back" size={28} color="#2d7474" />
                     </TouchableOpacity>
                     <View style={{flex:1,width:'120%',height:200,position:'absolute',}}>
-                                <Image source={anhbiadetail} style={{width:'100%',height:'100%'}}/>
+                                <Image source={this.state.image ? { uri: this.state.image } : anhbiadetail} style={{width:'100%',height:'100%'}}/>
                      </View>
                 </View>
                 
@@ -770,5 +770,19 @@ const styles = StyleSheet.create({
         lineHeight: 20, fontSize: 18,
 
         color: '#555555'
+    },
+    backScreen:{
+        ...Platform.select({
+            ios: {
+                paddingLeft: 10,
+                paddingTop:36
+            },
+            android: {
+                marginTop: 1
+            },
+            default: {
+              // other platforms, web for example
+            }
+          })
     }
 })

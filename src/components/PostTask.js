@@ -82,9 +82,9 @@ export default class TaskPage extends React.Component {
       tags: "",
       industry: "",
       refreshing: false,
-      formatted_address: "",
-      latitude: null,
-      longitude: null,
+      formatted_address: "2378 Alpha Ave, Burnaby, BC V5C 0K2, Ca-na-đa",
+      latitude: 16.0676498,
+      longitude: 108.1482117,
       region: [],
       skills: "",
       deal_price: "",
@@ -518,7 +518,7 @@ export default class TaskPage extends React.Component {
   refreshTop() {
     this.componentDidMount();
   }
-  onSubmitImage() {
+  onSubmitImage(e) {
     let apiUrl = "https://taskeepererver.herokuapp.com/taskImageUploader/";
     var data = new FormData();
     data.append("file", {
@@ -541,7 +541,7 @@ export default class TaskPage extends React.Component {
       );
   }
 
-  openImagePickerAsync = async () => {
+  openImagePickerAsync = async (e) => {
     let permissionResult = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (permissionResult === "granted") {
       return;
@@ -552,8 +552,14 @@ export default class TaskPage extends React.Component {
     //console.log(pickerResult);
     if (pickerResult.cancelled === true) {
       return;
-    } else {
-      this.setState({ localUri: pickerResult.uri });
+    } else {  
+      file = e.target.pickerResult;
+      // this.setState({ localUri: pickerResult.uri });
+      let reader = new FileReader;
+      reader.onload = (e)=>{this.setState({
+        localUri:e.target.result
+      })}
+      console.log(this.state.localUri)
     }
   };
 
@@ -717,16 +723,15 @@ export default class TaskPage extends React.Component {
           },
         };
         socket.emit("cl-new-tasks", tasknew);
-        const recommendlist = {
+        const recommendlist = await {
           location_history: {
             last_location: {
               coordinates: [this.state.longitude, this.state.latitude],
             },
           },
-          _id: this.state.user_id,
         };
-        sockettest.emit("cl-get-recomend-location", recommendlist);
         console.log(recommendlist);
+        await sockettest.emit("cl-get-recomend-location", recommendlist)
       }
     } else {
       if (this.state.task_title == "") {
@@ -910,16 +915,15 @@ export default class TaskPage extends React.Component {
           },
         };
         socket.emit("cl-new-tasks", tasknew);
-        const recommendlist = {
+        const recommendlist = await {
           location_history: {
             last_location: {
               coordinates: [this.state.longitude, this.state.latitude],
             },
           },
-          _id: this.state.user_id,
         };
-        sockettest.emit("cl-get-recomend-location", recommendlist);
         console.log(recommendlist);
+        await sockettest.emit("cl-get-recomend-location", recommendlist)
       }
     }
   };
@@ -2896,13 +2900,32 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   header: {
-    height: height * 0.08,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    paddingLeft: 10,
-    paddingTop: 15,
-    shadowOpacity: 0.2,
-    elevation: 1,
+    ...Platform.select({
+      ios: {
+        height: height * 0.08,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        paddingLeft: 10,
+        paddingTop:15,
+        shadowOpacity: 0.2,
+        elevation: 1,
+        paddingHorizontal: 16,
+        paddingTop:36
+      },
+      android: {
+        height: height * 0.08,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        paddingLeft: 10,
+        paddingTop:15,
+        shadowOpacity: 0.2,
+        elevation: 1,
+        paddingHorizontal: 16,
+      },
+      default: {
+        // other platforms, web for example
+      }
+    })
   },
   mainpost: {
     flex: 1,

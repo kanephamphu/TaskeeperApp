@@ -96,14 +96,32 @@ const styles = StyleSheet.create({
     })
   },
   header0: {
-    height: height * 0.08,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    paddingLeft: 10,
+    ...Platform.select({
+      ios: {
+        height: height * 0.08,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        paddingLeft: 10,
         paddingTop:15,
-    shadowOpacity: 0.2,
-    elevation: 1,
-    
+        shadowOpacity: 0.2,
+        elevation: 1,
+        paddingHorizontal: 16,
+        paddingTop:36
+      },
+      android: {
+        height: height * 0.08,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        paddingLeft: 10,
+        paddingTop:15,
+        shadowOpacity: 0.2,
+        elevation: 1,
+        paddingHorizontal: 16,
+      },
+      default: {
+        // other platforms, web for example
+      }
+    })
   },
   header: {
     ...Platform.select({

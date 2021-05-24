@@ -24,6 +24,7 @@ export default class HomeManageCandidate extends React.PureComponent {
     this.onStack1 = this.onStack.bind(this)
     this.onProfile = this.onProfile.bind(this)
     this.onDetail1 = this.onDetail.bind(this)
+    this.showSetAmountScreen = this.showSetAmountScreen.bind(this)
   }
   onStack(a){
     this.props.navigation.navigate("DetailCandidates",{task_id:a})
@@ -34,12 +35,15 @@ export default class HomeManageCandidate extends React.PureComponent {
   onDetail(_id, user_id) {
     this.props.navigation.navigate("detailjobs", { _task_id: _id })
   }
+  showSetAmountScreen(){
+    this.props.navigation.navigate("Setamountmenu")
+  }
   render(){
     return(
       <View style={styles.container}>
          <View style={styles.header0} /*onPress={()=>this.props.navigation.navigate("detailcandidates")}*/> 
-              <AppText i18nKey={'home_manage.titlehomemanagecandidates'} style={{fontWeight:'bold',fontSize:20,color:'black'}}>Candidates Management</AppText>
-              <TouchableOpacity onPress={()=>{this.props.navigation.navigate("HomeManageJobs")}} style={{flexDirection:'row',padding:7,borderRadius:5}}>
+              <AppText i18nKey={'home_manage.titlehomemanagecandidates'} style={{fontWeight:'bold',fontSize:20,color:'black',marginBottom:-10}}>Candidates Management</AppText>
+              <TouchableOpacity onPress={()=>{this.props.navigation.navigate("HomeManageJobs")}} style={{flexDirection:'row',paddingRight:7,borderRadius:5,marginBottom:-20}}>
                   <FontAwesome5 name="sync-alt" size={24} color="#2d7474" />
                   <View style={{marginLeft:5,marginTop:2}}>
                     <AppText i18nKey={'home_manage.job'} style={{color:'#2d7474',fontWeight:'bold'}}>Jobs</AppText>
@@ -55,7 +59,7 @@ export default class HomeManageCandidate extends React.PureComponent {
                     <Tab tabStyle={{ backgroundColor: '#faf9f9' }} activeTabStyle={{ backgroundColor: '#faf9f9' }}
                         textStyle={{ color: 'black' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }}
                      heading="History" >
-                       <History stackDetail={this.onDetail1} stackProfile={this.onProfile}/>
+                       <History stackSetAmount={this.showSetAmountScreen} stackDetail={this.onDetail1} stackProfile={this.onProfile}/>
                     </Tab>
         </Tabs>
         {/*<ScrollableTabView
@@ -128,15 +132,35 @@ const styles = StyleSheet.create({
       })
     },
     header0:{
-      flexDirection:'row',
-      alignItems:'center',
-      justifyContent:'space-between',
-      height:height*0.08, 
-      shadowOffset:{width:0,height:3},
-      shadowOpacity:0.2,
-      padding: 10,
-      shadowOpacity: 0.2,
-      elevation: 1,
+      ...Platform.select({
+      ios: {
+        flexDirection:'row',
+        alignItems:'center',
+        justifyContent:'space-between',
+        height:height*0.08, 
+        shadowOffset:{width:0,height:3},
+        shadowOpacity:0.2,
+        padding: 10,
+        shadowOpacity: 0.2,
+        elevation: 1,
+        paddingTop:36,
+        marginBottom:10
+      },
+      android: {
+        flexDirection:'row',
+        alignItems:'center',
+        justifyContent:'space-between',
+        height:height*0.08, 
+        shadowOffset:{width:0,height:3},
+        shadowOpacity:0.2,
+        padding: 10,
+        shadowOpacity: 0.2,
+        elevation: 1,
+      },
+      default: {
+        // other platforms, web for example
+      }
+    })
      
   },
     header:{

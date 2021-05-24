@@ -3,7 +3,8 @@ import {
     View,
     Text,
     StyleSheet,
-    ScrollView
+    ScrollView,
+    TouchableOpacity
 } from 'react-native'
 import io from 'socket.io-client/dist/socket.io'
 import AsyncStorage from '@react-native-community/async-storage';
@@ -56,10 +57,10 @@ class SearchTrending extends Component {
                         </View>
                     </View>
                     <ScrollView>
-                         {this.state.dataSource.map((item, index) =>  <View key={item._id} style={styles.search_item}>
+                         {this.state.dataSource.map((item, index) =>  <TouchableOpacity onPress={() => this.props.stackTrending(item.query_string)} key={item._id} style={styles.search_item}>
                             <AntDesign style={styles.item_icon} name="search1" size={16} color="#000000" />
                             <Text>#{item.query_string}</Text>
-                        </View>)}
+                        </TouchableOpacity>)}
                     </ScrollView>
                 </View>
             </View>

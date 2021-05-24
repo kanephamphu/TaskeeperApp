@@ -107,8 +107,9 @@ export default class RenderItem extends React.Component {
                 height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
               }}>
                 <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
-                <AppText i18nKey={'show_notice'}>Do you want to cancel this jobs ?</AppText>
+                <AppText i18nKey={'shownotice'}>Do you want to cancel this jobs ?</AppText>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
+
                   <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
                     width: "50%", backgroundColor: '#ffff',
                     borderWidth: 1, borderColor: '#488B8F',
@@ -165,7 +166,9 @@ const styles = StyleSheet.create({
       borderRadius:10,
       width:width-60,
       backgroundColor:'rgba(200,200,200,0.3)',
-      margin:10
+      margin:10,
+      borderWidth:1,
+      borderColor:'#2d7474'
   },
   time:{
     fontWeight:'bold',

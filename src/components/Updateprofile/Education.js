@@ -455,7 +455,7 @@ class Education extends Component {
                             <ScrollView>
                                 <View style={{ width: "100%", height: height, backgroundColor: "#ffff", flexDirection: 'column' }}>
                                     <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
-                                        <View style={{ marginTop: 10 }}>
+                                        <View style={{ ...Platform.select({ios: {marginTop: 30 },android: {marginTop: 10},default: {}})}}>
                                             <AppText i18nKey={'home_profile.addeducation'} style={{ fontWeight: 'bold', fontSize: 20 }} >Add education </AppText>
                                         </View>
                                         <View style={{ marginTop: 10 }}>
