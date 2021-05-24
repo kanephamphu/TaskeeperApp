@@ -19,7 +19,7 @@ class SearchTask extends Component {
         }
         this.searchTask = this.searchTask.bind(this);
         socket.on("sv-search-task", function (data) {
-            console.log(data)
+            //console.log(data)
             var list = data.data
             if (data.success == false) {
 

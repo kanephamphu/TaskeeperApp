@@ -14,11 +14,6 @@ export default class Ewallet extends React.Component {
     constructor(props) {
         super(props)
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
-        this.state = {
-
-        }
-
     };
 
     componentDidMount = async () => {
@@ -81,7 +76,7 @@ export default class Ewallet extends React.Component {
                     <View style={{ margin: 20 }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 23, color: 'black' }}>Settings</Text>
                     </View>
-                    <TouchableOpacity style={{
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("HistoryPayment")} style={{
                         borderWidth: 1, margin: 20, height: 45,
                         borderColor: '#71B7B7', justifyContent: 'space-between', padding: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 5
                     }}>

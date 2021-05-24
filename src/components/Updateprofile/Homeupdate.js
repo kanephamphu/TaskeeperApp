@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Education from './Education';
 import Updateprofile from './Updateprofile';
 import Working from './Working';
+import AppText from '../app-text';
 const { width, height } = Dimensions.get("window");
 import { Tab, Tabs} from 'native-base'
 export default class Homeupdate extends React.Component {
@@ -17,7 +18,7 @@ export default class Homeupdate extends React.Component {
         <View style={styles.header0}>
           <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
             <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
-            <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>Edit profile</Text>
+            <AppText i18nKey={'home_profile.editprofile'} style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>Edit profile</AppText>
           </TouchableOpacity>
 
         </View>

@@ -14,7 +14,6 @@ export default class Bankkinglink extends React.Component {
     constructor(props) {
         super(props)
         e = this;
-        this.socket = io('https://taskeepererver.herokuapp.com', { jsonp: false })
         this.state = {
 
         }

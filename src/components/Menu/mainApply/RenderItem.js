@@ -32,7 +32,7 @@ class RenderItem extends React.Component {
           console.log(JSON.stringify(data))
         } else if (data.success == true) {
           this.setState({
-            show1: true,
+            show1: false,
             notice: 'Deleted successfully!',
             key: "success",
           })
@@ -48,12 +48,13 @@ class RenderItem extends React.Component {
         secret_key: token,
       })
     }
-    deleteTasksave= () => {
+    deleteTasksave= async () => {
       const deleteSave = {
         secret_key: this.state.secret_key,
         task_id:this.props.item._id
       }
-      socket.emit("cl-delete-apply-job", deleteSave);
+      await socket.emit("cl-delete-apply-job", deleteSave);
+      this.props.onDelete(this.props.item._id)
     }
     render() {
       var task_title = this.props.item.task_title;
@@ -126,7 +127,7 @@ class RenderItem extends React.Component {
                 }}>
                   <Image source={this.state.key === "success" ? iconsuccess : iconerror} style={{ height: 50, width: 50 }}></Image>
                   <Text>{this.state.notice}</Text>
-                  <TouchableOpacity onPress={() =>  this.props.onDelete(this.props.item._id)} style={{
+                  <TouchableOpacity onPress={() => this.onTowClick()} style={{
                     width: "50%", backgroundColor: this.state.key === "success" ? 'green' : 'red',
                     height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center'
                   }}>

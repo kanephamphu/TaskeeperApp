@@ -22,6 +22,7 @@ export default{
     back:"Trở lại",
     titlehomemanagejobs:"Quản lý công việc",
     titlehomemanagecandidates:"Quản lý ứng cử viên",
+    createtime:"Thời gian tạo: ",
   },
   home_page:{
     title_home:"Đề xuất công việc",
@@ -77,6 +78,26 @@ export default{
     working:"Đang làm việc:",
     birthday:"Sinh nhật:",
     gender:"Giới tính:",
+    firstname:"Tên đầu tiên:",
+    lastname:"Tên họ:",
+    save:"Lưu",
+    personalinfor:"Thông tin cá nhân",
+    editprofile:"Chỉnh sửa hồ sơ",
+    educationat:"Giáo dục tại ",
+    educationdescription:"+ Mô tả giáo dục:",
+    year:"+ Năm:",
+    addeducation:"Thêm chỗ giáo dục",
+    educationname:"Tên giáo dục:",
+    editeducation:"Chỉnh sửa giáo dục",
+    notice:"Bạn có muốn xóa không !",
+    ok:"Có",
+    time:"Thời gian:",
+    workingat:"Làm việc tại ",
+    workingdescription:"+ Mô tả đang làm việc:",
+    position:"+ Vị trí:",
+    addworking:"Thêm công việc",
+    cancel:"Hủy bỏ",
+    add:"Thêm"
   },
   home_apply:{
     jobs:"Những công việc",
@@ -86,7 +107,12 @@ export default{
   historyjob:"Lịch sử công việc",
   home_taskpage:{
     taskpage:"Trang công việc",
-    titlepost:"Bạn có muốn đăng nhiệm vụ mới?"
+    titlepost:"Bạn có muốn đăng nhiệm vụ mới?",
+    address:"Địa chỉ:",
+    updated:"Cập nhật:",
+    price:"Giá:",
+    taskdescription:"Mô tả công việc:",
+    seedetail:"xem chi tiết",
   },
   home_changepass:{
     password:"Mật khẩu",

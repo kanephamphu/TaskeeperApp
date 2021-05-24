@@ -20,7 +20,6 @@ class SearchUser extends Component {
     constructor(props) {
         super(props)
         e = this
-       
         this.state = {
             dataSearch: [],
             search_string: '',
@@ -28,14 +27,14 @@ class SearchUser extends Component {
         }
         socket.on("sv-search-user", function (data) {
             if (data.success == false) {
-                console.log(JSON.stringify(data))
+                //console.log(JSON.stringify(data))
             } else if (data.success == true) {
                 var list = data.data
                 e.setState({
                     dataSearch: list,
                     isLoading: true
                 })
-                console.log(data)
+                //console.log(data)
             }
         })
     }
@@ -66,7 +65,7 @@ class SearchUser extends Component {
                             <FlatList data={this.state.dataSearch}
                                 renderItem={({ item, index }) => {
                                     return (
-                                        <Listdataitem stack={this.props.stackProfile} item={item} index={index}
+                                        <Listdataitem stackMessage={this.props.onMessage} stack={this.props.stackProfile} item={item} index={index}
                                         ></Listdataitem>
                                     )
                                 }}
@@ -136,7 +135,7 @@ class Listdataitem extends Component {
                                 this.props.item._id)}>
                                 <Text style={{ color: 'black', fontWeight: 'bold' }}>View Profile</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.viewmes}>
+                            <TouchableOpacity onPress={()=>this.props.stackMessage(this.props.item._id,this.props.item.first_name,this.props.item.last_name,this.props.item.avatar)} style={styles.viewmes}>
                                 <AntDesign name="message1" size={22} color="black" />
                             </TouchableOpacity>
                         </View>

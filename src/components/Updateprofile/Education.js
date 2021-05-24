@@ -17,6 +17,7 @@ import Swipeout from 'react-native-swipeout'
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import {socket} from "../../Socket.io/socket.io";
+import AppText from "../app-text";
 var e;
 const { height, width } = Dimensions.get('window');
 class Education extends Component {
@@ -390,11 +391,11 @@ class Education extends Component {
                                             <View >
                                                 <MaterialCommunityIcons name="cast-education" size={24} color="#555555" />
                                             </View>
-                                            <View style={{ marginLeft: 5, padding: 5, width: width - 100 }}>
-                                                <Text>
+                                            <View style={{ marginLeft: 5, padding: 5, width: width - 100,flexDirection:'row' }}>
+                                                <AppText i18nKey={'home_profile.educationat'}>
                                                     Education at
-                                                    <Text style={{ fontWeight: 'bold' }}> {item.school_name}</Text>
-                                                </Text>
+                                                </AppText>
+                                                <Text style={{ fontWeight: 'bold' }}>{item.school_name}</Text>
                                             </View>
                                         </View>
                                         <TouchableOpacity onPress={() => {
@@ -408,14 +409,14 @@ class Education extends Component {
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 }}>
                                         <View style={{ flexDirection: 'column', marginLeft: 35, marginRight: 15, marginBottom: 5, width: width - 120 }}>
                                             <View>
-                                                <Text>+ Education decription:</Text>
+                                                <AppText i18nKey={'home_profile.educationdescription'}>+ Education decription:</AppText>
                                             </View>
                                             <View style={{ width: width - 130, marginLeft: 15 }}>
                                                 <Text style={{ fontWeight: 'bold' }}>{item.description} </Text>
                                             </View>
                                             <View style={{ flexDirection: 'row' }}>
                                                 <View>
-                                                    <Text>+ Year:</Text>
+                                                    <AppText i18nKey={'home_profile.year'}>+ Year:</AppText>
                                                 </View>
                                                 <View style={{ width: width - 130, marginLeft: 5 }}>
                                                     <Text style={{ fontWeight: 'bold' }}>{item.time_period.from_time}{item.time_period.to_time == null ? null : " - "}{item.time_period.to_time === null ? null : item.time_period.to_time}</Text>
@@ -439,7 +440,7 @@ class Education extends Component {
                       
                         <TouchableOpacity onPress={() => this.setState({ show: true })} style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <Ionicons name="ios-add-circle" size={40} color="#71B7B7" />
-                            <Text style={{ color: '#71B7B7', fontWeight: 'bold' }}>Add education</Text>
+                            <AppText i18nKey={'home_profile.addeducation'} style={{ color: '#71B7B7', fontWeight: 'bold' }}>Add education</AppText>
                         </TouchableOpacity>
                         {this.props.education.length===0?
                             <View style={{flex:1,justifyContent: 'center', alignItems: 'center' ,marginTop:70}}>
@@ -455,17 +456,17 @@ class Education extends Component {
                                 <View style={{ width: "100%", height: height, backgroundColor: "#ffff", flexDirection: 'column' }}>
                                     <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
                                         <View style={{ marginTop: 10 }}>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 20 }} >Add education </Text>
+                                            <AppText i18nKey={'home_profile.addeducation'} style={{ fontWeight: 'bold', fontSize: 20 }} >Add education </AppText>
                                         </View>
                                         <View style={{ marginTop: 10 }}>
-                                            <Text >Education name:</Text>
+                                            <AppText i18nKey={'home_profile.educationname'}>Education name:</AppText>
                                         </View>
                                         <View style={{ backgroundColor: '#ffff', borderWidth: 1, width: 315, paddingLeft: 10, marginTop: 10, borderColor: this.state.keycheck == "school_name" ? 'red' : '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} placeholder="Education name" onChangeText={(school_name) => this.setState({ school_name })} ></TextInput>
                                         </View>
                                         <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "school_name" ? this.state.notice : null}</Text>
                                         <View >
-                                            <Text>Time:</Text>
+                                            <AppText i18nKey={'home_profile.time'}>Time:</AppText>
                                         </View>
                                         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10, height: 30 }}>
                                             <DropDownPicker
@@ -581,7 +582,7 @@ class Education extends Component {
                                         </View>
                                         <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "time" ? this.state.notice : null}</Text>
                                         <View style={{ marginTop: 10 }}>
-                                            <Text>Education description:</Text>
+                                            <AppText i18nKey={'home_profile.educationdescription'}>Education description:</AppText>
                                         </View>
                                         <View style={{ backgroundColor: '#ffff', width: 315, height: height * 0.5, paddingLeft: 10, marginTop: 10, borderColor: this.state.keycheck == "description" ? 'red' : '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} placeholder="Education description" onChangeText={(description) => this.setState({ description })} ></TextInput>
@@ -592,10 +593,10 @@ class Education extends Component {
                                                 height: 40, width: 150, borderRadius: 5, backgroundColor: '#ffff',
                                                 borderWidth: 1, borderColor: '#488B8F', marginRight: 10, justifyContent: 'center', alignItems: 'center'
                                             }}>
-                                                <Text style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancel</Text>
+                                                <AppText i18nKey={'home_profile.cancel'} style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancel</AppText>
                                             </TouchableOpacity>
                                             <TouchableOpacity onPress={this.onSubmit} style={{ height: 40, width: 150, backgroundColor: '#488B8F', marginLeft: 10, borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={{ fontWeight: 'bold', color: "white", fontSize: 18 }}>Add</Text>
+                                                <AppText i18nKey={'home_profile.add'} style={{ fontWeight: 'bold', color: "white", fontSize: 18 }}>Add</AppText>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -639,7 +640,7 @@ class Education extends Component {
                                         height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
                                     }}>
                                         <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
-                                        <Text>Do you want to detele !</Text>
+                                        <AppText i18nKey={'home_profile.notice'}>Do you want to detele !</AppText>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
 
                                             <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{
@@ -647,13 +648,13 @@ class Education extends Component {
                                                 borderWidth: 1, borderColor: '#488B8F',
                                                 height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginRight: 5
                                             }}>
-                                                <Text style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</Text>
+                                                <AppText i18nKey={'home_profile.cancel'} style={{ color: '#488B8F', fontSize: 15, fontWeight: 'bold' }}>Cancel</AppText>
                                             </TouchableOpacity>
                                             <TouchableOpacity onPress={() => this.onDelete(this.state.edu_id)} style={{
                                                 width: "50%", backgroundColor: '#488B8F',
                                                 height: 30, borderRadius: 10, marginTop: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 5
                                             }}>
-                                                <Text style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</Text>
+                                                <AppText i18nKey={'home_profile.ok'} style={{ color: "white", fontSize: 15, fontWeight: 'bold' }}>Ok</AppText>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -683,10 +684,10 @@ class Education extends Component {
                                 <View style={{ width: "100%", height: height, backgroundColor: "#ffff", flexDirection: 'column' }}>
                                     <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
                                         <View style={{ marginTop: 10 }}>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 20 }} >Edit education </Text>
+                                            <AppText i18nKey={'home_profile.editeducation'} style={{ fontWeight: 'bold', fontSize: 20 }} >Edit education </AppText>
                                         </View>
                                         <View style={{ marginTop: 10 }}>
-                                            <Text >Education name:</Text>
+                                            <AppText i18nKey={'home_profile.educationname'}>Education name:</AppText>
                                         </View>
                                         <View style={{ backgroundColor: '#ffff', borderWidth: 1, width: 315, paddingLeft: 10, marginTop: 10, borderColor: this.state.keycheck == "school_name" ? 'red' : '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} placeholder="Education name" onChangeText={(school_nameedit) => this.setState({ school_nameedit })} value={this.state.school_nameedit} ></TextInput>
@@ -694,7 +695,7 @@ class Education extends Component {
                                         </View>
                                         <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "school_name" ? this.state.notice : null}</Text>
                                         <View >
-                                            <Text>Time:</Text>
+                                            <AppText i18nKey={'home_profile.time'}>Time:</AppText>
                                         </View>
                                         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10, height: 30 }}>
                                             <DropDownPicker
@@ -813,7 +814,7 @@ class Education extends Component {
                                         </View>
                                         <Text style={{ color: 'red', fontStyle: 'italic' }}>{this.state.keycheck == "time" ? this.state.notice : null}</Text>
                                         <View >
-                                            <Text>Education description:</Text>
+                                            <AppText i18nKey={'home_profile.educationdescription'}>Education description:</AppText>
                                         </View>
                                         <View style={{ backgroundColor: '#ffff', borderWidth: 1, width: 315, height: height * 0.5, paddingLeft: 10, marginTop: 10, borderColor: this.state.keycheck == "description" ? 'red' : '#71B7B7', borderWidth: 1, borderRadius: 3 }}>
                                             <TextInput multiline={true} value={this.state.descriptionedit} placeholder="Education description" onChangeText={(descriptionedit) => this.setState({ descriptionedit })} ></TextInput>
@@ -824,10 +825,10 @@ class Education extends Component {
                                                 height: 40, width: 150, borderRadius: 5, backgroundColor: '#ffff',
                                                 borderWidth: 1, borderColor: '#488B8F', marginRight: 10, justifyContent: 'center', alignItems: 'center'
                                             }}>
-                                                <Text style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancel</Text>
+                                                <AppText i18nKey={'home_profile.cancel'} style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancel</AppText>
                                             </TouchableOpacity>
                                             <TouchableOpacity onPress={this.onEdit} style={{ height: 40, width: 150, backgroundColor: '#488B8F', marginLeft: 10, borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={{ fontWeight: 'bold', color: "#ffff", fontSize: 18 }}>Save</Text>
+                                                <AppText i18nKey={'home_profile.save'} style={{ fontWeight: 'bold', color: "#ffff", fontSize: 18 }}>Save</AppText>
                                             </TouchableOpacity>
                                         </View>
                                     </View>

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Image
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
@@ -15,7 +16,8 @@ import AsyncStorage from "@react-native-community/async-storage";
 import _ from "lodash";
 import io from "socket.io-client/dist/socket.io";
 const { height, width } = Dimensions.get("window");
-import { socket } from "../../Socket.io/socket.io";
+import { socket,sockettest } from "../../Socket.io/socket.io";
+import { TransferWithinAStationSharp } from "@material-ui/icons";
 var e;
 class Message extends Component {
   constructor(props) {
@@ -23,34 +25,26 @@ class Message extends Component {
     e = this;
     this.state = {
       // message: 'asas',
-      data: [],
-      isLoading: true,
-      refeshing: false,
+      message: "",
+      dataMessage:[
+      ],
+      color:'green',
+      isLoadingEarlier: false,
       secret_key: "",
       avatar: "",
       _id: "",
+      first_name:"",
+      last_name:""
     };
     this.onsend = this.onSend.bind(this);
 
-    socket.on("sv-send-message", function (data) {
-      if (data.success == false) {
-        //console.log(JSON.stringify(data))
-      } else {
-        //console.log(JSON.stringify(data))
-      }
-    });
-    socket.on("sv-get-private-message", function (data) {
-      if (data.success == true) {
-        var list = data.data;
-        // let test = new Date(list.createdAt).toLocaleDateString()
-        let listnew = _.orderBy(list, ["createdAt"], ["desc"]);
-        this.socket.on("chat-one-messages",mes =>{
-            this.setState({dataMessage:[...this.state.dataMessage.reverse(),mes]});
-          })
-      } else if (data.success == false) {
-        console.log(JSON.stringify(data));
-      }
-    });
+    sockettest.on("chat-one-messages",mes =>{
+        this.setState({dataMessage:[...this.state.dataMessage,mes]});
+      })
+      sockettest.on("chat-messages",data =>{
+        
+        this.setState({dataMessage:data});
+      }) 
   }
   // handleSend(message) {
   //   const write = message.map((m) => chatsRef.add(m))
@@ -63,40 +57,55 @@ class Message extends Component {
       secret_key: token,
       _id: decode._id,
       avatar: decode.avatar,
+      first_name:decode.first_name,
+      last_name:decode.last_name
     });
+    sockettest.emit("get-messages",{receiver_id:this.props.route.params.receiver_id,user_id:this.state._id}) 
     //5f2ac6648e857e00041dc2b9
-    const loadMessage = {
-      secret_key: this.state.secret_key,
-      receiver_id: "5fb3f741067baa00047e1a1c",
-      skip: 20,
-    };
-    socket.emit("cl-get-private-message", loadMessage);
-    //console.log(JSON.stringify(loadMessage))
   };
-  onSend(data = []) {
-    const newtext = {
-      secret_key: this.state.secret_key,
-      receiver_id: "5fb3f741067baa00047e1a1c",
+  s4(){
+    return Math.random((1+Math.random())*0x10000).toString(16).substring(1);
+  }
+  createID=()=>{
+    return this.s4() + this.s4()+ '-'+this.s4();
+  }
+  onLoadEarlier = () => {
+    e.setState({ isLoadingEarlier: true},() => {
+      e.setState({ isLoadingEarlier: false})
+    })
+    }
+  onSend=(data = [])=> {
+    const send = {
+      _id:this.createID(),
+      receiver_id:this.props.route.params.receiver_id,
+      first_name:this.props.route.params.first_name,
+      last_name:this.props.route.params.last_name,
+      avatar_receiver:this.props.route.params.avatar,
       text: data[0].text,
-    };
-    socket.emit("cl-send-message", newtext);
-    console.log(JSON.stringify(newtext))
+      createdAt: new Date(),
+      user: {
+        _id:this.state._id,
+        name: this.state.first_name+" "+this.state.last_name,
+        avatar: this.state.avatar,
+      },
+    }
+    sockettest.emit("chat-message",send);
+    console.log(send)
     this.setState((previousState) => {
       return {
-        data: GiftedChat.append(previousState.data, data),
+        dataMessage: GiftedChat.append(previousState.dataMessage, data),
       };
     });
   }
   render() {
-    const { receiver_id } = this.props.route.params;
-
+    let listnew = _.orderBy(this.state.dataMessage, ["createdAt"], ["desc"]);
     return (
       <View style={styles.container}>
         <View style={styles.header0}>
           <View style={{ flexDirection: "row", marginTop: 30, marginLeft: 10 }}>
             <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
               <Ionicons
-                style={{ marginTop: 1, marginLeft: 5 }}
+                style={{ marginTop: 9, marginLeft: 5 }}
                 name="ios-arrow-back"
                 size={28}
                 color="#faf9f9"
@@ -109,17 +118,12 @@ class Message extends Component {
                 justifyContent: "center",
                 alignItems: "center",
                 marginLeft: 20,
+                marginTop: 8,
               }}
             >
               <Text style={{ fontSize: 25, color: "#2d7474" }}>
-                NGuyen Minh Nha
+               {this.props.route.params.first_name+" "+this.props.route.params.last_name}
               </Text>
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ marginRight: 3 }}>
-                  <Octicons name="primitive-dot" size={22} color="green" />
-                </View>
-                <Text>Online</Text>
-              </View>
             </View>
 
             <View style={{ marginLeft: 30, marginTop: 8 }}>
@@ -142,19 +146,24 @@ class Message extends Component {
         </View>
 
         <GiftedChat
-          messages={this.state.data}
-          onSend={(messages) => this.onSend(messages)}
-          isLoadingEarlier
           scrollToBottom
           infiniteScroll
-          loadEarlier
           alwaysShowSend
           renderUsernameOnMessage
           inverted={true}
           showUserAvatar
+          loadEarlier={true}
+          renderAvatarOnTop
+          onLoadEarlier={this.onLoadEarlier}
+          isLoadingEarlier={this.state.isLoadingEarlier}
+          alwaysShowSend={true}
+          messages={listnew}
+          onSend={(messages) => this.onSend(messages)}
           user={{
-            _id: this.state._id,
+            _id:this.state._id,
             avatar: this.state.avatar,
+            createdAt: new Date(Date.UTC(2016, 5, 11, 17, 20, 0)),
+            name: this.state.first_name+" "+this.state.last_name,
           }}
         ></GiftedChat>
       </View>

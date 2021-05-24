@@ -6,6 +6,8 @@ import jwt_decode from 'jwt-decode'
 import AsyncStorage from '@react-native-community/async-storage';
 import { Entypo } from '@expo/vector-icons'; 
 import avatarimage from '../images/avatar.jpg';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import {socket} from "../Socket.io/socket.io";
 import AppText from './app-text';
@@ -17,6 +19,8 @@ export default class ProfileUser extends React.Component {
     super(props)
     e = this;
     this.state = {
+      localUri:null,
+      secret_key:'',
       _user_id: '',
       first_name: '',
       last_name: '',
@@ -35,7 +39,6 @@ export default class ProfileUser extends React.Component {
     }
     this.onUpdate = this.onUpdate.bind(this);
     this.onAdd = this.onAdd.bind(this);
-    this.onUpdateimages=this.onUpdateimages.bind(this);
    socket.on("sv-user-detail", function (data) {
       var list = data.data
       if (data.success == true) {
@@ -66,6 +69,9 @@ export default class ProfileUser extends React.Component {
       _user_id: this.props._id,
     }
     socket.emit("cl-user-detail", detail)
+    e.setState({
+      secret_key:token
+    })
   }
   onAdd() {
     alert('ok them');
@@ -73,8 +79,40 @@ export default class ProfileUser extends React.Component {
   onUpdate() {
     alert('ok cap nhat');
   }
-  onUpdateimages=async()=>{
-    
+  openImagePickerAsync = async () => {
+    let permissionResult = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if(permissionResult==='granted'){
+      return;
+    }
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      type: [ImagePicker.MediaTypeOptions.file]
+    });
+    //console.log(pickerResult);
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    else{
+    this.setState({ localUri: pickerResult.uri});
+      if(this.state.localUri!=null){
+        let apiUrl = 'https://taskeepererver.herokuapp.com/avataruploader/';
+        var data = new FormData();  
+        data.append('file', {  
+          uri: this.state.localUri,
+          name: 'file',
+          type: 'image/jpg'
+        })
+        data.append('secret_key', this.state.secret_key)
+        //console.log(data)
+        fetch(apiUrl, {  
+          method: 'POST',
+          body: data
+        }).then(
+          response => {
+            alert("Update Avatar Success")
+          }
+          )
+      }
+    }
   }
   render() {
     return (
@@ -84,11 +122,17 @@ export default class ProfileUser extends React.Component {
             style={{ alignItems: 'center',width:width,marginTop:10,marginBottom:10}}
           >
             <View >
+            {this.state.localUri==null?
             <Avatar.Image 
               source={this.state.avatar ? { uri: this.state.avatar } : avatarimage}
               size={100}
             />
-            <TouchableOpacity onPress={this.onUpdateimages} style={{position:'absolute',right:0,bottom:0,backgroundColor:"#cccc",borderRadius:100,width:30,height:30,justifyContent: 'center',alignItems: 'center'}}>
+            : 
+            <Avatar.Image 
+              source={{uri:this.state.localUri}}
+              size={100}
+            />}
+            <TouchableOpacity onPress={()=>this.openImagePickerAsync()} style={{position:'absolute',right:0,bottom:0,backgroundColor:"#cccc",borderRadius:100,width:30,height:30,justifyContent: 'center',alignItems: 'center'}}>
               <Entypo name="camera" size={15} color="black" />
             </TouchableOpacity>
             </View>
@@ -102,7 +146,7 @@ export default class ProfileUser extends React.Component {
           <View>
           <View style={{flexDirection:'row',marginTop:50,marginLeft:30,marginRight:30}}>
               <AppText i18nKey={'home_profile.fullname'} style={{ fontSize: 19,fontWeight:'bold'}}>Full name:</AppText>
-            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:50}}>
+            <View style={{position:'absolute',left:170,width:width-200}}>
               <ShimmerPlaceholder style={{borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 <Text style={{ fontSize: 19 }}>{this.state.first_name} {this.state.last_name}</Text>
               </ShimmerPlaceholder>
@@ -110,7 +154,7 @@ export default class ProfileUser extends React.Component {
           </View>
           <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
               <AppText i18nKey={'home_profile.email'} style={{ fontSize: 19,fontWeight:'bold'}}>Email:</AppText>
-              <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:85}}>
+              <View style={{position:'absolute',left:170,width:width-200}}>
               <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 <Text style={{ fontSize: 19 }}>{this.state.email}</Text>
               </ShimmerPlaceholder>
@@ -118,7 +162,7 @@ export default class ProfileUser extends React.Component {
           </View>
           <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
             <AppText i18nKey={'home_profile.birthday'} style={{ fontSize: 19,fontWeight:'bold'}}>Birthday:</AppText>
-            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:60}}>
+            <View style={{position:'absolute',left:170,width:width-200}}>
               <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 {
                   this.state.day_of_birth==undefined?
@@ -131,7 +175,7 @@ export default class ProfileUser extends React.Component {
           </View>
           <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
             <AppText i18nKey={'home_profile.gender'} style={{ fontSize: 19,fontWeight:'bold'}}>Gender:</AppText>
-            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:71}}>
+            <View style={{position:'absolute',left:170,width:width-200}}>
               <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 {
                   this.state.gender=='undefined'?
@@ -144,40 +188,40 @@ export default class ProfileUser extends React.Component {
           </View>
           <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
             <AppText i18nKey={'home_profile.phone'} style={{ fontSize: 19,fontWeight:'bold'}}>Phone number:</AppText>
-            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:8}}>
+            <View style={{position:'absolute',left:170,width:width-200}}>
               <ShimmerPlaceholder style={{borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 <Text style={{ fontSize: 19 }}>{this.state.phone_number}</Text>
               </ShimmerPlaceholder>
             </View>
           </View>
-          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
-            <AppText i18nKey={'home_profile.education'} style={{ fontSize: 19,fontWeight:'bold'}}>Education:</AppText>
-            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:48}}>
-            <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
-                {this.state.education.map((item) => {
-                  return (
-                    <View key={item._id} style={{ flexDirection: 'column', marginRight: 5 }} >                  
-                          <Text style={{ fontSize: 19 }}>{item.school_name}</Text>
-                    </View>
-                  )
-                })}
-            </ShimmerPlaceholder>
+            <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
+              <AppText i18nKey={'home_profile.education'} style={{ fontSize: 19,fontWeight:'bold'}}>Education:</AppText>
+              <View style={{width:width-160,paddingLeft:80}}>
+              <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
+                  {this.state.education.map((item) => {
+                    return (
+                      <View key={item._id} style={{ flexDirection: 'column', marginRight: 5 }} >                  
+                            <Text style={{ fontSize: 19 }}>{item.school_name}</Text>
+                      </View>
+                    )
+                  })}
+              </ShimmerPlaceholder>
+              </View>
             </View>
-          </View>
-          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
-            <AppText i18nKey={'home_profile.working'} style={{ fontSize: 19,fontWeight:'bold'}}>Working:</AppText>
-            <View style={{marginLeft: 50,paddingLeft: 5, width: width - 200,marginLeft:60}}>
-            <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
-                {this.state.working_information.map((item) => {
-                  return (
-                    <View key={item._id} style={{ flexDirection: 'column', marginRight: 5 }} >
-                          <Text style={{ fontSize: 19 }}>{item.company_name}</Text>
-                    </View>
-                  )
-                })}
-            </ShimmerPlaceholder>
+            <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
+              <AppText i18nKey={'home_profile.working'} style={{ fontSize: 19,fontWeight:'bold'}}>Working:</AppText>
+              <View style={{width:width-160,paddingLeft:95}}>
+              <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
+                  {this.state.working_information.map((item) => {
+                    return (
+                      <View key={item._id} style={{ flexDirection: 'column', marginRight: 5 }} >
+                            <Text style={{ fontSize: 19 }}>{item.company_name}</Text>
+                      </View>
+                    )
+                  })}
+              </ShimmerPlaceholder>
+              </View>
             </View>
-          </View>
           </View>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 30 }}>
               <TouchableOpacity onPress={this.props.onUp} style={styles.btnLogin}>

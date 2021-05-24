@@ -176,7 +176,7 @@ class RenderItem extends React.Component {
                   onPress={() => this.props.stackScreen(this.props.item._id)}
                 >
                   <View style={{ flexDirection: "row" }}>
-                    <Text style={{ fontWeight: "bold" }}>Create time: </Text>
+                    <AppText style={{ fontWeight: "bold" }} i18nKey={'home_manage.createtime'}>Create time: </AppText>
                     <Text style={{ fontStyle: "italic" }}>
                       {new Date(
                         this.props.item.created_time
