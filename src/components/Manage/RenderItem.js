@@ -166,7 +166,9 @@ const styles = StyleSheet.create({
       borderRadius:10,
       width:width-60,
       backgroundColor:'rgba(200,200,200,0.3)',
-      margin:10
+      margin:10,
+      borderWidth:1,
+      borderColor: '#71B7B7'
   },
   time:{
     fontWeight:'bold',

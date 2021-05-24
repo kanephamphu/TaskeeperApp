@@ -247,14 +247,14 @@ class RenderItem  extends React.Component{
               <View style={styles.image_container} key={task._id}>
                 <View style={{flexDirection:'column'}}>
                   <TouchableOpacity onPress={()=>this.props.stackToDetail(this.props.item._id)} style={{flexDirection:'row'}}>
-                      <View style={{marginLeft:20,}}>
+                      {/* <View style={{marginLeft:20,}}>
                         <Avatar.Image source={this.props.item.task_owner_avatar?{uri:this.props.item.task_owner_avatar}:avatarimage} size={40}/>
-                      </View>
-                      <View style={{marginTop:10,marginLeft:20,width:width-170}}>
-                        <Text style={{fontWeight:'bold',fontSize:18}}>{task_title}</Text>
+                      </View> */}
+                      <View style={{marginTop:5,marginLeft:20,width:width-170}}>
+                        <Text style={{fontWeight:'bold',fontSize:18, fontStyle:'italic', color:'#2D7474'}}>{task_title}</Text>
                       </View>
                   </TouchableOpacity>
-                  <View style={{flexDirection:'row',marginTop:15,marginLeft:20}}>
+                  <View style={{flexDirection:'row',marginTop:10,marginLeft:20}}>
                     <TouchableOpacity style={{height:55,width:55,backgroundColor:'white',shadowOffset: { width: 0, height: 3 },
     shadowColor: 'green',
     shadowOpacity: 0.5,

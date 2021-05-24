@@ -55,7 +55,7 @@ var e;
     return (
       this.props.onstatus===true
        ?
-       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
        <ActivityIndicator size='large'></ActivityIndicator>
      </View>
        :  
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   image_container: {
     paddingVertical: 10,
@@ -119,7 +119,9 @@ const styles = StyleSheet.create({
     height: 90,
     width: 350,
     backgroundColor: 'rgba(200,200,200,0.3)',
-    margin: 20
+    margin: 20,
+    borderColor: '#71B7B7',
+    borderWidth:1,
   },
   time: {
     fontWeight: 'bold',

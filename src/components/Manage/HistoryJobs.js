@@ -96,6 +96,7 @@ class RenderItem  extends React.Component{
     shadowColor: 'green',
     shadowOpacity: 0.5,
     elevation: 10,
+    
     borderColor: '#71B7B7',
     borderRadius: 50}}>
               <Image source={this.props.item.task_owner_avatar?{uri:this.props.item.task_owner_avatar}:avatarimage} style={styles.image}/>

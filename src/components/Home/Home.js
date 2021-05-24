@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import {
     View, Text, StyleSheet, TouchableOpacity,
-    FlatList, Image, ScrollView, Dimensions,
+    FlatList, Image, ScrollView, Dimensions,Modal,
     SafeAreaView, Alert,ActivityIndicator,StatusBar
 } from 'react-native'
 import Swiper from 'react-native-swiper';
@@ -24,6 +24,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import AppText from '../app-text';
+
 var e;
 const { height, width } = Dimensions.get('window');
 class Home extends PureComponent {
@@ -233,6 +234,7 @@ class Home extends PureComponent {
                         <Entypo name="new-message" size={18} color="white" />
                     </TouchableOpacity>
                 </View>     
+              
                 {this.props.status === false
                     ?
                         <SafeAreaView >  

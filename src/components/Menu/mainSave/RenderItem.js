@@ -172,6 +172,8 @@ const styles = StyleSheet.create({
       marginTop: 5, height: 80, width: width * 0.92, justifyContent: 'space-between',
       backgroundColor: 'rgba(200,200,200,0.3)',
       borderRadius: 10,
+      borderWidth:1, 
+      borderColor: '#71B7B7'
       
     },
     time: {
