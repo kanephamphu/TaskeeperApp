@@ -196,7 +196,6 @@ class Home extends Component {
       // } else if (data.success == true) {
       //   console.log(JSON.stringify(data))
       // }
-      console.log(data)
       e.setState({
         showmodalnew:data.result
       })
@@ -214,7 +213,6 @@ class Home extends Component {
 
     sockettest.emit("set-socketID", { user_id: decode._id });
     sockettest.emit("cl-check-information", {_id: decode._id });
-    console.log(decode._id);
 
     const getnewtask = {
       secret_key: this.state.secret_key,

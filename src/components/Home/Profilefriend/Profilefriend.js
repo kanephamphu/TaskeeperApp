@@ -355,8 +355,8 @@ export default class Profilefriend extends React.Component {
                 </Modal>
                 <View style={styles.header0}>
                     <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
-                        <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="black" />
-                        <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>{this.state.first_name} {this.state.last_name}</Text>
+                        <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
+                        <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: 1 }}>{this.state.first_name} {this.state.last_name}</Text>
                     </TouchableOpacity>
                 </View>
                 {this.state.checkloading===false ?

@@ -64,6 +64,7 @@ import RenderItem from "../Manage/RenderItem";
 import io from "socket.io-client/dist/socket.io";
 import AsyncStorage from "@react-native-community/async-storage";
 import { socket } from "../../Socket.io/socket.io";
+import Test from '../Menu/test';
 const HomeStack = createStackNavigator();
 var e;
 const Tab = createMaterialBottomTabNavigator();
@@ -560,6 +561,11 @@ const MoreStackScreen = ({ navigation }) => {
       <HomeStack.Screen
         name="HistoryPayment"
         component={HistoryPayment}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="Test"
+        component={Test}
         options={{ headerShown: false }}
       />
     </HomeStack.Navigator>

@@ -7,6 +7,7 @@ import io from 'socket.io-client/dist/socket.io';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import {sockettest} from "../../../Socket.io/socket.io";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 const { width, height } = Dimensions.get("window");
 var e;
@@ -14,9 +15,28 @@ export default class Ewallet extends React.Component {
     constructor(props) {
         super(props)
         e = this;
+        this.state={
+            data:''
+        }
+        sockettest.on("sv-get-total-currently",function(data){
+            var list = data.data
+            if(data.success==true){
+                e.setState({
+                    data:list
+                })
+            }
+            else{
+                console.log(data)
+            }
+        })
     };
 
     componentDidMount = async () => {
+        const sendemail={
+            email:this.props.route.params.receiver_email
+        }
+        sockettest.emit("cl-get-total-currently",sendemail)
+        
     }
     render() {
         return (
@@ -29,7 +49,7 @@ export default class Ewallet extends React.Component {
                     </TouchableOpacity>
                     <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
                         <Text style={{ fontSize: 25, color: 'black' }}>Total income</Text>
-                        <Text style={{ fontWeight: 'bold', fontSize: 30, color: 'black' }}>0.00</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 30, color: 'black' }}>${this.state.data}</Text>
                     </View>
                 </View>
                 <View style={styles.body}>
