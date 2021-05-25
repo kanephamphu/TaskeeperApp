@@ -63,6 +63,7 @@ class FlatListdata extends Component {
                     key: "success",
 
                 })
+                
             }
         })
 
@@ -97,7 +98,10 @@ class FlatListdata extends Component {
 
         })
     }
-    applyJob() {
+    onSuccessAppy = (task) =>{
+        this.props.onApply(task)
+    }
+    applyJob(task) {
         let a = this.state.price;
         let b = parseInt(a)
         if (this.state.introduction == '') {
@@ -125,6 +129,7 @@ class FlatListdata extends Component {
                 price: this.state.price,
             }
             socket.emit("cl-apply-job", apply)
+            this.props.onApply(task)
         }
 
 
@@ -140,7 +145,7 @@ class FlatListdata extends Component {
         }
         this.socket.emit("cl-follow-user",follow)
     }  */
-    saveTask = () => {
+    saveTask = (task) => {
         e.setState({
             checksave: true
         })
@@ -149,6 +154,7 @@ class FlatListdata extends Component {
             task_id: this.state._id
         }
         socket.emit("cl-save-task", save)
+        this.props.onSave(task)
     }
     onsss() {
         this.props.stack;
@@ -235,46 +241,7 @@ class FlatListdata extends Component {
                         </View>
                     </View>
                     <View style={styles.bodynext} >
-                        {/*<View style={{ flexDirection: 'row', marginTop: 10 }}>
-                            <Text style={{ color: '#0E0E0E', fontSize: 13 }}>Updated:</Text>
-                            <View style={{ marginLeft: 5 }}>
-                                {this.props.item.end_year < moment(d).format('YYYY') ?
-                                    <>
-                                        <Text style={{ color: '#0E0E0E', fontSize: 13 }}>You have expired to apply for this job</Text>
-                                    </>
-                                    :
-                                    <>
-                                        {this.props.item.end_month < moment(d).format('MM') ?
-                                            <>
-                                                <Text style={{ color: '#0E0E0E', fontSize: 13 }}>You have expired to apply for this job</Text>
-                                            </>
-                                            :
-                                            <>
-                                                {this.props.item.end_day <= moment(d).format('DD') ?
-                                                    <>
-                                                        <Text style={{ color: '#0E0E0E', fontSize: 13 }}>You have expired to apply for this job</Text>
-                                                    </>
-                                                    :
-                                                    <View style={{ flexDirection: 'row' }}>
-                                                        <Text style={{ color: '#0E0E0E', fontSize: 13 }}>You have </Text>
-                                                        <Text style={{ color: '#0E0E0E', fontSize: 13, fontWeight: 'bold' }}>{this.props.item.end_day - moment(d).format('DD')} </Text>
-                                                        {this.props.item.end_day - moment(d).format('DD') == 1 ?
-                                                            <>
-                                                                <Text style={{ color: '#0E0E0E', fontSize: 13 }}>day to apply</Text>
-                                                            </>
-                                                            :
-                                                            <>
-                                                                <Text style={{ color: '#0E0E0E', fontSize: 13 }}>days to apply</Text>
-                                                            </>
-                                                        }
-                                                    </View>
-                                                }
-                                            </>
-                                        }
-                                    </>
-                                }
-                            </View>
-                            </View>*/}
+                      
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <View style={{ flexDirection: 'row' }}>
                                 <AppText i18nKey={'home_page.price'} style={{ color: '#0E0E0E', fontSize: 13 }}>Price:</AppText>
@@ -348,7 +315,7 @@ class FlatListdata extends Component {
                                         </View>
                                     </View>
                         }
-                        {!this.props.item.isSaved ? <TouchableOpacity style={styles.iconBulliten2} onPress={this.save}>
+                        {!this.props.item.isSaved ? <TouchableOpacity style={styles.iconBulliten2} onPress={()=>this.save({...this.props.item,isSaved:true})}>
                         <View style={{ flexDirection: 'row', margin: 5, borderWidth: 1, borderColor: '#71B7B7', width: 100, height: 27, alignItems: 'center', borderRadius: 15 }}>
                                         <View style={{ marginLeft: 10 }}>
                                             <Entypo name="save" size={17} color="#71B7B7" />
@@ -359,7 +326,7 @@ class FlatListdata extends Component {
                                     </View>
                         </TouchableOpacity> :
                             this.props.item.isSaved == false ?
-                                <TouchableOpacity style={styles.iconBulliten2} onPress={this.save}>
+                                <TouchableOpacity style={styles.iconBulliten2} onPress={()=>this.save({...this.props.item,isSaved:true})}>
                                     <View style={{ flexDirection: 'row', margin: 5, borderWidth: 1, borderColor: '#71B7B7', width: 100, height: 27, alignItems: 'center', borderRadius: 15 }}>
                                         <View style={{ marginLeft: 10 }}>
                                             <Entypo name="save" size={17} color="#71B7B7" />
@@ -436,7 +403,7 @@ class FlatListdata extends Component {
                                     <TouchableOpacity style={styles.cancle} onPress={() => this.setState({ show: false, abc: '', introduction: '', price: '' })}>
                                         <AppText i18nKey={'home_page.cancel'} style={{ fontWeight: 'bold', color: "#488B8F", fontSize: 18 }}>Cancle</AppText>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={styles.apply} onPress={this.applyJob}>
+                                    <TouchableOpacity style={styles.apply} onPress={()=>this.applyJob({...this.props.item,isApplied:true})}>
                                         <AppText i18nKey={'home_page.btnapply'} style={{ fontWeight: 'bold', color: "white", fontSize: 18 }}>Apply</AppText>
                                     </TouchableOpacity>
                                 </View>
@@ -481,8 +448,11 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchProps=(dispatch,props)=>{
     return {
-        onApply:(id)=>{
-            dispatch(actions.applyTask(id));
+        onApply:(task)=>{
+            dispatch(actions.onApplyTask(task));
+        },
+        onSave:(task)=>{
+            dispatch(actions.onSaveTask(task));
         }
     }
 }

@@ -1,4 +1,4 @@
-import {GET_NEWFEED,ON_REFRESH,APPLY_TASK} from '../constants';
+import {GET_NEWFEED,ON_REFRESH,APPLY_TASK,SAVE_TASK} from '../constants';
 
 export const getNewfeed=(payload)=>{
     return {
@@ -12,8 +12,15 @@ export const onRefresh=()=>{
         
     }
 }
-export const onApplyTask=()=>{
+export const onApplyTask=(payload)=>{
     return {
         type:APPLY_TASK,
+        payload
+    }
+}
+export const onSaveTask=(payload)=>{
+    return {
+        type:SAVE_TASK,
+        payload
     }
 }
