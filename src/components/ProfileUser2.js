@@ -9,7 +9,7 @@ import avatarimage from '../images/avatar.jpg';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import {socket} from "../Socket.io/socket.io";
+import {socket,sockettest} from "../Socket.io/socket.io";
 import AppText from './app-text';
 
 const { height, width } = Dimensions.get('window');
@@ -39,7 +39,7 @@ export default class ProfileUser extends React.Component {
     }
     this.onUpdate = this.onUpdate.bind(this);
     this.onAdd = this.onAdd.bind(this);
-   socket.on("sv-user-detail", function (data) {
+    sockettest.on("sv-user-detail", function (data) {
       var list = data.data
       if (data.success == true) {
         e.setState({
@@ -68,7 +68,7 @@ export default class ProfileUser extends React.Component {
     const detail = {
       _user_id: this.props._id,
     }
-    socket.emit("cl-user-detail", detail)
+    sockettest.emit("cl-user-detail", detail)
     e.setState({
       secret_key:token
     })

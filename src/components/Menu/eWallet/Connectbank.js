@@ -25,7 +25,7 @@ export default class Connectbank extends React.Component {
                 <View style={styles.header0}>
                     <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
                         <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
-                        <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>Bank</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: 1 }}>Bank</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.body}>
@@ -33,7 +33,7 @@ export default class Connectbank extends React.Component {
                     borderRadius:10,borderColor:'#cccc',
                     backgroundColor:' rgba(229, 229, 229, 0.51)',padding:20,justifyContent: 'center'}}>
                         <Text style={{fontSize:16}}>Link to credit card,debit card</Text>
-                        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Bankkinglink")} style={{flexDirection:'row',marginTop:15}}>
+                        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Test")} style={{flexDirection:'row',marginTop:15}}>
                             <Text style={{fontSize:18,fontWeight: 'bold'}}>Add connective</Text>
                             <MaterialIcons name="navigate-next" size={28} color="black" />
                         </TouchableOpacity>

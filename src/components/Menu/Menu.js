@@ -347,7 +347,7 @@ class New extends PureComponent {
                                     <MaterialIcons name="navigate-next" size={30} color="#71B7B7" />
                                 </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5,justifyContent:'space-between' }} onPress={() => this.props.navigation.navigate("Ewallet")} >
+                        <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5,justifyContent:'space-between' }} onPress={() => this.props.navigation.navigate("Ewallet",{receiver_email :this.state.email})} >
                             <View style={styles.texticon}>
                                 <Text style={styles.text}>E Wallet</Text>
                             </View>
