@@ -9,6 +9,8 @@ import {
     Image,
     Dimensions,
     Animated,
+    TouchableWithoutFeedback,
+    Keyboard
 } from 'react-native'
 import background from '../../images/anh1.png'
 import logo from '../../images/logoblack.png'
@@ -115,7 +117,7 @@ class Login extends Component {
             loginquery: this.state.loginquery,
             password: this.state.password,
         }
-       socket.emit("cl-send-login-req", user)
+       socket.emit("cl-send-login-req", user) 
     
     }
     showPass = () => {
@@ -142,6 +144,7 @@ class Login extends Component {
 
     render() {
         return (
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={styles.imagebackground}>
             <View  style={styles.imagebackground}>
                 <Animated.View style={{
                     opacity: this.state.logoContainer,
@@ -248,6 +251,7 @@ class Login extends Component {
                 </View>
 
             </View>
+            </TouchableWithoutFeedback>
         )
     }
 }

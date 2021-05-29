@@ -88,20 +88,33 @@ class Message extends Component {
       createdAt: new Date(),
       user: {
         _id: this.state._id,
-        name: this.state.first_name + " " + this.state.last_name,
+        first_name: this.state.first_name,
+        last_name:this.state.last_name,
         avatar: this.state.avatar,
       },
     };
     sockettest.emit("chat-message", send);
-    console.log(send);
   };
+  onListMess=async()=>{
+    const token = await AsyncStorage.getItem("token");
+    const decode = jwt_decode(token)
+    const setread={
+      userId:decode._id,
+      receiver_id:this.props.route.params.receiver_id
+    }
+    sockettest.emit("cl-set-readed-message",setread)
+    const sendID_Message = {
+      userId: decode._id,
+    };
+    sockettest.emit("cl-get-list-message", sendID_Message);
+  }
   render() {
     let listnew = _.orderBy(this.state.dataMessage, ["createdAt"], ["desc"]);
     return (
       <View style={styles.container}>
         <View style={styles.header0}>
           <View style={{ flexDirection: "row", marginTop: 30, marginLeft: 10 }}>
-            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+            <TouchableOpacity onPress={() => {this.props.navigation.goBack();this.onListMess()}}>
               <Ionicons
                 style={{ marginTop: 9, marginLeft: 5 }}
                 name="ios-arrow-back"
@@ -150,7 +163,7 @@ class Message extends Component {
           user={{
             _id: this.state._id,
             createdAt: new Date(Date.UTC(2016, 5, 11, 17, 20, 0)),
-            name: this.state.first_name + " " + this.state.last_name,
+            name: this.state.first_name+" "+this.state.last_name
           }}
         ></GiftedChat>
       </View>

@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, Image, Dimensions, TouchableOpacity, } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, Dimensions, TouchableOpacity,ActivityIndicator } from 'react-native';
 import jwt_decode from 'jwt-decode'
 import AsyncStorage from '@react-native-community/async-storage';
 import io from 'socket.io-client/dist/socket.io'
-import {socket} from "../../../Socket.io/socket.io";
+import {socket,sockettest} from "../../../Socket.io/socket.io";
 import star from '../../../images/star.png';
 import { Ionicons } from '@expo/vector-icons';
+import avatarimage from '../../../images/avatar11.png';
 const { height, width } = Dimensions.get('window');
+import AppText from "../../app-text";
 var e;
 export default class Historyjobfriend extends React.Component {
   constructor(props) {
@@ -14,74 +16,37 @@ export default class Historyjobfriend extends React.Component {
     e = this;
     this.state = {
       isLoading: false,
-      refreshing: false,
-      data: [
-        {
-          _id: 1,
-          time: '03-2019',
-          company: 'Fancha Milktea',
-          position: 'Staff',
-          rating: 3
-        },
-        {
-          _id: 2,
-          time: '07-2019',
-          company: "Crazy's Cat",
-          position: 'Batender',
-          rating: 4
-        },
-        {
-          _id: 3,
-          time: '02-2019',
-          company: 'Fourdigit',
-          position: 'FE Developer',
-          rating: 1
-        },
-        {
-          _id: 4,
-          time: '01-2019',
-          company: 'sadasdsadasd',
-          position: 'FE Developer',
-          rating: 2
-        },
-        {
-          _id: 6,
-          time: '02-2019',
-          company: 'ccccccc',
-          position: 'FE Developer',
-          rating: 5
-        },
+      refeshing: false,
+      loadingdata:false,
+      dataJob: [
       ],
-      dataHistoryjob: [
-
-      ],
-      user: {
-        name: 'Lê Ngân',
-        job: 'Business Analyst',
-      },
     }
 
-    socket.on("sv-job-history", function (data) {
-      var list = data.data
-      if (data.success == true) {
-        console.log(JSON.stringify(list))
+    sockettest.on("sv-get-history-job",function(data){
+      var list=data.data
+      if(data.success==false){
+        console.log(JSON.stringify(data))
+      }else if(data.success==true){
         e.setState({
-          dataHistoryjob: list,
-          isLoading: true
+          dataJob:list,
+          loadingdata:true
         })
-      } else {
-        console.log(data.error)
       }
+     
     })
   };
-  componentDidMount = async () => {
-    const token = await AsyncStorage.getItem('token')
-    const decode = jwt_decode(token)
-    const historyjob = {
-      _user_id: decode._id,
-      skip: 1
+  componentDidMount=async()=>{
+    var token= await AsyncStorage.getItem('token')
+    const decode=jwt_decode(token)
+    const historyjob ={
+      userId:this.props.route.params._id, 
+      number:10,
+      skip:0
     }
-    socket.emit("cl-job-history", historyjob)
+    sockettest.emit("cl-get-history-job",historyjob)
+  }
+  refreshTop() {
+    this.componentDidMount()
   }
 
   render() {
@@ -90,134 +55,156 @@ export default class Historyjobfriend extends React.Component {
       <View style={styles.container}>
            <View style={styles.header0}>
           <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
-            <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="black" />
-    <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>{last}'s History jobs</Text>
+            <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
+            <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: 1 }}>{last}'s History jobs</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.flatlist}>
-          <FlatList
-            data={this.state.data}
-            renderItem={({ item, index }) => {
-              return (
-                <View>
-                  <RenderItem1 item={item} index={index}  ></RenderItem1>
-                </View>
-              )
-            }}
-            keyExtractor={(item) => item._id.toString()}
-            ItemSeparatorComponent={this.ItemSeparatorComponent}
-            showsHorizontalScrollIndicator={false}
-            refreshing={this.state.refreshing}
-          >
-          </FlatList>
-        </View>
+        {!this.state.loadingdata == true ?
+          <View style={{ flex: 1, alignItems: 'center',justifyContent:'center' }}>
+            <ActivityIndicator size='large'></ActivityIndicator>
+          </View>
+          :
+          this.state.dataJob.length ===0 
+          ?
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "#ffff" }}>
+            <AppText i18nKey={'home_manage.blank_show'}>Blank task apply list</AppText>
+          </View>
+          :
+          <View style={styles.flatlist}>
+            <FlatList data={this.state.dataJob}
+              renderItem={({item,index})=>{
+                return(
+                  <RenderItem item={item} index={index}></RenderItem>
+                )
+              }}
+              keyExtractor={(item)=>item._id.toString()}
+              refreshing={this.state.refeshing}
+              onRefresh={() => { this.refreshTop() }}
+            >
+            </FlatList>
+          </View>}
       </View>
     );
   }
 }
-class RenderItem1 extends React.Component {
-  _rating(item) {
-    let rating = [];
-    for (i = 0; i < item; i++) {
-      rating.push(
-             <Image
-            source={star}
-            style={{ width: 15, height: 15, marginRight: 3 }}
-            resizeMode="cover"
-        />
+class RenderItem  extends React.Component{
+  render(){
+    var task_title = this.props.item.task_title;
+      
+    var count = task_title.length;
 
-      )
+    if (count >= 30) {
+        task_title = task_title.slice(0, 30)+'...';
     }
-    return rating;
-  }
-  render() {
-    return (
-      <View style={styles.image_container} key={this.props.item._id}>
-        <View style={{ flexDirection: 'column' }}>
-          <View style={{ width: 15, height: 15, borderRadius: 50, backgroundColor: '#2d7474', marginLeft: -5.5 }} >
-
+    return(
+      <View style={styles.image_container}>
+        <TouchableOpacity  style={{flexDirection:'row'}}>
+          <View style={{justifyContent:'center',alignItems: 'center',marginLeft:10,height:55,width:55,backgroundColor:'white',shadowOffset: { width: 0, height: 3 },
+            shadowColor: 'green',
+            shadowOpacity: 0.5,
+            elevation: 10,
+            borderColor: '#71B7B7',
+            borderRadius: 50}}
+          >
+              <Image source={this.props.item.task_owner_avatar?{uri:this.props.item.task_owner_avatar}:avatarimage} style={styles.image}/>
           </View>
-          <View style={{ width: 1, height: 100, borderWidth: 2, borderColor: '#2d7474', backgroundColor: '#2d7474' }}>
-
-          </View>
-          <View style={{ width: 15, height: 15, borderRadius: 50, backgroundColor: '#2d7474', marginLeft: -5.5, marginTop: -0.5 }} >
-
-          </View>
-        </View>
-        <View style={{ flexDirection: 'column' }}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate("Detail")} style={{ marginLeft: 10 }}>
-            <Text>{this.props.item.time}</Text>
-          </TouchableOpacity>
-          <View style={{
-            flexDirection: 'column', borderRadius: 10, borderWidth: 2,
-            borderColor: '#2d7474', width:width-100, height: 90, marginLeft: 10, marginTop: 5, justifyContent: 'center', alignItems: 'center'
-          }}>
-            <View>
-              <Text style={{ fontWeight: 'bold', color: '#2d7474', fontSize: 18 }}>{this.props.item.company}</Text>
-            </View>
+          <View  style={{flexDirection:'column',marginLeft:10,alignItems:'flex-start',width:width-180}}>
+            <Text style={[styles.name,{color:'#2d7474'}]}>{task_title}</Text>
             <View >
-              <Text style={{ fontWeight: 'bold', color: 'black', fontSize: 18 }}>{this.props.item.position}</Text>
-            </View>
-            <View key={this.props.item._id} >
-              <Text> {this._rating(this.props.item.rating)}</Text>
+              <Text style={{fontWeight:'bold',fontSize:15}}>{this.props.item.task_type}</Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>   
       </View>
     )
   }
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#faf9f9'
-  },
-  flatlist: {
-    flex: 1,
-    alignItems: 'center',
-    marginTop: 20
-  },
-  image_container: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    flexDirection: 'row',
-    borderRadius: 10,
-    height: 130,
-    width: width,
-    backgroundColor: '#faf9f9',
-    alignItems: 'center',
-    marginBottom: 10, 
-    justifyContent: 'center',alignItems: 'center'
-
-  },
-  time: {
-    fontSize: 16
-  },
   header0: {
-    height: height * 0.08,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    paddingLeft: 10,
-    paddingTop:15,
-    shadowOpacity: 0.2,
-    elevation: 1,
+    ...Platform.select({
+      ios: {
+          backgroundColor: 'white',
+          height: height * 0.09,
+          shadowOffset: { width: 0, height: 3 },
+          shadowOpacity: 0.2,
+          paddingLeft: 10,
+          paddingTop:15,
+          shadowOpacity: 0.2,
+          elevation: 1,
+          paddingTop:36
+      },
+      android: {
+        backgroundColor: 'white',
+        height: height * 0.09,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        paddingLeft: 10,
+        paddingTop:15,
+        shadowOpacity: 0.2,
+        elevation: 1,
+      },
+      default: {
+        // other platforms, web for example
+      }
+    })
    
   },
-  company: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontWeight: 'bold',
-    fontSize: 19,
-    color: '#2d7474'
+  container: {
+    flex: 1,
+    justifyContent: 'center',  
+    backgroundColor: '#faf9f9'
   },
-  position: {
-    fontWeight: 'bold',
-    fontSize: 18
+  name:{
+    fontWeight:'bold',
+    fontSize:18
   },
-  rating: {
-    marginTop: 5,
-    flexDirection: 'row'
-  }
+  flatlist:{
+    flex:1,
+    alignItems:'center',
+    marginTop:10
+  },
+  image_container:{
+      paddingVertical:10,
+      paddingHorizontal:10,
+      flexDirection:'row',
+      borderRadius:10,
+      alignItems:'center',
+      justifyContent:'center',
+      width:width-60,
+      backgroundColor:'rgba(200,200,200,0.3)',
+      margin:10,
+      borderWidth:1,
+      borderColor:'#2d7474'
+  },
+  time:{
+    fontWeight:'bold',
+    fontSize:19,
+    color:'#2d7474'
+      
+  },
+  position:{
+    fontWeight:'bold',
+    fontSize:18
+    
+  },
+  amount:{
+    fontSize:16
+  },
+  image:{
+    width:50,
+    height:50,borderRadius:50
+  },
+  input: {
+    width:230,
+    height: 55,
+    borderRadius: 5,
+    fontSize: 16,
+    paddingLeft: 15,
+    paddingTop: -10,
+    color: '#2d7474',
+    marginHorizontal: 25,
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderColor: '#2d7474'
+  },
 })

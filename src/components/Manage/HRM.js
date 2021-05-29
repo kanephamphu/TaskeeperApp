@@ -27,7 +27,7 @@ class HRM extends React.Component {
     e = this;
     this.state = {
       secret_key: "",
-      number_task: 10,
+      number_task: 40,
       skip: 10,
       refreshing: false,
       loadingdata: false,

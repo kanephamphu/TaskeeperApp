@@ -204,6 +204,7 @@ export default class Register extends Component{
     render(){
         
         return(
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={styles.imagebackground}>
             <View style={styles.imagebackground}>
                 
                <Animated.View style={{
@@ -435,6 +436,7 @@ export default class Register extends Component{
                             </View>
                         </Modal>
             </View>
+            </TouchableWithoutFeedback>
         )
     }
 }

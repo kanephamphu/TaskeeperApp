@@ -24,7 +24,8 @@ export default{
     titlehomemanagecandidates:"Quản lý ứng cử viên",
     createtime:"Thời gian tạo: ",
     english:"Tiếng Anh",
-    vietnam:"Tiếng Việt"
+    vietnam:"Tiếng Việt",
+    done:"Làm xong"
   },
   home_page:{
     title_home:"Đề xuất công việc",
@@ -64,7 +65,16 @@ export default{
     notification:"Thông báo",
     help:"Giúp đỡ",
     payment:"Thanh toán",
-    logout:"Đăng xuất"
+    logout:"Đăng xuất",
+    ewallet: "Ví điện tử",
+    total:"Tổng thu nhập",
+    topup:"Hàng đầu",
+    withdraw:"Rút tiền",
+    send:"Gửi",
+    wallet:"Ví tiền",
+    transactionhistory:"Lịch sử giao dịch",
+    mybankaccount:"tài khoản của tôi",
+    changetheorderpass:"Thay đổi mật khẩu"
   },
   home_profile:{
     businessanalyst:"Phân tích doanh nghiệp",

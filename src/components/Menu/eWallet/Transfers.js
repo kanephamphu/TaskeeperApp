@@ -8,6 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import {sockettest} from "../../../Socket.io/socket.io";
 import visa from '../../../images/visacard.png'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 const { width, height } = Dimensions.get("window");
@@ -24,11 +25,17 @@ export default class Transfers extends React.Component {
 
     componentDidMount = async () => {
     }
+    reloadEwallet=()=>{
+        const sendemail={
+            email:this.props.route.params.email
+        }
+        sockettest.emit("cl-get-total-currently",sendemail)
+    }
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.header0}>
-                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
+                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => {this.props.navigation.goBack();this.reloadEwallet()}}>
                         <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
                         <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>Transfers</Text>
                     </TouchableOpacity>

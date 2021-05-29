@@ -1,13 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet,Button,FlatList,Image,Modal,Keyboard,TextInput,TouchableWithoutFeedback,Dimensions,TouchableOpacity,ActivityIndicator} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import {Avatar} from 'react-native-paper'
 import io from 'socket.io-client/dist/socket.io';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import avatarimage from '../../images/avatar11.png';
 import jwt_decode from 'jwt-decode'
-import {socket} from "../../Socket.io/socket.io";
+import {socket,sockettest} from "../../Socket.io/socket.io";
 import AppText from '../app-text';
 const {height,width} =Dimensions.get('window');
 var e;
@@ -24,7 +23,7 @@ export default class HistoryJob extends React.Component {
       dataJob: [
       ],
     }
-    socket.on("sv-get-approved-job",function(data){
+    sockettest.on("sv-get-history-job",function(data){
       var list=data.data
       if(data.success==false){
         console.log(JSON.stringify(data))
@@ -41,9 +40,11 @@ export default class HistoryJob extends React.Component {
     var token= await AsyncStorage.getItem('token')
     const decode=jwt_decode(token)
     const historyjob ={
-      secret_key:token, 
+      userId:decode._id, 
+      number:10,
+      skip:0
     }
-    socket.emit("cl-get-approved-job",historyjob)
+    sockettest.emit("cl-get-history-job",historyjob)
   }
   refreshTop() {
     this.componentDidMount()
@@ -66,7 +67,7 @@ export default class HistoryJob extends React.Component {
             <FlatList data={this.state.dataJob}
               renderItem={({item,index})=>{
                 return(
-                  <RenderItem stackToDetail={this.props.stackDetail} item={item} index={index}></RenderItem>
+                  <RenderItem item={item} index={index}></RenderItem>
                 )
               }}
               keyExtractor={(item)=>item._id.toString()}
@@ -91,13 +92,14 @@ class RenderItem  extends React.Component{
     }
     return(
       <View style={styles.image_container}>
-        <TouchableOpacity onPress={()=>this.props.stackToDetail(this.props.item._id)} style={{flexDirection:'row'}}>
+        <TouchableOpacity  style={{flexDirection:'row'}}>
           <View style={{justifyContent:'center',alignItems: 'center',marginLeft:10,height:55,width:55,backgroundColor:'white',shadowOffset: { width: 0, height: 3 },
-    shadowColor: 'green',
-    shadowOpacity: 0.5,
-    elevation: 10,
-    borderColor: '#71B7B7',
-    borderRadius: 50}}>
+            shadowColor: 'green',
+            shadowOpacity: 0.5,
+            elevation: 10,
+            borderColor: '#71B7B7',
+            borderRadius: 50}}
+          >
               <Image source={this.props.item.task_owner_avatar?{uri:this.props.item.task_owner_avatar}:avatarimage} style={styles.image}/>
           </View>
           <View  style={{flexDirection:'column',marginLeft:10,alignItems:'flex-start',width:width-180}}>

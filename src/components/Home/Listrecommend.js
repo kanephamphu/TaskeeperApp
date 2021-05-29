@@ -75,7 +75,8 @@ class Listrecommend extends Component {
                             var count_description=task_description.length;
                             if (count >= 25) {
                                 task_title = task_title.slice(0, 20)+"...";
-                            }else if(count_description>=40){
+                            }
+                            if(count_description>=40){
                                 task_description = task_description.slice(0,34)+"...";
                             }
                             return (
@@ -238,11 +239,26 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     header0: {
-        height: height * 0.08,
-        shadowOffset: { width: 0, height: 3 },
-        paddingLeft: 10,
-        paddingTop:15,
-        backgroundColor: '#faf9f9'
+        ...Platform.select({
+            ios: {
+                height: height * 0.08,
+                shadowOffset: { width: 0, height: 3 },
+                paddingLeft: 10,
+                paddingTop:15,
+                backgroundColor: '#faf9f9',
+                paddingTop:36
+            },
+            android: {
+                height: height * 0.08,
+                shadowOffset: { width: 0, height: 3 },
+                paddingLeft: 10,
+                paddingTop:15,
+                backgroundColor: '#faf9f9'
+            },
+            default: {
+              // other platforms, web for example
+            }
+          })
     },
     bodyone: {
         flexDirection: 'row',

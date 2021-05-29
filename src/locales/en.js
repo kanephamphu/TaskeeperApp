@@ -24,7 +24,8 @@ export default{
     titlehomemanagecandidates:"Candidates Management",
     createtime:"Create Time: ",
     english:"English",
-    vietnam:"Vietnamese"
+    vietnam:"Vietnamese",
+    done:"Done"
   },
   home_page:{
     quotes:"The suitable of for you today!!!",
@@ -64,7 +65,16 @@ export default{
     notification:"Notification",
     help:"Help",
     payment:"Payment",
-    logout:"Log out"
+    logout:"Log out",
+    ewallet: "E Wallet",
+    total:"Total income",
+    topup:"Top up",
+    withdraw:"Withdraw",
+    send:"Send",
+    wallet:"Wallet",
+    transactionhistory:"Transaction History",
+    mybankaccount:"My bank account",
+    changetheorderpass:"Change the order password"
   },
   home_profile:{
     businessanalyst:"Business Analyst",

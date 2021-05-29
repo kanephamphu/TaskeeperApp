@@ -24,9 +24,11 @@ import Animated, { Easing } from 'react-native-reanimated'
 const { Value, timing } = Animated
 import { Ionicons } from '@expo/vector-icons';
 import io from 'socket.io-client/dist/socket.io'
-import {socket} from "../../Socket.io/socket.io";
+import {socket,sockettest} from "../../Socket.io/socket.io";
 import AsyncStorage from '@react-native-community/async-storage';
 import { createStackNavigator } from '@react-navigation/stack';
+import { FontAwesome } from '@expo/vector-icons'; 
+import jwt_decode from "jwt-decode";
 const SearchStack = createStackNavigator();
 // Calculate window size
 const width = Dimensions.get('window').width
@@ -47,7 +49,8 @@ class Search extends React.Component {
       key: '',
       data: [],
       dataHistory: "",
-      secret_key:''
+      secret_key:'',
+      numberunread:''
     }
 
     // animation values
@@ -76,6 +79,17 @@ class Search extends React.Component {
 
       }
     })
+    sockettest.on("sv-get-number-unMessage",function (data) {
+      e.setState({numberunread:data.result})
+    })
+  }
+  componentDidMount=async()=>{
+    const token = await AsyncStorage.getItem("token");
+    const decode = jwt_decode(token)
+    const getnumbermessunread={
+      userId:decode._id
+    }
+    sockettest.emit("cl-get-number-unMessage",getnumbermessunread)
   }
   _onFocus = () => {
     // update state
@@ -205,14 +219,15 @@ class Search extends React.Component {
                 >
                   <AntDesign name="search1" size={22} color="#000000" />
                 </TouchableHighlight>
-                <TouchableHighlight
+                <TouchableOpacity
                   activeOpacity={1}
                   underlayColor={"#ccd0d5"}
                   onPress={this.props.message}
                   style={styles.search_icon_box}
                 >
                   <AntDesign name="message1" size={22} color="#000000" />
-                </TouchableHighlight>
+                  {this.state.numberunread===0?null:<><FontAwesome style={{position:'absolute',right:3,top:3}} name="circle" size={16} color="red" /><Text style={{position:'absolute',color:'white',top:5,right:7,fontSize:10}}>{this.state.numberunread}</Text></>}
+                </TouchableOpacity>
               </View>
 
               <Animated.View

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet,Button,FlatList,Image,Modal,Keyboard,TextInput,TouchableWithoutFeedback,Dimensions,TouchableOpacity,ActivityIndicator} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import {Avatar} from 'react-native-paper'
 import io from 'socket.io-client/dist/socket.io';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';

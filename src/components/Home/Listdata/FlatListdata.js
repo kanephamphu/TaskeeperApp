@@ -211,22 +211,22 @@ class FlatListdata extends Component {
                       : null}*/}
                     </View>
                     <View style={styles.bodytwo}>
-                        <View style={{ flex: 1, width:'100%', height: 200, borderRadius: 5, alignItems: 'center', marginRight: 10, shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 5, shadowRadius: 3, elevation: 20 }}>
+                        <TouchableOpacity onPress={() => this.props.stackDetail(this.props.item._id, this.props.item.isSaved, this.props.item.isApplied)} style={{ flex: 1, width:'100%', height: 200, borderRadius: 5, alignItems: 'center', marginRight: 10, shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 5, shadowRadius: 3, elevation: 20 }}>
                             <Image source={anhbiadetail} style={{ width: '100%', height: '100%', borderRadius: 10 }} />
-                        </View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap', marginTop: 10 }}>
-                            <TouchableOpacity style={{ alignSelf: 'flex-start' }} onPress={() => this.props.stackDetail(this.props.item._id, this.props.item.isSaved, this.props.item.isApplied)}>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.props.stackDetail(this.props.item._id, this.props.item.isSaved, this.props.item.isApplied)} style={{ flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap', marginTop: 10 }}>
+                            <View style={{ alignSelf: 'flex-start' }} >
                                 <View><Text style={{ fontWeight: 'bold', fontSize: 20, fontStyle: 'normal', color: '#000000' }}>{task_title}</Text></View>
-                            </TouchableOpacity>
+                            </View>
                             {new Date(this.props.item.created_time).toLocaleDateString() == d.toLocaleDateString() ?
-                                <TouchableOpacity style={{ alignSelf: 'center', borderWidth: 1, borderColor: '#F7B32D', width: '15%', borderRadius: 8, marginTop: 2 }}>
+                                <View style={{ alignSelf: 'center', borderWidth: 1, borderColor: '#F7B32D', width: '15%', borderRadius: 8, marginTop: 2 }}>
                                     <View style={{ alignItems: 'center' }}>
                                         <AppText i18nKey={"home_page.new"} style={{ color: '#F7B32D',fontStyle:'normal' }} >NEW</AppText>
                                     </View>
 
-                                </TouchableOpacity>
+                                </View>
                                 : null}
-                        </View>
+                        </TouchableOpacity>
                         <View style={{ flexDirection: 'column', marginTop: 10 }}>
                             <View style={{ marginTop: 10, flexDirection: 'row' }}>
                                 <Text style={{ marginLeft: 10, color: '#0E0E0E', fontSize: 13, fontStyle:'normal' }}>{task_description}</Text>

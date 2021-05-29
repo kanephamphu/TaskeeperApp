@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,
      Modal, ScrollView, Dimensions, Image,TextInput ,
        ActivityIndicator,Keyboard,TouchableWithoutFeedback,FlatList} from 'react-native';
-import { Avatar } from 'react-native-paper';
 import io from 'socket.io-client/dist/socket.io'
 import { Ionicons } from '@expo/vector-icons';
 import jwt_decode from 'jwt-decode'
 import AsyncStorage from '@react-native-community/async-storage';
+import avatarimage from '../../../images/avatar11.png';
 import { AntDesign } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -26,36 +26,6 @@ export default class Profilefriend extends React.Component {
         super(props)
         e = this;
         this.state = {
-            data: [
-                {
-                    _id: 1,
-                    time: '03-2019',
-                    company: 'Fancha Milktea',
-                    position: 'Staff',
-                    rating: 3
-                },
-                {
-                    _id: 2,
-                    time: '07-2019',
-                    company: "Crazy's Cat",
-                    position: 'Batender',
-                    rating: 4
-                },
-                {
-                    _id: 3,
-                    time: '02-2019',
-                    company: 'Fourdigit',
-                    position: 'FE Developer',
-                    rating: 1
-                },
-                {
-                    _id: 4,
-                    time: '02-2019',
-                    company: 'Fourdigit',
-                    position: 'FE Developer',
-                    rating: 1
-                },
-            ],
             email: "",
             last_name: "",
             first_name: "",
@@ -79,7 +49,8 @@ export default class Profilefriend extends React.Component {
             datawall:[],
             isFollowing:false,
             checkloading: false,
-            listVote:[]
+            listVote:[],
+            dataJob: [],
         }
         socket.on("sv-user-detail", function (data) {
             var list = data.data
@@ -162,6 +133,17 @@ export default class Profilefriend extends React.Component {
                 console.log(data)
             }
         })
+        sockettest.on("sv-get-history-job",function(data){
+            var list=data.data
+            if(data.success==false){
+              console.log(JSON.stringify(data))
+            }else if(data.success==true){
+              e.setState({
+                dataJob:list,
+              })
+            }
+           
+          })
 
     }
     componentDidMount = async () => {
@@ -172,6 +154,12 @@ export default class Profilefriend extends React.Component {
             _id:this.props.route.params._id
         }
         sockettest.emit("cl-get-detail-votes",detailvote)
+        const historyjob ={
+            userId:this.props.route.params._id, 
+            number:2,
+            skip:0
+          }
+          sockettest.emit("cl-get-history-job",historyjob)
     }
     onCheckFollower= async () =>{
         const token = await AsyncStorage.getItem('token');
@@ -536,33 +524,51 @@ export default class Profilefriend extends React.Component {
                             <Text style={{ fontSize: 15, fontWeight: 'bold' }}>History Jobs</Text>
                         </View>
                         <View style={{ marginTop: 20 }}>
-                            {this.state.data.map((item) => {
-                                return (
-                                    <View key={item._id} style={{
-                                        flexDirection: 'column'
-                                        , backgroundColor: '#ffff', shadowOffset: { width: 0, height: 0 },
+                            {this.state.dataJob.map((item) => {
+                                var task_title = item.task_title;
+      
+                                var count = task_title.length;
+                            
+                                if (count >= 30) {
+                                    task_title = task_title.slice(0, 30)+'...';
+                                }
+                                return(
+                                  <View style={{
+                                    paddingVertical:10,
+                                    paddingHorizontal:10,
+                                    flexDirection:'row',
+                                    borderRadius:10,
+                                    alignItems:'center',
+                                    justifyContent:'center',
+                                    width:width-60,
+                                    backgroundColor:'rgba(200,200,200,0.3)',
+                                    margin:10,
+                                    borderWidth:1,
+                                    borderColor:'#2d7474'
+                                  }}>
+                                    <TouchableOpacity  style={{flexDirection:'row'}}>
+                                      <View style={{justifyContent:'center',alignItems: 'center',marginLeft:10,height:55,width:55,backgroundColor:'white',shadowOffset: { width: 0, height: 3 },
                                         shadowColor: 'green',
-                                        shadowOpacity: 0.1,
-                                        elevation: 4,
-                                        borderWidth: 1,
-                                        borderColor: '#71B7B7', padding: 5,
-                                        height: 100, borderRadius: 10, justifyContent: 'center', alignItems: 'center', marginBottom: 10
-                                    }}>
-                                        <View>
-                                            <Text style={{ fontWeight: 'bold', color: '#2d7474', fontSize: 18 }}>{item.company}</Text>
-                                        </View>
+                                        shadowOpacity: 0.5,
+                                        elevation: 10,
+                                        borderColor: '#71B7B7',
+                                        borderRadius: 50}}
+                                      >
+                                          <Image source={item.task_owner_avatar?{uri:item.task_owner_avatar}:avatarimage} style={styles.image}/>
+                                      </View>
+                                      <View  style={{flexDirection:'column',marginLeft:10,alignItems:'flex-start',width:width-180}}>
+                                        <Text style={[styles.name,{color:'#2d7474'}]}>{task_title}</Text>
                                         <View >
-                                            <Text style={{ fontWeight: 'bold', color: 'black', fontSize: 18 }}>{item.position}</Text>
+                                          <Text style={{fontWeight:'bold',fontSize:15}}>{item.task_type}</Text>
                                         </View>
-                                        <View  >
-                                            <Text>{this._rating(item.rating)}</Text>
-                                        </View>
-                                    </View>
+                                      </View>
+                                    </TouchableOpacity>   
+                                  </View>
                                 )
                             })}
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate("historyfriend", { first: this.state.first_name, last: this.state.last_name })} style={{
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate("historyfriend", { first: this.state.first_name, last: this.state.last_name,_id:this.props.route.params._id })} style={{
                                 backgroundColor: '#DDDDDD',
                                 justifyContent: 'center', alignItems: 'center',
                                 width: "100%", height: 35, borderRadius: 5, flexDirection: "row"
@@ -802,5 +808,17 @@ const styles = StyleSheet.create({
         margin:10, 
         flexDirection:'column',
         paddingBottom:10
-    }
+    },
+    name:{
+        fontWeight:'bold',
+        fontSize:18
+      },
+      flatlist:{
+        flex:1,
+        alignItems:'center'
+    },
+    image:{
+        width:50,
+        height:50,borderRadius:50
+      },
 })

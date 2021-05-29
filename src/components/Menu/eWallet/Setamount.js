@@ -11,10 +11,14 @@ import {
   FlatList,
   ActivityIndicator,
   ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { socket } from "../../../Socket.io/socket.io";
+import { socket,sockettest } from "../../../Socket.io/socket.io";
 import AsyncStorage from '@react-native-community/async-storage';
+import { Octicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 const { width, height } = Dimensions.get("window");
 var e;
 export default class Setamount extends React.Component {
@@ -23,44 +27,68 @@ export default class Setamount extends React.Component {
     e = this;
     this.state = {
       searchString: "",
-      key: "",
-      dataSearch: [],
-      fullname: "",
+      static:0,
+      amount:"",
+      _id:"",
+      message:"",
+      check:""
     };
-    socket.on("serverSearchUsersAutoComplete", function (data) {
-      var list = data.data;
-      if (data.success == false) {
-        console.log(JSON.stringify(data));
-      } else if (data.success == true) {
-        e.setState({
-          dataSearch: list,
-        });
-      }
-    });
+    this.onCheckMail = this.onCheckMail.bind(this)
     socket.on("sv-money-transfer-request", function (data) {
-      console.log(data);
-  })
+      if(data.success==true){
+        e.setState({
+          searchString: "",
+          static:0,
+          amount:"",
+          _id:"",
+          message:"",
+          check:""
+        })
+        alert("Transfer Success")
+      }
+      console.log(data)
+    })
+    sockettest.on("sv-get-id-by-email",function (data) {
+      if(data.success==true){
+        e.setState({
+          _id:data.data._id,
+          check:true
+        })
+      }
+      if(data.success==false){
+        e.setState({
+          check:false
+        })
+      }
+    })
   }
-  onSearch = async (searchString) => {
-    this.setState({
-      key: searchString,
-      searchString: "",
-    });
-    const search = {
-      searchString: searchString,
-    };
-    socket.emit("clientSearchUsersAutoComplete", search);
-  };
   onTransferRequest = async () => {
     const token = await AsyncStorage.getItem("token");
-    const request = {
-      secret_key: token,
-      receiver_id: "60a721b0e071a3000407605d",
-      money_amount: "1200000",
-      description: "yeu em",
-    };
-    socket.emit("cl-money-transfer-request", request);
-    console.log(request);
+    if(this.state.searchString==""){
+      alert("Email not filled in");
+    }
+    else if(this.state.check===""){
+      alert("Check mail please!!!");
+    }
+    else if(this.state.amount==""){
+      alert("Amount not filled in");
+    }
+    else if(this.state.message==""){
+      alert("Message not filled in");
+    }
+    else if(this.state.check===false){
+      alert("Mail error, check again!");
+    }
+    else{
+      const request = {
+        secret_key: token,
+        receiver_id: this.state._id,
+        money_amount: this.state.amount,
+        description: this.state.message,
+      };
+      socket.emit("cl-money-transfer-request", request);
+      console.log(request);
+    }
   };
   renderItem = ({ item }) => {
     return (
@@ -71,9 +99,15 @@ export default class Setamount extends React.Component {
       </TouchableOpacity>
     );
   };
+  onCheckMail(){
+    const checkmail={
+      email:this.state.searchString
+    }
+    sockettest.emit("cl-get-id-by-email",checkmail)
+  }
   render() {
-    console.log(this.state.dataSearch);
     return (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={styles.container}>
       <View style={styles.container}>
         <View style={styles.header0}>
           <TouchableOpacity
@@ -96,58 +130,34 @@ export default class Setamount extends React.Component {
         <View style={styles.body}>
           <View style={{ margin: 20 }}>
             <Text style={{ fontSize: 18 }}>
-              How much good you like to send?{this.state.fullname}
+              How much good you like to send?
             </Text>
           </View>
           <View>
-            {this.state.key != "" ? (
-              <FlatList
-                style={{
-                  backgroundColor: "#ffff",
-                  borderWidth: 1,
-                  borderColor: "#cccc",
-                  zIndex: 2,
-                  marginLeft: "7%",
-                  marginTop: "13%",
-                  position: "absolute",
-                  width: 333,
-                  height: 100,
-                }}
-                data={this.state.dataSearch}
-                renderItem={({ item, index }) => {
-                  return (
-                    <View key={item}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          this.setState({
-                            fullname: item.first_name + " " + item.last_name,
-                            searchString: "",
-                            key: "",
-                          })
-                        }
-                      >
-                        <Text style={{ color: "black" }}>
-                          {item.first_name} {item.last_name}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  );
-                }}
-              />
-            ) : null}
             <View style={{ zIndex: 1 }}>
+              <>
               <TextInput
                 style={styles.input}
-                placeholder={"Email"}
+                placeholder={"Email (Check your mail before transfer!)"}
                 placeholderTextColor={"#cccc"}
                 underlineColorAndroid="transparent"
-                onChangeText={(searchString) => this.onSearch(searchString)}
-              ></TextInput>
+                onChangeText={(searchString) => this.setState({searchString})}
+                value={this.state.searchString}
+              >
+              </TextInput>
+              <View>
+              {this.state.check===true?<Octicons style={{position:'absolute',right:30,top:-30}} name="check" size={24} color="#2d7474" />:null}
+                {this.state.check===false?<MaterialCommunityIcons style={{position:'absolute',right:30,top:-30}} name="window-close" size={24} color="red" />:null}
+                {this.state.check===false?<Text style={{position:'absolute',color:'red',left:40}}>email does not exist</Text>:null}
+              </View>
+              </>
               <TextInput
                 style={styles.input}
                 placeholder={"Amount (VND)"}
                 placeholderTextColor={"#cccc"}
                 underlineColorAndroid="transparent"
+                value={this.state.amount}
+                onChangeText={(amount)=>this.setState({amount,status:0})}
               ></TextInput>
               <TextInput
                 style={styles.input}
@@ -155,6 +165,8 @@ export default class Setamount extends React.Component {
                 placeholderTextColor={"#cccc"}
                 underlineColorAndroid="transparent"
                 multiline={true}
+                value={this.state.message}
+                onChangeText={(message)=>this.setState({message})}
               ></TextInput>
             </View>
           </View>
@@ -171,12 +183,23 @@ export default class Setamount extends React.Component {
                 width: "70%",
               }}
             >
-              <View style={styles.menhgia1}>
-                <Text style={styles.textmoney}>100.000</Text>
-              </View>
-              <View style={styles.menhgia}>
-                <Text style={styles.textmoney}>200.000</Text>
-              </View>
+              {this.state.status==1?
+              <TouchableOpacity onPress={()=>this.setState({amount:"1",status:1})} style={[styles.menhgia1,{backgroundColor:'#2d7474'}]}>
+                <Text style={[styles.textmoney,{color:'white'}]}>1</Text>
+              </TouchableOpacity>
+              :
+              <TouchableOpacity onPress={()=>this.setState({amount:"1",status:1})} style={styles.menhgia1}>
+                <Text style={styles.textmoney}>1</Text>
+              </TouchableOpacity>}
+              {this.state.status==2?
+              <TouchableOpacity onPress={()=>this.setState({amount:"2",status:2})} style={[styles.menhgia,{backgroundColor:'#2d7474'}]}>  
+                <Text style={[styles.textmoney,{color:'white'}]}>2</Text>
+              </TouchableOpacity>
+              :
+              <TouchableOpacity onPress={()=>this.setState({amount:"2",status:2})} style={styles.menhgia}>  
+                <Text style={styles.textmoney}>2</Text>
+              </TouchableOpacity>
+              }
             </View>
             <View
               style={{
@@ -186,12 +209,23 @@ export default class Setamount extends React.Component {
                 marginTop: 15,
               }}
             >
-              <View style={styles.menhgia1}>
-                <Text style={styles.textmoney}>500.000</Text>
-              </View>
-              <View style={styles.menhgia}>
-                <Text style={styles.textmoney}>1.000.000</Text>
-              </View>
+              {this.state.status==5?
+              <TouchableOpacity onPress={()=>this.setState({amount:"5",status:5})} style={[styles.menhgia1,{backgroundColor:'#2d7474'}]}>
+                <Text style={[styles.textmoney,{color:'white'}]}>5</Text>
+              </TouchableOpacity>
+              :
+              <TouchableOpacity onPress={()=>this.setState({amount:"5",status:5})} style={styles.menhgia1}>
+                <Text style={styles.textmoney}>5</Text>
+              </TouchableOpacity>}
+              {this.state.status==10?
+              <TouchableOpacity onPress={()=>this.setState({amount:"10",status:10})} style={[styles.menhgia,{backgroundColor:'#2d7474'}]}>  
+                <Text style={[styles.textmoney,{color:'white'}]}>10</Text>
+              </TouchableOpacity>
+              :
+              <TouchableOpacity onPress={()=>this.setState({amount:"10",status:10})} style={styles.menhgia}>  
+                <Text style={styles.textmoney}>10</Text>
+              </TouchableOpacity>
+              }
             </View>
             <View
               style={{
@@ -201,12 +235,23 @@ export default class Setamount extends React.Component {
                 marginTop: 15,
               }}
             >
-              <View style={styles.menhgia1}>
-                <Text style={styles.textmoney}>2.000.000</Text>
-              </View>
-              <View style={styles.menhgia}>
-                <Text style={styles.textmoney}>5.000.000</Text>
-              </View>
+               {this.state.status==20?
+              <TouchableOpacity onPress={()=>this.setState({amount:"20",status:20})} style={[styles.menhgia1,{backgroundColor:'#2d7474'}]}>
+                <Text style={[styles.textmoney,{color:'white'}]}>20</Text>
+              </TouchableOpacity>
+              :
+              <TouchableOpacity onPress={()=>this.setState({amount:"20",status:20})} style={styles.menhgia1}>
+                <Text style={styles.textmoney}>20</Text>
+              </TouchableOpacity>}
+              {this.state.status==50?
+              <TouchableOpacity onPress={()=>this.setState({amount:"50",status:50})} style={[styles.menhgia,{backgroundColor:'#2d7474'}]}>  
+                <Text style={[styles.textmoney,{color:'white'}]}>50</Text>
+              </TouchableOpacity>
+              :
+              <TouchableOpacity onPress={()=>this.setState({amount:"50",status:50})} style={styles.menhgia}>  
+                <Text style={styles.textmoney}>50</Text>
+              </TouchableOpacity>
+              }
             </View>
           </View>
           <View
@@ -218,11 +263,32 @@ export default class Setamount extends React.Component {
             }}
           >
             <TouchableOpacity
+              onPress={()=>this.onCheckMail()}
+              style={{
+                height: 40,
+                width: 150,
+                borderRadius: 5,
+                backgroundColor: "#ffff",
+                borderWidth: 1,
+                marginRight: 10,
+                borderColor: "#488B8F",
+                
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{ fontWeight: "bold", color: "#488B8F", fontSize: 18 }}
+              >
+                Check Mail
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={{
                 height: 40,
                 width: 150,
                 backgroundColor: "#488B8F",
-                marginRight: 10,
+                marginLeft: 10,
                 borderRadius: 5,
                 justifyContent: "center",
                 alignItems: "center",
@@ -235,28 +301,10 @@ export default class Setamount extends React.Component {
                 Transfer
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                height: 40,
-                width: 150,
-                borderRadius: 5,
-                backgroundColor: "#ffff",
-                borderWidth: 1,
-                borderColor: "#488B8F",
-                marginLeft: 10,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{ fontWeight: "bold", color: "#488B8F", fontSize: 18 }}
-              >
-                Cancel
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

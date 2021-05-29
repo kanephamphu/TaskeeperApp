@@ -29,7 +29,7 @@ export default class Test extends React.Component {
                     <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: 1 }}>Back</Text>
                 </TouchableOpacity>
                 </View>
-                <WebView source={{uri:"https://elated-bassi-3a85c8.netlify.app/?fbclid=IwAR0cs3LjjrUsQ4YLaZVc0a8CpAyywKId_fwcoeAgB59yFylpZ_YsnxsmOcM"}}/>
+                <WebView source={{uri:"https://gracious-hamilton-9eb340.netlify.app/?fbclid=IwAR0IQtYGGx1V5R-u2udSVxSuVDuRvCta8YOeALicN8DM7n3o6YKArHPIzSI"}}/>
             </View>
         )
     }

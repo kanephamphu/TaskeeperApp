@@ -75,10 +75,22 @@ export default class Homesearch extends Component {
 }
 const styles = StyleSheet.create({
     header: {
-        height: 85,
-        zIndex: 1000,
-        backgroundColor: '#faf9f9',
-       marginTop:-30
+       ...Platform.select({
+        ios: {
+            height: 85,
+            zIndex: 1000,
+            backgroundColor: '#faf9f9',
+        },
+        android: {
+            height: 85,
+            zIndex: 1000,
+            backgroundColor: '#faf9f9',
+            marginTop:-30
+        },
+        default: {
+          // other platforms, web for example
+        }
+      })
     },
     input: {
         flex: 1,

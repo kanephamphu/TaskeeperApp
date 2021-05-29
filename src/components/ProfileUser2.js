@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Entypo } from '@expo/vector-icons'; 
 import avatarimage from '../images/avatar.jpg';
 import * as Permissions from 'expo-permissions';
+import { Octicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import {socket,sockettest} from "../Socket.io/socket.io";
@@ -108,7 +109,7 @@ export default class ProfileUser extends React.Component {
           body: data
         }).then(
           response => {
-            alert("Update Avatar Success")
+            
           }
           )
       }
@@ -133,7 +134,7 @@ export default class ProfileUser extends React.Component {
               size={100}
             />}
             <TouchableOpacity onPress={()=>this.openImagePickerAsync()} style={{position:'absolute',right:0,bottom:0,backgroundColor:"#cccc",borderRadius:100,width:30,height:30,justifyContent: 'center',alignItems: 'center'}}>
-              <Entypo name="camera" size={15} color="black" />
+            {this.state.localUri==null?<Entypo name="camera" size={15} color="black" />:<Octicons name="check" size={24} color="#2d7474" />}
             </TouchableOpacity>
             </View>
           </View>
@@ -143,60 +144,60 @@ export default class ProfileUser extends React.Component {
             </ShimmerPlaceholder>
             <AppText i18nKey={'home_profile.businessanalyst'} style={{ fontSize: 20 }}>Business Analyst</AppText>  
           </View>
-          <View>
-          <View style={{flexDirection:'row',marginTop:50,marginLeft:30,marginRight:30}}>
+          <View style={{flexDirection:'column'}}>
+            <View style={{flexDirection:'row',justifyContent:'space-between',margin:20}}>
               <AppText i18nKey={'home_profile.fullname'} style={{ fontSize: 19,fontWeight:'bold'}}>Full name:</AppText>
-            <View style={{position:'absolute',left:170,width:width-200}}>
               <ShimmerPlaceholder style={{borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 <Text style={{ fontSize: 19 }}>{this.state.first_name} {this.state.last_name}</Text>
               </ShimmerPlaceholder>
             </View>
-          </View>
-          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
+            <View style={{flexDirection:'row',justifyContent:'space-between',marginBottom:20,marginLeft:20,marginRight:20}}>
               <AppText i18nKey={'home_profile.email'} style={{ fontSize: 19,fontWeight:'bold'}}>Email:</AppText>
-              <View style={{position:'absolute',left:170,width:width-200}}>
               <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 <Text style={{ fontSize: 19 }}>{this.state.email}</Text>
               </ShimmerPlaceholder>
             </View>
-          </View>
-          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
-            <AppText i18nKey={'home_profile.birthday'} style={{ fontSize: 19,fontWeight:'bold'}}>Birthday:</AppText>
-            <View style={{position:'absolute',left:170,width:width-200}}>
+            <View style={{flexDirection:'row',justifyContent:'space-between',marginBottom:20,marginLeft:20,marginRight:20}}>
+              <AppText i18nKey={'home_profile.birthday'} style={{ fontSize: 19,fontWeight:'bold'}}>Birthday:</AppText>
               <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
-                {
-                  this.state.day_of_birth==undefined?
-                  <AppText i18nKey={'home_profile.undefined'} style={{ fontSize: 19 }}>undefined</AppText>
-                  :
-                <Text style={{ fontSize: 19 }}>{this.state.day_of_birth}/{this.state.month_of_birth}/{this.state.year_of_birth}</Text>
-                }
-              </ShimmerPlaceholder>
+                  {
+                    this.state.day_of_birth==undefined?
+                    <Text style={{ fontSize: 19 }}></Text>
+                    :
+                  <Text style={{ fontSize: 19 }}>{this.state.day_of_birth}/{this.state.month_of_birth}/{this.state.year_of_birth}</Text>
+                  }
+                </ShimmerPlaceholder>
             </View>
-          </View>
-          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
-            <AppText i18nKey={'home_profile.gender'} style={{ fontSize: 19,fontWeight:'bold'}}>Gender:</AppText>
-            <View style={{position:'absolute',left:170,width:width-200}}>
+            <View style={{flexDirection:'row',justifyContent:'space-between',marginBottom:20,marginLeft:20,marginRight:20}}>
+              <AppText i18nKey={'home_profile.gender'} style={{ fontSize: 19,fontWeight:'bold'}}>Gender:</AppText>
               <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 {
                   this.state.gender=='undefined'?
-                  <AppText i18nKey={'home_profile.undefined'} style={{ fontSize: 19 }}>undefined</AppText>
+                  <Text style={{ fontSize: 19 }}></Text>
                   :
                 <Text style={{ fontSize: 19 }}>{this.state.gender}</Text>
                 }
               </ShimmerPlaceholder>
             </View>
-          </View>
-          <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
-            <AppText i18nKey={'home_profile.phone'} style={{ fontSize: 19,fontWeight:'bold'}}>Phone number:</AppText>
-            <View style={{position:'absolute',left:170,width:width-200}}>
+            <View style={{flexDirection:'row',justifyContent:'space-between',marginBottom:20,marginLeft:20,marginRight:20}}>
+              <AppText i18nKey={'home_profile.gender'} style={{ fontSize: 19,fontWeight:'bold'}}>Gender:</AppText>
+              <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
+                {
+                  this.state.gender=='undefined'?
+                  <Text style={{ fontSize: 19 }}></Text>
+                  :
+                <Text style={{ fontSize: 19 }}>{this.state.gender}</Text>
+                }
+              </ShimmerPlaceholder>
+            </View>
+            <View style={{flexDirection:'row',justifyContent:'space-between',marginBottom:20,marginLeft:20,marginRight:20}}>
+              <AppText i18nKey={'home_profile.phone'} style={{ fontSize: 19,fontWeight:'bold'}}>Phone number:</AppText>
               <ShimmerPlaceholder style={{borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                 <Text style={{ fontSize: 19 }}>{this.state.phone_number}</Text>
               </ShimmerPlaceholder>
             </View>
-          </View>
-            <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
+            <View style={{flexDirection:'row',justifyContent:'space-between',marginBottom:20,marginLeft:20,marginRight:20}}>
               <AppText i18nKey={'home_profile.education'} style={{ fontSize: 19,fontWeight:'bold'}}>Education:</AppText>
-              <View style={{width:width-160,paddingLeft:80}}>
               <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                   {this.state.education.map((item) => {
                     return (
@@ -206,11 +207,9 @@ export default class ProfileUser extends React.Component {
                     )
                   })}
               </ShimmerPlaceholder>
-              </View>
             </View>
-            <View style={{flexDirection:'row',marginTop:15,marginLeft:30,marginRight:30}}>
+            <View style={{flexDirection:'row',justifyContent:'space-between',marginBottom:20,marginLeft:20,marginRight:20}}>
               <AppText i18nKey={'home_profile.working'} style={{ fontSize: 19,fontWeight:'bold'}}>Working:</AppText>
-              <View style={{width:width-160,paddingLeft:95}}>
               <ShimmerPlaceholder style={{ borderRadius: 7 }} autoRun visible={this.state.isLoading}>
                   {this.state.working_information.map((item) => {
                     return (
@@ -220,7 +219,6 @@ export default class ProfileUser extends React.Component {
                     )
                   })}
               </ShimmerPlaceholder>
-              </View>
             </View>
           </View>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 30 }}>

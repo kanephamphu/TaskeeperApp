@@ -17,6 +17,7 @@ import {
   Button,
 } from "react-native";
 import Swiper from "react-native-swiper";
+import {Avatar} from "react-native-paper";
 import DropDownPicker from "react-native-dropdown-picker";
 import MyMapView from ".././MapView";
 import { FontAwesome } from "@expo/vector-icons";
@@ -45,7 +46,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import * as actions from "../../actions";
 import MapInput2 from "../../components/MapInput2";
+import anhgrabjob from "../../images/anhgrabjob.jpg";
 import ActionButton, { ActionButtonItem } from "react-native-action-button";
+import {
+  ThreeSixtySharp,
+  TransferWithinAStationSharp,
+} from "@material-ui/icons";
 var e;
 const { height, width } = Dimensions.get("window");
 var gender = [
@@ -57,7 +63,15 @@ class Home extends Component {
     super(props);
     e = this;
     this.state = {
+      task_id:"",
+      task_title: "",
+      task_description: "",
+      task_owner_first_name: "",
+      task_owner_last_name: "",
+      task_requirement: "",
       first_name: "",
+      showapplyrecommend: null,
+      showmodalrecommendapply: false,
       last_name: "",
       formatted_address: "",
       showlocation: false,
@@ -79,7 +93,7 @@ class Home extends Component {
       latitude: "",
       showtags: false,
       datasource: [],
-      showmodalnew: true,
+      showmodalnew: "",
       region: [],
       latitude: null,
       longitude: null,
@@ -196,10 +210,36 @@ class Home extends Component {
       // } else if (data.success == true) {
       //   console.log(JSON.stringify(data))
       // }
-      e.setState({
-        showmodalnew:data.result
-      })
+      var list = data.result
+        e.setState({
+          showmodalnew: list,
+        });
+        console.log(list)
     });
+    socket.on("new-task-recommend", function (data) {
+      const list = data.data.data;
+      if (data.data.success == true) {
+        e.setState({
+          showapplyrecommend: list,
+          task_title: list.task_title,
+          task_description: list.task_description,
+          task_owner_first_name: list.task_owner_first_name,
+          task_owner_last_name: list.task_owner_last_name,
+          task_requirement: list.task_requirement,
+          showmodalrecommendapply: true,
+          task_id:list._id
+        });
+      } else {
+        console.log(data);
+      }
+    });
+    socket.on("sv-apply-job", function (data) {
+      if (data.success == false) {
+          console.log(data)
+      } else if (data.success == true) {
+          e.setState({showmodalrecommendapply:false})
+      }
+  })
   }
 
   componentDidMount = async () => {
@@ -209,10 +249,11 @@ class Home extends Component {
       first_name: decode.first_name,
       email: decode.email,
       secret_key: token,
+      _id:decode._id
     });
 
     sockettest.emit("set-socketID", { user_id: decode._id });
-    sockettest.emit("cl-check-information", {_id: decode._id });
+    sockettest.emit("cl-check-information", { _id: decode._id });
 
     const getnewtask = {
       secret_key: this.state.secret_key,
@@ -282,8 +323,8 @@ class Home extends Component {
       socket.emit("cl-send-new-tags", sendTags);
       alert("send location and tags success!");
       this.setState({
-        showmodalnew:true
-      })
+        showmodalnew: true,
+      });
     }
   };
   /*followTask=async()=>{
@@ -450,6 +491,16 @@ class Home extends Component {
   onHistory(_id) {
     this.props.navigation.navigate("historyfriend", { _id: _id });
   }
+  onApply=()=>{
+    const apply = {
+      secret_key: this.state.secret_key,
+      task_id: this.state.task_id,
+      introduction: "I want do this job!",
+      price: "20",
+    }
+    socket.emit("cl-apply-job", apply)
+    console.log(apply)
+  }
   renderFooter() {
     return (
       <View
@@ -466,84 +517,205 @@ class Home extends Component {
   }
 
   render() {
+    var task_title = this.state.task_title;
+    if (task_title.length >= 25) {
+      task_title = task_title.slice(0, 25) + "...";
+    }
+    var task_description = this.state.task_description;
+    if (task_description.length >= 40) {
+      task_description = task_description.slice(0, 40) + "...";
+    }
+    var name =
+      this.state.task_owner_first_name + " " + this.state.task_owner_last_name;
+    if (name.length >= 16) {
+      name = name.slice(0, 16) + "...";
+    }
+    var task_requirement = this.state.task_requirement;
+    if (task_requirement.length >= 64) {
+      task_requirement = task_requirement.slice(0, 64) + "...";
+    }
+    var showmodal = this.state.showmodalnew
     return (
       <View style={styles.container}>
         <StatusBar />
         <View style={{ marginTop: 10 }}>
           <Search stack={this.onStack} message={this.onMessage} />
         </View>
-        
-        <Modal transparent={true} visible={!this.state.showmodalnew} >
-                    <View style={{flexDirection:'column', flex:1, backgroundColor:'#000000aa'}}>
-                        <View style={styles.enterInformation}>
-                            <View style={{marginTop:10, marginLeft:5}}>
-                                <Text style={{fontSize:15, color:'#2d7474'}}>
-                                    Address:
-                                </Text> 
-                            </View>   
-                            <View style={{marginTop:10,height:50}}>
-                                    <MapInput2 notifyChange={(loc,name) => this.getCoordsFromName(loc,name)}
-                                    />
-                            </View>
-                             <View style={{flexDirection:'column'}}>
-                            <View style={{marginTop:10, marginLeft:5,marginBottom:10,zIndex:3}}>
-                                <Text style={{fontSize:15, color:'#2d7474'}}>
-                                    Tags:
-                                </Text>
-                            </View>  
-                                <MultiSelect
-                                            items={this.state.datatags}
-                                            //items={this.state.items4}
-                                            uniqueKey="name"
-                                            onSelectedItemsChange={this.onSelectedTagsChange}
-                                            onChangeInput={(tag_query)=>this.onChangeTagsInput(tag_query)}
-                                            selectedItems={this.state.selectedTags}
-                                            selectText="    Choose Tags"
-                                            searchInputPlaceholderText="Search Tags..."
-                                            tagRemoveIconColor="#2d7474"
-                                            tagColor="#2d7474"
-                                            tagTextColor="#2d7474"
-                                            selectedItemTextColor="black"
-                                            selectedItemIconColor="black"
-                                            itemTextColor="black"
-                                            searchInputStyle={{ color: 'black' }}
-                                            hideSubmitButton={true}
-                                            styleSelectorContainer={{
-                                                position: 'absolute',
-                                                height:100,
-                                                width:width*0.7,
-                                                marginHorizontal: 5,
-                                                marginLeft:10,
-                                                marginRight:10,
-                                                zIndex:3
-                                            }}
-                                            hideTags={true}
-                                        />
-                                        <FlatList style={{height:70}} numColumns={2} data={this.state.selectedTags} renderItem={({ item, index }) => {
-                                         let tag = item;
-                                         let count =tag.length;
-                                         if (count >=14) {
-                                            tag = tag.slice(0,14)+'..';
-                                         }
-                                        return (
-                                            <View key={item} style={{ borderWidth: 1, backgroundColor: '#EEEEEE', borderColor: '#D2D2D2', alignItems: 'center', justifyContent: 'center', borderRadius: 5, height: 30, paddingLeft: 20, paddingRight: 20, marginBottom: 10, marginRight: 10 }}>
-                                                <Text style={{ color: '#505050', lineHeight: 20, fontSize: 13 }}>{tag}</Text>
-                                            </View>
-                                        )
-                                        }}
-                                            keyExtractor={(item) => item.toString()}>
-                                        </FlatList>
-                            </View>
-                            <View style={{margin:20, marginLeft:60, marginRight:60, zIndex:1}}>
-                                <Button onPress={()=>this.onSubmitLocation()}
-                                    title="Save"
-                                    color="#2d7474"
-                                    style={{fontSize:18, color:'white'}}
-                                /> 
-                            </View>
-                        </View>
-                        </View>  
-                    </Modal>
+        <Modal transparent={true} visible={this.state.showmodalrecommendapply}>
+          <View style={{backgroundColor:'#000000aa',flex:1,justifyContent:'center',alignItems:'center'}}>
+            <View style={{backgroundColor:'#E5E5E5',width:"90%",borderRadius: 5}}>
+                <View style={{width:'100%',backgroundColor: "white",borderRadius: 5,borderBottomLeftRadius:20,borderBottomRightRadius:20,flexDirection:'row'}}>
+                  {this.state.showapplyrecommend==null?
+                    <Avatar.Image style={{marginTop: 10,marginLeft: 10,marginRight:10}} size={55} source={{uri:"https://scontent.fdad2-1.fna.fbcdn.net/v/t1.6435-9/168845852_2862826570597917_3769343382090002789_n.jpg?_nc_cat=101&ccb=1-3&_nc_sid=8bfeb9&_nc_ohc=HRfsr3L3-44AX98GBK9&_nc_ht=scontent.fdad2-1.fna&oh=91d70af6e2f0221f3993b6e23a3bf13d&oe=60D22EEC"}}/>
+                    :
+                    <Avatar.Image style={{marginTop: 10,marginLeft: 10,marginRight:10}} size={55} source={this.state.showapplyrecommend.task_owner_avatar?{uri:this.state.showapplyrecommend.task_owner_avatar}:{uri:"https://scontent.fdad2-1.fna.fbcdn.net/v/t1.6435-9/168845852_2862826570597917_3769343382090002789_n.jpg?_nc_cat=101&ccb=1-3&_nc_sid=8bfeb9&_nc_ohc=HRfsr3L3-44AX98GBK9&_nc_ht=scontent.fdad2-1.fna&oh=91d70af6e2f0221f3993b6e23a3bf13d&oe=60D22EEC"}}/>
+                  }
+                  <View style={{flexDirection:'column',width:'75%',marginTop: 10}}>
+                    <Text style={{fontStyle: "normal",fontWeight: "bold",color: "#2d7474",marginBottom: 5,fontSize:18,}}>{task_title}</Text>
+                    <Text style={{fontStyle: "normal",fontWeight: "bold",fontSize:16,marginBottom: 5}}>{task_description}</Text>
+                    <Text style={{ fontSize: 14, fontStyle: "normal" }}>{this.state.showapplyrecommend==null?null:this.state.showapplyrecommend.location.formatted_address}</Text>
+                  </View>
+                </View>
+                <View style={{backgroundColor: "white",borderRadius: 20,margin:10,flexDirection:'column'}}>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',margin:15,marginBottom:5}}>
+                      <Text style={{fontSize: 14,color: "rgba(0, 0, 0, 0.38)",fontWeight: "bold",}}>
+                          Name
+                      </Text>
+                      {this.state.showapplyrecommend==null?
+                        <Text style={{ color: "#2d7474", fontWeight: "bold" }}></Text>
+                        :
+                        <Text style={{ color: "#2d7474", fontWeight: "bold" }}>$ {this.state.showapplyrecommend.price.price_type=="dealing"?this.state.showapplyrecommend.price.price_type:<>{this.state.showapplyrecommend.price.floor_price+" - "+this.state.showapplyrecommend.price.ceiling_price}</>}</Text>
+                      }
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',marginLeft:15,marginRight:15,marginBottom:10}}>
+                      <Text style={{fontSize: 16,color: "rgba(0, 0, 0, 0.6)",fontWeight: "bold",}}>{name}</Text>
+                      <View style={{flexDirection:'row'}}>
+                        <AntDesign name="clockcircleo" size={14} color="black" />
+                        <Text style={{ fontSize: 14, color: "rgba(0, 0, 0, 0.38)" }}>  {this.state.showapplyrecommend==null?null:<>{new Date(this.state.showapplyrecommend.created_time).toLocaleDateString()}</>}</Text>
+                      </View>
+                    </View>
+                    <View style={{justifyContent:'center',flexDirection:'row',marginBottom:15}}>
+                      <View style={{borderWidth:1,width:'70%',}}>
+                      </View>
+                    </View>
+                    <View style={{marginLeft:15,marginRight:15,marginBottom:20}}>
+                      <Image source={anhgrabjob}style={{ width:'100%',height:202 }}/>
+                    </View>
+                    <View style={{marginLeft:15,marginRight:15,marginBottom:10}}>
+                      <Text style={{ color: "rgba(0, 0, 0, 0.38)", fontWeight: "bold" }}>{task_requirement}</Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'flex-end',marginRight:15,marginBottom:15}}>
+                      <Text style={{ color: "#2d7474", fontWeight: "bold" }}>{this.state.showapplyrecommend==null?null:this.state.showapplyrecommend.task_candidate_apply_list.length} </Text>
+                      <Text style={{ color: "rgba(0, 0, 0, 0.38)" }}>candidates</Text>
+                    </View>
+                </View>
+                <View style={{flexDirection:'row',justifyContent:'space-between',margin:15,marginLeft:40,marginRight:40}}>
+                  <TouchableOpacity onPress={()=>this.setState({showmodalrecommendapply:false})} style={{borderWidth:1,borderColor: '#2d7474',fontSize:17}}><Text  style={{margin:10,fontWeight:'bold',color:"#2d7474",fontSize:17}}>Cancel</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={()=>this.onApply()} style={{ backgroundColor: '#2d7474'}}><Text  style={{margin:10,fontWeight:'bold',color:'white',fontSize:17}} >Apply Job</Text></TouchableOpacity>
+                </View>
+            </View>
+          </View>
+        </Modal>
+        {showmodal==="false"?<Modal transparent={true} visible={true}>
+          <View
+            style={{
+              flexDirection: "column",
+              flex: 1,
+              backgroundColor: "#000000aa",
+            }}
+          >
+            <View style={styles.enterInformation}>
+              <View style={{ marginTop: 10, marginLeft: 5 }}>
+                <Text style={{ fontSize: 15, color: "#2d7474" }}>Address:</Text>
+              </View>
+              <View style={{ marginTop: 10, height: 50 }}>
+                <MapInput2
+                  notifyChange={(loc, name) =>
+                    this.getCoordsFromName(loc, name)
+                  }
+                />
+              </View>
+              <View style={{ flexDirection: "column" }}>
+                <View
+                  style={{
+                    marginTop: 10,
+                    marginLeft: 5,
+                    marginBottom: 10,
+                    zIndex: 3,
+                  }}
+                >
+                  <Text style={{ fontSize: 15, color: "#2d7474" }}>Tags:</Text>
+                </View>
+                <MultiSelect
+                  items={this.state.datatags}
+                  //items={this.state.items4}
+                  uniqueKey="name"
+                  onSelectedItemsChange={this.onSelectedTagsChange}
+                  onChangeInput={(tag_query) =>
+                    this.onChangeTagsInput(tag_query)
+                  }
+                  selectedItems={this.state.selectedTags}
+                  selectText="    Choose Tags"
+                  searchInputPlaceholderText="Search Tags..."
+                  tagRemoveIconColor="#2d7474"
+                  tagColor="#2d7474"
+                  tagTextColor="#2d7474"
+                  selectedItemTextColor="black"
+                  selectedItemIconColor="black"
+                  itemTextColor="black"
+                  searchInputStyle={{ color: "black" }}
+                  hideSubmitButton={true}
+                  styleSelectorContainer={{
+                    position: "absolute",
+                    height: 100,
+                    width: width * 0.7,
+                    marginHorizontal: 5,
+                    marginLeft: 10,
+                    marginRight: 10,
+                    zIndex: 3,
+                  }}
+                  hideTags={true}
+                />
+                <FlatList
+                  style={{ height: 70 }}
+                  numColumns={2}
+                  data={this.state.selectedTags}
+                  renderItem={({ item, index }) => {
+                    let tag = item;
+                    let count = tag.length;
+                    if (count >= 14) {
+                      tag = tag.slice(0, 14) + "..";
+                    }
+                    return (
+                      <View
+                        key={item}
+                        style={{
+                          borderWidth: 1,
+                          backgroundColor: "#EEEEEE",
+                          borderColor: "#D2D2D2",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          borderRadius: 5,
+                          height: 30,
+                          paddingLeft: 20,
+                          paddingRight: 20,
+                          marginBottom: 10,
+                          marginRight: 10,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "#505050",
+                            lineHeight: 20,
+                            fontSize: 13,
+                          }}
+                        >
+                          {tag}
+                        </Text>
+                      </View>
+                    );
+                  }}
+                  keyExtractor={(item) => item.toString()}
+                ></FlatList>
+              </View>
+              <View
+                style={{
+                  margin: 20,
+                  marginLeft: 60,
+                  marginRight: 60,
+                  zIndex: 1,
+                }}
+              >
+                <Button
+                  onPress={() => this.onSubmitLocation()}
+                  title="Save"
+                  color="#2d7474"
+                  style={{ fontSize: 18, color: "white" }}
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>:null}
         {this.props.status === false ? (
           <SafeAreaView>
             <ScrollView>
@@ -918,8 +1090,8 @@ const Task = ({
 }) => {
   var fullname = title;
   var count = fullname.length;
-  if (count >= 25) {
-    fullname = fullname.slice(0, 25) + "...";
+  if (count >= 21) {
+    fullname = fullname.slice(0, 21) + "...";
   }
 
   return (
@@ -959,23 +1131,19 @@ const Task = ({
               {fullname}
             </Text>
           </TouchableOpacity>
-
+          <View style={{flexDirection:'column',justifyContent:'space-between'}}>
           <View style={{ flexDirection: "row", paddingRight: 15 }}>
             <View>
               <Entypo name="location-pin" size={22} color="red" />
             </View>
             <Text style={{ fontSize: 13, color: "#888888" }}>{location}</Text>
           </View>
-        </View>
-        <TouchableOpacity
+          <TouchableOpacity
           onPress={() => onStack(_id)}
           style={{
-            width: "90%",
+            width: "100%",
             height: 30,
             backgroundColor: "#2d7474",
-            position: "absolute",
-            bottom: 7,
-            left: "5%",
             borderRadius: 5,
             shadowOffset: { width: 0, height: 0 },
             shadowColor: "green",
@@ -989,6 +1157,8 @@ const Task = ({
             Detail
           </Text>
         </TouchableOpacity>
+        </View>
+        </View>
       </View>
     </View>
   );
@@ -1313,20 +1483,20 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   enterInformation: {
-    backgroundColor:'#FFFF',
-    width:'80%',
-    height:height*0.5,
-    margin:'10%', 
-    padding:10,
+    backgroundColor: "#FFFF",
+    width: "80%",
+    height: height * 0.5,
+    margin: "10%",
+    padding: 10,
     shadowColor: "#000",
     shadowOffset: {
-        width: 0,
-        height: 12,
+      width: 0,
+      height: 12,
     },
     shadowOpacity: 0.58,
-    shadowRadius: 16.00,
+    shadowRadius: 16.0,
     elevation: 24,
-    borderRadius:10
+    borderRadius: 10,
   },
   inputIcon: {
     position: "absolute",

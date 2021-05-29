@@ -18,6 +18,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import {Avatar} from "react-native-paper";
 import jwt_decode from "jwt-decode";
 import io from "socket.io-client/dist/socket.io";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -27,7 +28,6 @@ import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import { Avatar } from "react-native-paper";
 import DropDownPicker from "react-native-dropdown-picker";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -82,9 +82,9 @@ export default class TaskPage extends React.Component {
       tags: "",
       industry: "",
       refreshing: false,
-      formatted_address: "2378 Alpha Ave, Burnaby, BC V5C 0K2, Ca-na-đa",
-      latitude: 16.0676498,
-      longitude: 108.1482117,
+      formatted_address: "",
+      latitude: null,
+      longitude: null,
       region: [],
       skills: "",
       deal_price: "",
@@ -397,14 +397,16 @@ export default class TaskPage extends React.Component {
           choosenTime1: "",
           choosenTime2: "",
           formatted_address: "",
-          longitude: "",
-          latitude: "",
+          latitude: null,
+          longitude: null,
           start_time: "",
           end_time: "",
         });
         //console.log(list)
       } else if (data.success == false) {
-        console.log(data.errors);
+        if(data.errors.message=="Money amount is not enough"){
+          alert("Money amount is not enough")
+        }
       }
     });
     this.onDetail = this.onDetail.bind(this);
@@ -458,13 +460,13 @@ export default class TaskPage extends React.Component {
       //console.log(list)
     });
 
-    sockettest.on("sv-get-recomend-location", function (data) {
-      var list = data.data;
-      e.setState({
-        dataemployee: list,
-      });
-      console.log(list);
-    });
+    // sockettest.on("sv-get-recomend-location", function (data) {
+    //   var list = data.data;
+    //   e.setState({
+    //     dataemployee: list,
+    //   });
+    //   console.log(list);
+    // });
   }
 
   onDetail(a) {
@@ -518,7 +520,7 @@ export default class TaskPage extends React.Component {
   refreshTop() {
     this.componentDidMount();
   }
-  onSubmitImage(e) {
+  onSubmitImage() {
     let apiUrl = "https://taskeepererver.herokuapp.com/taskImageUploader/";
     var data = new FormData();
     data.append("file", {
@@ -541,7 +543,7 @@ export default class TaskPage extends React.Component {
       );
   }
 
-  openImagePickerAsync = async (e) => {
+  openImagePickerAsync = async () => {
     let permissionResult = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (permissionResult === "granted") {
       return;
@@ -553,13 +555,7 @@ export default class TaskPage extends React.Component {
     if (pickerResult.cancelled === true) {
       return;
     } else {  
-      file = e.target.pickerResult;
-      // this.setState({ localUri: pickerResult.uri });
-      let reader = new FileReader;
-      reader.onload = (e)=>{this.setState({
-        localUri:e.target.result
-      })}
-      console.log(this.state.localUri)
+      this.setState({ localUri: pickerResult.uri});
     }
   };
 
@@ -2065,6 +2061,9 @@ export default class TaskPage extends React.Component {
   enableCont = false;
   render() {
     var size = this.state.position.length;
+    console.log(this.state.longitude)
+    console.log(this.state.latitude)
+    console.log(this.state.formatted_address)
     return (
       <View style={styles.container}>
         <Modal

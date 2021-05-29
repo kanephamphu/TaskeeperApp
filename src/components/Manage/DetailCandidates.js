@@ -425,12 +425,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#add2c9',
   },
   header:{
-    height:height*0.08, 
-    shadowOffset:{width:0,height:3},
-    shadowOpacity:0.2,
-    padding: 10,
-    shadowOpacity: 0.2,
-    elevation: 1,
+    ...Platform.select({
+      ios: {
+        height:height*0.08, 
+        shadowOffset:{width:0,height:3},
+        shadowOpacity:0.2,
+        padding: 10,
+        shadowOpacity: 0.2,
+        elevation: 1,
+        paddingTop:30,
+        paddingBottom:-30
+      },
+      android: {
+        height:height*0.08, 
+      shadowOffset:{width:0,height:3},
+      shadowOpacity:0.2,
+      padding: 10,
+      shadowOpacity: 0.2,
+      elevation: 1,
+      },
+      default: {
+        // other platforms, web for example
+      }
+    })
    
   },
   footer:{  

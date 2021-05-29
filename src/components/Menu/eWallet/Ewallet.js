@@ -7,6 +7,7 @@ import io from 'socket.io-client/dist/socket.io';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import  AppText from '../../app-text';
 import {sockettest} from "../../../Socket.io/socket.io";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 const { width, height } = Dimensions.get("window");
@@ -24,6 +25,7 @@ export default class Ewallet extends React.Component {
                 e.setState({
                     data:list
                 })
+                console.log(data)
             }
             else{
                 console.log(data)
@@ -33,7 +35,7 @@ export default class Ewallet extends React.Component {
 
     componentDidMount = async () => {
         const sendemail={
-            email:this.props.route.params.receiver_email
+            email:this.props.route.params.email
         }
         sockettest.emit("cl-get-total-currently",sendemail)
         
@@ -45,10 +47,10 @@ export default class Ewallet extends React.Component {
                 <View style={styles.header0}>
                     <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
                         <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
-                        <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>E Wallet</Text>
+                        <AppText i18nKey={'home_menu.ewallet'} style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: -2 }}>E Wallet</AppText>
                     </TouchableOpacity>
                     <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-                        <Text style={{ fontSize: 25, color: 'black' }}>Total income</Text>
+                        <AppText i18nKey={'home_menu.total'} style={{ fontSize: 25, color: 'black' }}>Total income</AppText>
                         <Text style={{ fontWeight: 'bold', fontSize: 30, color: 'black' }}>${this.state.data}</Text>
                     </View>
                 </View>
@@ -72,49 +74,49 @@ export default class Ewallet extends React.Component {
                             <View style={styles.viewmini}>
                                 <FontAwesome5 name="dollar-sign" size={30} color="#2d7474" />
                             </View>
-                            <Text>Top up</Text>
+                            <AppText i18nKey={'home_menu.topup'}>Top up</AppText>
                         </TouchableOpacity>
                         <TouchableOpacity style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                             <View style={styles.viewmini}>
                                 <FontAwesome5 name="money-bill" size={30} color="#2d7474" />
                             </View>
-                            <Text>Withdraw</Text>
+                            <AppText i18nKey={'home_menu.withdraw'}>Withdraw</AppText>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Transfer")} style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Transfer",{email:this.props.route.params.email})} style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                             <View style={styles.viewmini}>
                                 <FontAwesome name="paper-plane" size={30} color="#2d7474" />
                             </View>
-                            <Text>Send</Text>
+                            <AppText i18nKey={'home_menu.send'}>Send</AppText>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Connectbank")} style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Connectbank",{email:this.props.route.params.email})} style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                             <View style={styles.viewmini}>
                                 <FontAwesome5 name="wallet" size={30} color="#2d7474" />
                             </View>
-                            <Text>Wallet</Text>
+                            <AppText i18nKey={'home_menu.wallet'}>Wallet</AppText>
                         </TouchableOpacity>
                     </View>
                     <View style={{ margin: 20 }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 23, color: 'black' }}>Settings</Text>
+                        <AppText i18nKey={'home_menu.setting'} style={{ fontWeight: 'bold', fontSize: 23, color: 'black' }}>Settings</AppText>
                     </View>
-                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("HistoryPayment")} style={{
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("HistoryPayment",{email:this.props.route.params.email})} style={{
                         borderWidth: 1, margin: 20, height: 45,
                         borderColor: '#71B7B7', justifyContent: 'space-between', padding: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 5
                     }}>
-                        <Text style={{ fontSize: 20, color: 'black' }}>Transaction history</Text>
+                        <AppText i18nKey={'home_menu.transactionhistory'} style={{ fontSize: 20, color: 'black' }}>Transaction history</AppText>
                         <MaterialIcons name="navigate-next" size={30} color="black" />
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         borderWidth: 1, margin: 20, height: 45,
                         borderColor: '#71B7B7', justifyContent: 'space-between', padding: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 5
                     }}>
-                        <Text style={{ fontSize: 20, color: 'black' }}>My bank account</Text>
+                        <AppText i18nKey={'home_menu.mybankaccount'} style={{ fontSize: 20, color: 'black' }}>My bank account</AppText>
                         <MaterialIcons name="navigate-next" size={30} color="black" />
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         borderWidth: 1, margin: 20, height: 45,
                         borderColor: '#71B7B7', justifyContent: 'space-between', padding: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 5
                     }}>
-                        <Text style={{ fontSize: 20, color: 'black' }}>Change the order password</Text>
+                        <AppText i18nKey={'home_menu.changetheorderpass'} style={{ fontSize: 20, color: 'black' }}>Change the order password</AppText>
                         <MaterialIcons name="navigate-next" size={30} color="black" />
                     </TouchableOpacity>
                 </View>

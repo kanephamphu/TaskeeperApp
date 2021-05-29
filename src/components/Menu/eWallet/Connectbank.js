@@ -5,6 +5,7 @@ import io from 'socket.io-client/dist/socket.io';
 import { MaterialIcons } from '@expo/vector-icons';
 import visa from '../../../images/visacard.png'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {sockettest} from "../../..//Socket.io/socket.io";
 const { width, height } = Dimensions.get("window");
 var e;
 export default class Connectbank extends React.Component {
@@ -19,11 +20,17 @@ export default class Connectbank extends React.Component {
 
     componentDidMount = async () => {
     }
+    reloadEwallet=()=>{
+        const sendemail={
+            email:this.props.route.params.email
+        }
+        sockettest.emit("cl-get-total-currently",sendemail)
+    }
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.header0}>
-                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.props.navigation.goBack()}>
+                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => {this.props.navigation.goBack();this.reloadEwallet()}}>
                         <Ionicons style={{ marginTop: 1 }} name="ios-arrow-back" size={28} color="#2d7474" />
                         <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'black', marginLeft: 15, marginTop: 1 }}>Bank</Text>
                     </TouchableOpacity>
@@ -34,8 +41,8 @@ export default class Connectbank extends React.Component {
                     backgroundColor:' rgba(229, 229, 229, 0.51)',padding:20,justifyContent: 'center'}}>
                         <Text style={{fontSize:16}}>Link to credit card,debit card</Text>
                         <TouchableOpacity onPress={()=>this.props.navigation.navigate("Test")} style={{flexDirection:'row',marginTop:15}}>
-                            <Text style={{fontSize:18,fontWeight: 'bold'}}>Add connective</Text>
-                            <MaterialIcons name="navigate-next" size={28} color="black" />
+                            <Text style={{fontSize:18,fontWeight: 'bold'}}>Payment on account</Text>
+                            <MaterialIcons style={{marginTop:-4}} name="navigate-next" size={28} color="black" />
                         </TouchableOpacity>
                    </View>
                    <View   style={{margin:20}}>

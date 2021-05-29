@@ -77,11 +77,11 @@ export default class RenderItem extends React.Component {
       <View style={styles.image_container}>
         <View style={{flexDirection:'row'}}>
         <TouchableOpacity onPress={()=>this.props.stackToDetail(this.props.item._id)} style={{justifyContent:'center',marginLeft:10,height:55,width:55,backgroundColor:'white', shadowOffset: { width: 0, height: 3 },
-    shadowColor: 'green',
-    shadowOpacity: 0.5,
-    elevation: 10,
-    borderColor: '#71B7B7',
-    borderRadius: 50}}>
+          shadowColor: 'green',
+          shadowOpacity: 0.5,
+          elevation: 10,
+          borderColor: '#71B7B7',
+          borderRadius: 50}}>
             <Image source={this.props.item.task_owner_avatar?{uri:this.props.item.task_owner_avatar}:null} style={styles.image}/>
         </TouchableOpacity>
           <TouchableOpacity onPress={()=>this.props.stackToDetail(this.props.item._id)} style={{flexDirection:'column',marginLeft:10,alignItems:'flex-start',width:width-180,justifyContent:'center'}}>
@@ -107,7 +107,7 @@ export default class RenderItem extends React.Component {
                 height: "30%", width: "70%", justifyContent: 'center', alignItems: 'center'
               }}>
                 <Image source={iconwarning} style={{ height: 50, width: 50 }}></Image>
-                <AppText i18nKey={'shownotice'}>Do you want to cancel this jobs ?</AppText>
+                <AppText i18nKey={'show_notice'}>Do you want to cancel this jobs ?</AppText>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: "70%" }}>
 
                   <TouchableOpacity onPress={() => this.setState({ showarning: false })} style={{

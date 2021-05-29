@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TextInput,
 } from "react-native";
-import { Avatar } from "react-native-paper";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -54,6 +53,7 @@ import Addnewcard from "../Menu/eWallet/Addnewcard";
 import Transfer from "../Menu/eWallet/Transfers";
 import Setamount from "../Menu/eWallet/Setamount";
 import Bankkinglink from "../Menu/eWallet/Bankkinglink";
+import DetailHistoryPayment from "../Menu/mainPayment/DetailHistoryPayment";
 import mmm from "../Manage/test";
 import Jobs from "../Manage/Jobs";
 import HomeManageCandidate from "../Manage/HomeManageCandidate";
@@ -566,6 +566,11 @@ const MoreStackScreen = ({ navigation }) => {
       <HomeStack.Screen
         name="Test"
         component={Test}
+        options={{ headerShown: false }}
+      />
+        <HomeStack.Screen
+        name="DetailHistoryPayment"
+        component={DetailHistoryPayment}
         options={{ headerShown: false }}
       />
     </HomeStack.Navigator>

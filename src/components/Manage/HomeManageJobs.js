@@ -22,7 +22,7 @@ export default class HomeManageJobs extends React.Component {
       /*secret_key=''*/
     }
   }
-  onDetail(_id, user_id) {
+  onDetail(_id) {
     this.props.navigation.navigate("detailjobs", { _task_id: _id })
   }
   render(){
@@ -45,7 +45,7 @@ export default class HomeManageJobs extends React.Component {
                     </Tab>
                     <Tab tabStyle={{ backgroundColor: '#faf9f9' }} activeTabStyle={{ backgroundColor: '#faf9f9' }}
                         textStyle={{ color: 'black' }} activeTextStyle={{ color: '#2d7474', fontWeight: 'bold' }}
-                     heading="History" >
+                     heading="List Approved" >
                        <History stackDetail={this.onDetail1}/>
                     </Tab>
         </Tabs>

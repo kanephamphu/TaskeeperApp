@@ -6,7 +6,16 @@ import { Tab, Tabs } from 'native-base'
 import { Ionicons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get("window");
+var e;
 export default class HomePayment extends React.Component {
+  constructor(props){
+    super(props);
+    e=this;
+    this.state={
+      /*secret_key=''*/
+    }
+  }
+  
   render() {
     return (
       <View style={styles.container}>

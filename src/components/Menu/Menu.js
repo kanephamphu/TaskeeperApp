@@ -11,7 +11,7 @@ import Collapsible from 'react-native-collapsible';
 import { Entypo } from "@expo/vector-icons";
 import avatar1 from '../../images/avatar11.png'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import {socket} from "../../Socket.io/socket.io";
+import {socket,sockettest} from "../../Socket.io/socket.io";
 import AppText from '../app-text';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/index';
@@ -75,7 +75,7 @@ class New extends PureComponent {
                 })
             }
         })
-       socket.on("sv-user-detail", function (data) {
+        sockettest.on("sv-user-detail", function (data) {
             var list = data.data
             if (data.success == true) {
                 e.setState({
@@ -128,11 +128,12 @@ class New extends PureComponent {
         const detail = {
             _user_id: this.state._user_id
         }
-       socket.emit("cl-user-detail", detail)
+        sockettest.emit("cl-user-detail", detail)
     }
     logout = async () => {
         var token = await AsyncStorage.getItem('token')
         socket.emit("client-send-logout-request", token)
+        sockettest.emit("disconnect")
         try {
             await AsyncStorage.removeItem('token');
         } catch (e) {
@@ -347,9 +348,9 @@ class New extends PureComponent {
                                     <MaterialIcons name="navigate-next" size={30} color="#71B7B7" />
                                 </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5,justifyContent:'space-between' }} onPress={() => this.props.navigation.navigate("Ewallet",{receiver_email :this.state.email})} >
+                        <TouchableOpacity style={{ flexDirection: 'row',marginLeft:5,justifyContent:'space-between' }} onPress={() => this.props.navigation.navigate("Ewallet",{email :this.state.email})} >
                             <View style={styles.texticon}>
-                                <Text style={styles.text}>E Wallet</Text>
+                                <AppText i18nKey={'home_menu.ewallet'} style={styles.text}>E Wallet</AppText>
                             </View>
                             <View style={styles.iconstyle}>
                                     <MaterialIcons name="navigate-next" size={30} color="#71B7B7" />
